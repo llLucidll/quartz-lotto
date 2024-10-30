@@ -1,0 +1,175 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.example.myapplication"
+4    android:versionCode="1"
+5    android:versionName="1.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="24"
+9        android:targetSdkVersion="34" />
+10
+11    <permission
+11-->[androidx.core:core:1.13.0] C:\Users\gfran\.gradle\caches\transforms-4\42dfdf811721b94244c28f65a2afec29\transformed\core-1.13.0\AndroidManifest.xml:22:5-24:47
+12        android:name="com.example.myapplication.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
+12-->[androidx.core:core:1.13.0] C:\Users\gfran\.gradle\caches\transforms-4\42dfdf811721b94244c28f65a2afec29\transformed\core-1.13.0\AndroidManifest.xml:23:9-81
+13        android:protectionLevel="signature" />
+13-->[androidx.core:core:1.13.0] C:\Users\gfran\.gradle\caches\transforms-4\42dfdf811721b94244c28f65a2afec29\transformed\core-1.13.0\AndroidManifest.xml:24:9-44
+14
+15    <uses-permission android:name="com.example.myapplication.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION" />
+15-->[androidx.core:core:1.13.0] C:\Users\gfran\.gradle\caches\transforms-4\42dfdf811721b94244c28f65a2afec29\transformed\core-1.13.0\AndroidManifest.xml:26:5-97
+15-->[androidx.core:core:1.13.0] C:\Users\gfran\.gradle\caches\transforms-4\42dfdf811721b94244c28f65a2afec29\transformed\core-1.13.0\AndroidManifest.xml:26:22-94
+16
+17    <application
+17-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:5:5-56:19
+18        android:allowBackup="true"
+18-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:6:9-35
+19        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+19-->[androidx.core:core:1.13.0] C:\Users\gfran\.gradle\caches\transforms-4\42dfdf811721b94244c28f65a2afec29\transformed\core-1.13.0\AndroidManifest.xml:28:18-86
+20        android:dataExtractionRules="@xml/data_extraction_rules"
+20-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:7:9-65
+21        android:debuggable="true"
+22        android:extractNativeLibs="false"
+23        android:fullBackupContent="@xml/backup_rules"
+23-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:8:9-54
+24        android:icon="@mipmap/ic_launcher"
+24-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:9:9-43
+25        android:label="@string/app_name"
+25-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:10:9-41
+26        android:roundIcon="@mipmap/ic_launcher_round"
+26-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:11:9-54
+27        android:supportsRtl="true"
+27-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:12:9-35
+28        android:testOnly="true"
+29        android:theme="@style/Theme.MyApplication" >
+29-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:13:9-51
+30        <activity
+30-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:15:9-23:20
+31            android:name="com.example.myapplication.MainActivity"
+31-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:16:13-41
+32            android:exported="true" >
+32-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:17:13-36
+33            <intent-filter>
+33-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:18:13-22:29
+34                <action android:name="android.intent.action.MAIN" />
+34-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:19:17-69
+34-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:19:25-66
+35
+36                <category android:name="android.intent.category.LAUNCHER" />
+36-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:21:17-77
+36-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:21:27-74
+37            </intent-filter>
+38        </activity>
+39
+40        <!-- Activity for Entrant Profile -->
+41        <activity
+41-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:26:9-29:20
+42            android:name="com.example.myapplication.EntrantProfileActivity"
+42-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:27:13-51
+43            android:exported="true" >
+43-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:28:13-36
+44        </activity>
+45
+46        <!-- Activity for Admin Profile -->
+47        <activity
+47-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:32:9-35:20
+48            android:name="com.example.myapplication.AdminProfileActivity"
+48-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:33:13-49
+49            android:exported="true" >
+49-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:34:13-36
+50        </activity>
+51
+52        <!-- Activity for Organizer Profile -->
+53        <activity
+53-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:38:9-41:20
+54            android:name="com.example.myapplication.OrganizerProfileActivity"
+54-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:39:13-53
+55            android:exported="true" >
+55-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:40:13-36
+56        </activity>
+57
+58        <!-- Activity for Entrants for a selected group -->
+59        <activity
+59-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:44:9-47:20
+60            android:name="com.example.myapplication.GroupEntrantsActivity"
+60-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:45:13-50
+61            android:exported="true" >
+61-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:46:13-36
+62        </activity>
+63
+64        <!-- Activity for Managing the Notification Groups -->
+65        <activity
+65-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:50:9-53:20
+66            android:name="com.example.myapplication.ManageNotificationGroupsActivity"
+66-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:51:13-61
+67            android:exported="true" >
+67-->C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:52:13-36
+68        </activity>
+69
+70        <provider
+70-->[androidx.emoji2:emoji2:1.3.0] C:\Users\gfran\.gradle\caches\transforms-4\51f1927f6706bb4e824223b170abb02f\transformed\emoji2-1.3.0\AndroidManifest.xml:24:9-32:20
+71            android:name="androidx.startup.InitializationProvider"
+71-->[androidx.emoji2:emoji2:1.3.0] C:\Users\gfran\.gradle\caches\transforms-4\51f1927f6706bb4e824223b170abb02f\transformed\emoji2-1.3.0\AndroidManifest.xml:25:13-67
+72            android:authorities="com.example.myapplication.androidx-startup"
+72-->[androidx.emoji2:emoji2:1.3.0] C:\Users\gfran\.gradle\caches\transforms-4\51f1927f6706bb4e824223b170abb02f\transformed\emoji2-1.3.0\AndroidManifest.xml:26:13-68
+73            android:exported="false" >
+73-->[androidx.emoji2:emoji2:1.3.0] C:\Users\gfran\.gradle\caches\transforms-4\51f1927f6706bb4e824223b170abb02f\transformed\emoji2-1.3.0\AndroidManifest.xml:27:13-37
+74            <meta-data
+74-->[androidx.emoji2:emoji2:1.3.0] C:\Users\gfran\.gradle\caches\transforms-4\51f1927f6706bb4e824223b170abb02f\transformed\emoji2-1.3.0\AndroidManifest.xml:29:13-31:52
+75                android:name="androidx.emoji2.text.EmojiCompatInitializer"
+75-->[androidx.emoji2:emoji2:1.3.0] C:\Users\gfran\.gradle\caches\transforms-4\51f1927f6706bb4e824223b170abb02f\transformed\emoji2-1.3.0\AndroidManifest.xml:30:17-75
+76                android:value="androidx.startup" />
+76-->[androidx.emoji2:emoji2:1.3.0] C:\Users\gfran\.gradle\caches\transforms-4\51f1927f6706bb4e824223b170abb02f\transformed\emoji2-1.3.0\AndroidManifest.xml:31:17-49
+77            <meta-data
+77-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\gfran\.gradle\caches\transforms-4\fab565b32d1caf7d32cc0e9c5a768a04\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:29:13-31:52
+78                android:name="androidx.lifecycle.ProcessLifecycleInitializer"
+78-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\gfran\.gradle\caches\transforms-4\fab565b32d1caf7d32cc0e9c5a768a04\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:30:17-78
+79                android:value="androidx.startup" />
+79-->[androidx.lifecycle:lifecycle-process:2.6.2] C:\Users\gfran\.gradle\caches\transforms-4\fab565b32d1caf7d32cc0e9c5a768a04\transformed\lifecycle-process-2.6.2\AndroidManifest.xml:31:17-49
+80            <meta-data
+80-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:29:13-31:52
+81                android:name="androidx.profileinstaller.ProfileInstallerInitializer"
+81-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:30:17-85
+82                android:value="androidx.startup" />
+82-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:31:17-49
+83        </provider>
+84
+85        <receiver
+85-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:34:9-52:20
+86            android:name="androidx.profileinstaller.ProfileInstallReceiver"
+86-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:35:13-76
+87            android:directBootAware="false"
+87-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:36:13-44
+88            android:enabled="true"
+88-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:37:13-35
+89            android:exported="true"
+89-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:38:13-36
+90            android:permission="android.permission.DUMP" >
+90-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:39:13-57
+91            <intent-filter>
+91-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:40:13-42:29
+92                <action android:name="androidx.profileinstaller.action.INSTALL_PROFILE" />
+92-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:17-91
+92-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:41:25-88
+93            </intent-filter>
+94            <intent-filter>
+94-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:43:13-45:29
+95                <action android:name="androidx.profileinstaller.action.SKIP_FILE" />
+95-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:17-85
+95-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:44:25-82
+96            </intent-filter>
+97            <intent-filter>
+97-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:46:13-48:29
+98                <action android:name="androidx.profileinstaller.action.SAVE_PROFILE" />
+98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:17-88
+98-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:47:25-85
+99            </intent-filter>
+100            <intent-filter>
+100-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:49:13-51:29
+101                <action android:name="androidx.profileinstaller.action.BENCHMARK_OPERATION" />
+101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:17-95
+101-->[androidx.profileinstaller:profileinstaller:1.3.1] C:\Users\gfran\.gradle\caches\transforms-4\7c6c24dcca5059c7b3ce34791d5d98cd\transformed\profileinstaller-1.3.1\AndroidManifest.xml:50:25-92
+102            </intent-filter>
+103        </receiver>
+104    </application>
+105
+106</manifest>
