@@ -8,6 +8,11 @@
         android:minSdkVersion="24"
         android:targetSdkVersion="34" />
 
+    <!-- Although the *SdkVersion is captured in gradle build files, this is required for non gradle builds -->
+    <!-- <uses-sdk android:minSdkVersion="14" /> -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+
     <permission
         android:name="com.example.myapplication.DYNAMIC_RECEIVER_NOT_EXPORTED_PERMISSION"
         android:protectionLevel="signature" />
@@ -36,37 +41,39 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name="com.example.myapplication.OrganizerProfileActivity" />
+        <activity android:name="com.example.myapplication.ManageNotificationGroupsActivity" />
+        <activity android:name="com.example.myapplication.GroupEntrantsActivity" />
 
-        <!-- Activity for Entrant Profile -->
+        <service
+            android:name="com.google.firebase.components.ComponentDiscoveryService"
+            android:directBootAware="true"
+            android:exported="false" >
+            <meta-data
+                android:name="com.google.firebase.components:com.google.firebase.firestore.FirebaseFirestoreKtxRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+            <meta-data
+                android:name="com.google.firebase.components:com.google.firebase.firestore.FirestoreRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+            <meta-data
+                android:name="com.google.firebase.components:com.google.firebase.ktx.FirebaseCommonLegacyRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+            <meta-data
+                android:name="com.google.firebase.components:com.google.firebase.FirebaseCommonKtxRegistrar"
+                android:value="com.google.firebase.components.ComponentRegistrar" />
+        </service>
+
         <activity
-            android:name="com.example.myapplication.EntrantProfileActivity"
-            android:exported="true" >
-        </activity>
+            android:name="com.google.android.gms.common.api.GoogleApiActivity"
+            android:exported="false"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" />
 
-        <!-- Activity for Admin Profile -->
-        <activity
-            android:name="com.example.myapplication.AdminProfileActivity"
-            android:exported="true" >
-        </activity>
-
-        <!-- Activity for Organizer Profile -->
-        <activity
-            android:name="com.example.myapplication.OrganizerProfileActivity"
-            android:exported="true" >
-        </activity>
-
-        <!-- Activity for Entrants for a selected group -->
-        <activity
-            android:name="com.example.myapplication.GroupEntrantsActivity"
-            android:exported="true" >
-        </activity>
-
-        <!-- Activity for Managing the Notification Groups -->
-        <activity
-            android:name="com.example.myapplication.ManageNotificationGroupsActivity"
-            android:exported="true" >
-        </activity>
-
+        <provider
+            android:name="com.google.firebase.provider.FirebaseInitProvider"
+            android:authorities="com.example.myapplication.firebaseinitprovider"
+            android:directBootAware="true"
+            android:exported="false"
+            android:initOrder="100" />
         <provider
             android:name="androidx.startup.InitializationProvider"
             android:authorities="com.example.myapplication.androidx-startup"
@@ -81,6 +88,10 @@
                 android:name="androidx.profileinstaller.ProfileInstallerInitializer"
                 android:value="androidx.startup" />
         </provider>
+
+        <meta-data
+            android:name="com.google.android.gms.version"
+            android:value="@integer/google_play_services_version" />
 
         <receiver
             android:name="androidx.profileinstaller.ProfileInstallReceiver"
