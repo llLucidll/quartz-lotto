@@ -24,6 +24,6 @@
         android:text="Open Organizer Profile"
         tools:layout_editor_absoluteX="109dp"
         tools:layout_editor_absoluteY="163dp" />
-    
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

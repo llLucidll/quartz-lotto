@@ -19,6 +19,7 @@ id editTextName
 id main
 id textViewEntrants
 id textViewNotifications
+layout activity_entrant_profile
 layout activity_group_entrants
 layout activity_main
 layout activity_manage_notification_groups
