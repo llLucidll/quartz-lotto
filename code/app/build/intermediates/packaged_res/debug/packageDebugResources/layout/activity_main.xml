@@ -17,9 +17,13 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/buttonEntrantProfile"
-        android:layout_width="match_parent"
+        android:id="@+id/buttonOpenProfile"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Go to Entrant Profile" />
+        android:layout_centerInParent="true"
+        android:text="Open Organizer Profile"
+        tools:layout_editor_absoluteX="109dp"
+        tools:layout_editor_absoluteY="163dp" />
+    
 
 </androidx.constraintlayout.widget.ConstraintLayout>
