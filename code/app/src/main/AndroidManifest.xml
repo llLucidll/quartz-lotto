@@ -21,6 +21,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <activity android:name=".OrganizerProfileActivity" />
+        <activity android:name=".ManageNotificationGroupsActivity" />
+        <activity android:name=".GroupEntrantsActivity" />
+
     </application>
 
 </manifest>
