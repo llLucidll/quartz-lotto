@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "840451516881",
+    "project_id": "quartz-lotto",
+    "storage_bucket": "quartz-lotto.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:840451516881:android:0e7de36787fbb74941d8f0",
+        "android_client_info": {
+          "package_name": "com.example.myapplication"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "840451516881-ps5d4ujvr6nv6f4ed86lvn3ekdht6qcg.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.myapplication",
+            "certificate_hash": "a3e07783930673a37063b8d61e3bc9e6b49d09d9"
+          }
+        },
+        {
+          "client_id": "840451516881-g0mjlq901dc3ra6ng1ccebffeq614b6r.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD5HT4aH5PMB2JogjnMiGPrImAd38Vo6jw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "840451516881-g0mjlq901dc3ra6ng1ccebffeq614b6r.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
