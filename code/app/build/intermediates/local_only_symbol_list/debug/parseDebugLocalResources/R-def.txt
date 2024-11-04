@@ -11,7 +11,11 @@ id buttonSave
 id buttonSelectedEntrants
 id buttonSendNotification
 id buttonWaitingList
+id button_save_preferences
 id checkBoxNotifications
+id checkbox_chosen_from_waiting_list
+id checkbox_not_chosen_from_waiting_list
+id checkbox_receive_notifications
 id editTextContact
 id editTextDOB
 id editTextEmail
@@ -24,6 +28,7 @@ layout activity_group_entrants
 layout activity_main
 layout activity_manage_notification_groups
 layout activity_organizer_profile
+layout notification_page
 mipmap ic_launcher
 mipmap ic_launcher_round
 string app_name
