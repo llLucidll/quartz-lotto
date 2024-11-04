@@ -3242,6 +3242,7 @@ id buttonSave
 id buttonSelectedEntrants
 id buttonSendNotification
 id buttonWaitingList
+id button_save_preferences
 id cache_measures
 id callMeasure
 id cancel_button
@@ -3256,6 +3257,9 @@ id chain2
 id chains
 id checkBoxNotifications
 id checkbox
+id checkbox_chosen_from_waiting_list
+id checkbox_not_chosen_from_waiting_list
+id checkbox_receive_notifications
 id checked
 id chronometer
 id circle_center
@@ -3846,6 +3850,7 @@ layout mtrl_search_bar
 layout mtrl_search_view
 layout notification_action
 layout notification_action_tombstone
+layout notification_page
 layout notification_template_custom_big
 layout notification_template_icon_group
 layout notification_template_part_chronometer
