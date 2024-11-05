@@ -22,6 +22,7 @@ id editTextDOB
 id editTextEmail
 id editTextName
 id main
+id textView
 id textViewEntrants
 id textViewNotifications
 layout activity_entrant_profile

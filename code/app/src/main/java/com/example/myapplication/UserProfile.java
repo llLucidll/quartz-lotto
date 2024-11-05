@@ -5,23 +5,52 @@ package com.example.myapplication;
 
 import android.content.Context;
 
+import java.util.Objects;
+
 /*
 Used for holding all the preferences, profile picture, fields information for each user profile.
  */
 public class UserProfile {
+    private int id;
+    private String name;
     private boolean receiveNotifications;
     private boolean chosenFromWaitingList;
     private boolean notChosenFromWaitingList;
+
     private UserProfile user;
     //TODO profile picture, name,email dob fields, country region selection, facility preferences?
 
     public UserProfile() {
         // Default is true
+        this.id = id;
+        this.name = name;
         this.receiveNotifications = true;
         this.chosenFromWaitingList = true;
         this.notChosenFromWaitingList = true;
     }
 
+    public int getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        UserProfile that = (UserProfile) o;
+
+        return id == that.id;
+    }
+
+    //For comparision between users and equality checks.
+    public int hashCode() {
+        return Objects.hash(id);
+    }
 
     // Getters and setters
     public boolean isReceivingNotifications() {
