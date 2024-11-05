@@ -4,6 +4,7 @@ color black
 color white
 drawable ic_launcher_background
 drawable ic_launcher_foreground
+id TEST
 id buttonCancelledEntrants
 id buttonManageNotifications
 id buttonOpenProfile
@@ -27,8 +28,8 @@ layout activity_entrant_profile
 layout activity_group_entrants
 layout activity_main
 layout activity_manage_notification_groups
+layout activity_notification
 layout activity_organizer_profile
-layout notification_page
 mipmap ic_launcher
 mipmap ic_launcher_round
 string app_name

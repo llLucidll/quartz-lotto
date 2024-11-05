@@ -3145,6 +3145,7 @@ int id SHOW_ALL 0x7f080008
 int id SHOW_PATH 0x7f080009
 int id SHOW_PROGRESS 0x7f08000a
 int id SYM 0x7f08000b
+int id TEST 0x7f08020d
 int id TOP_END 0x7f08000c
 int id TOP_START 0x7f08000d
 int id accelerate 0x7f08000e
@@ -3777,6 +3778,7 @@ int layout activity_entrant_profile 0x7f0b001c
 int layout activity_group_entrants 0x7f0b001d
 int layout activity_main 0x7f0b001e
 int layout activity_manage_notification_groups 0x7f0b001f
+int layout activity_notification 0x7f0b0071
 int layout activity_organizer_profile 0x7f0b0020
 int layout custom_dialog 0x7f0b0021
 int layout design_bottom_navigation_item 0x7f0b0022
@@ -3849,7 +3851,6 @@ int layout mtrl_search_bar 0x7f0b0064
 int layout mtrl_search_view 0x7f0b0065
 int layout notification_action 0x7f0b0066
 int layout notification_action_tombstone 0x7f0b0067
-int layout notification_page 0x7f0b0068
 int layout notification_template_custom_big 0x7f0b0069
 int layout notification_template_icon_group 0x7f0b006a
 int layout notification_template_part_chronometer 0x7f0b006b

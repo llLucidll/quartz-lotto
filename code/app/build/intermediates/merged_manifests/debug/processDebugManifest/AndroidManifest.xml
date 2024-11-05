@@ -8,6 +8,8 @@
         android:minSdkVersion="24"
         android:targetSdkVersion="34" />
 
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+
     <!-- Although the *SdkVersion is captured in gradle build files, this is required for non gradle builds -->
     <!-- <uses-sdk android:minSdkVersion="14" /> -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -44,6 +46,7 @@
         <activity android:name="com.example.myapplication.OrganizerProfileActivity" />
         <activity android:name="com.example.myapplication.ManageNotificationGroupsActivity" />
         <activity android:name="com.example.myapplication.GroupEntrantsActivity" />
+        <activity android:name="com.example.myapplication.NotificationActivity" />
 
         <service
             android:name="com.google.firebase.components.ComponentDiscoveryService"

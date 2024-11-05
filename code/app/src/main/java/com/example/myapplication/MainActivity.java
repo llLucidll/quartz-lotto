@@ -16,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
+        NotificationUtils.createNotificationChannel(this); //Creating channel for notifications
+
 
         // Adjust padding for system bars
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -28,6 +30,14 @@ public class MainActivity extends AppCompatActivity {
         Button buttonOpenProfile = findViewById(R.id.buttonOpenProfile);
         buttonOpenProfile.setOnClickListener(v -> {
             Intent intent = new Intent(MainActivity.this, OrganizerProfileActivity.class);
+            startActivity(intent);
+        });
+
+        //Test button to open NotificationActivity
+        //TODO REMOVE AND MOVE TO AYESHAS USER PROFILE PAGE
+        Button buttonNotif = findViewById(R.id.TEST);
+        buttonNotif.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
             startActivity(intent);
         });
     }
