@@ -1,8 +1,8 @@
-#Sun Nov 03 16:57:27 MST 2024
-base.0=C\:\\Users\\akhil\\Documents\\School\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
-base.1=C\:\\Users\\akhil\\Documents\\School\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
-base.2=C\:\\Users\\akhil\\Documents\\School\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\5\\classes.dex
-base.3=C\:\\Users\\akhil\\Documents\\School\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
+#Mon Nov 04 18:35:33 MST 2024
+base.0=C\:\\Users\\ayra4\\AndroidStudioProjects\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
+base.1=C\:\\Users\\ayra4\\AndroidStudioProjects\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
+base.2=C\:\\Users\\ayra4\\AndroidStudioProjects\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\5\\classes.dex
+base.3=C\:\\Users\\ayra4\\AndroidStudioProjects\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
 path.0=classes.dex
 path.1=0/classes.dex
 path.2=5/classes.dex
