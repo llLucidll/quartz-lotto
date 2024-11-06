@@ -12,17 +12,6 @@
 /captures
 .externalNativeBuild
 .cxx
-../.idea/misc.xml
-../build.gradle.kts
-../dataconnect/connector/connector.yaml
-../dataconnect/connector/mutations.gql
-../dataconnect/connector/queries.gql
-../dataconnect/dataconnect.yaml
-../dataconnect/schema/schema.gql
-../firebase-debug.log
-../firestore-debug.log
-../gradle.properties
-../gradle/libs.versions.toml
 local.properties
 /code/app/build/intermediates/
 /code/.gradle/8.7/
@@ -161,6 +150,6 @@ lint/tmp/
 # lint/reports/
 # MacOS
 .DS_Store
-# App Specific cases
+# App Specific cases 
 app/release/output.json
 .idea/codeStyles/
