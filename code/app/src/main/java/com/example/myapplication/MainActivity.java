@@ -1,10 +1,7 @@
 package com.example.myapplication;
 
-import android.content.Intent;
 import android.os.Bundle;
 import androidx.fragment.app.Fragment;
-import android.widget.Button;
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
@@ -19,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
-        //load HomeFragment by default
+        // Load HomeFragment by default
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container, new HomeFragment())
@@ -47,17 +44,6 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
             }
             return true;
-        // Adjust padding for system bars
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-
-        // Set up button to open OrganizerProfileActivity
-        Button buttonOpenProfile = findViewById(R.id.buttonOpenProfile);
-        buttonOpenProfile.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, OrganizerProfileActivity.class);
-            startActivity(intent);
         });
     }
 }
