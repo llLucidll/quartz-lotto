@@ -1,7 +1,13 @@
-code/app/build/intermediates/
-code/.gradle/8.7/
-code/.gradle/buildOutputCleanup/buildOutputCleanup.lock
-code/.gradle/file-system.probe
+/code/app/build/intermediates/
+/code/.gradle/8.7/
+/code/.gradle/buildOutputCleanup/buildOutputCleanup.lock
+/code/.gradle/file-system.probe
+
+# Ignore Gradle files
+.gradle/
+
+# Ignore build outputs
+*/build/
 
 *.iml
 .gradle
