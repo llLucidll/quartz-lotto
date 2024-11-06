@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-<<<<<<< HEAD
     <TextView
         android:id="@+id/textView"
         android:layout_width="wrap_content"
@@ -17,7 +16,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_bias="0.553" />
-=======
+
 
     <FrameLayout
         android:id="@+id/fragment_container"
@@ -32,7 +31,7 @@
         android:layout_gravity="bottom"
         app:menu="@menu/bottom_nav_menu"
         app:labelVisibilityMode="unlabeled" />
->>>>>>> 83d7e857b79857f04bf19ec0259dff4a3a7e0b7c
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
     <Button
