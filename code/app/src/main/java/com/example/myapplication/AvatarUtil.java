@@ -3,7 +3,6 @@ package com.example.myapplication;
 
 import android.graphics.*;
 import androidx.core.content.ContextCompat;
-import com.example.myapplication.R;
 
 public class AvatarUtil {
 
