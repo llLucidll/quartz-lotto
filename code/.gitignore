@@ -12,4 +12,14 @@
 /captures
 .externalNativeBuild
 .cxx
-local.properties
+../.idea/misc.xml
+../build.gradle.kts
+../dataconnect/connector/connector.yaml
+../dataconnect/connector/mutations.gql
+../dataconnect/connector/queries.gql
+../dataconnect/dataconnect.yaml
+../dataconnect/schema/schema.gql
+../firebase-debug.log
+../firestore-debug.log
+../gradle.properties
+../gradle/libs.versions.toml
