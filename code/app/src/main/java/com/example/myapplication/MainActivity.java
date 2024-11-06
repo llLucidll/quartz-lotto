@@ -12,7 +12,13 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+<<<<<<< HEAD
+        //EdgeToEdge.enable(this);
+=======
+>>>>>>> 83d7e857b79857f04bf19ec0259dff4a3a7e0b7c
         setContentView(R.layout.activity_main);
+        NotificationUtils.createNotificationChannel(this); //Creating channel for notifications
+
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -44,6 +50,14 @@ public class MainActivity extends AppCompatActivity {
                         .commit();
             }
             return true;
+        });
+
+        //Test button to open NotificationActivity
+        //TODO REMOVE AND MOVE TO AYESHAS USER PROFILE PAGE
+        Button buttonNotif = findViewById(R.id.TEST);
+        buttonNotif.setOnClickListener(v -> {
+            Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
+            startActivity(intent);
         });
     }
 }

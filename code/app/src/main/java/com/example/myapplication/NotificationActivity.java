@@ -7,18 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-//Activity which hosts the User Profile page.
-/*
-Profile page has:
-    Checkboxes for notifications
-    Profile Picture editing
-    Notification preferences.
-    fields for name, email, dob
-    country/region selection.
- */
-
-//Can alternatively move notification checkboxes into a separate page for aesthetic purposes.
-public class UserProfileActivity extends AppCompatActivity {
+public class NotificationActivity extends AppCompatActivity {
     private CheckBox receiveNotifications;
     private CheckBox chosenFromWaitingList;
     private CheckBox notChosenFromWaitingList;
@@ -27,7 +16,7 @@ public class UserProfileActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.notification_page); //TODO replace with profile_page.xml
+        setContentView(R.layout.activity_notification);
 
         receiveNotifications = findViewById(R.id.checkbox_receive_notifications);
         chosenFromWaitingList = findViewById(R.id.checkbox_chosen_from_waiting_list);
@@ -42,11 +31,11 @@ public class UserProfileActivity extends AppCompatActivity {
 
             //Updating UserProfile permissions with checkbox values on save click.
             UserProfile user = getUserProfile(); // Assume this retrieves the current user profile
-            user.setReceiveNotifications(receive);
-
-            //receive notification if not chosen/not chosen
-            user.setChosenFromWaitingList(chosen);
-            user.setNotChosenFromWaitingList(notChosen);
+            if (receive) {
+                NotificationService.optInToNotifications(this, user);
+            } else {
+                NotificationService.optOutOfNotifications(user);
+            }
 
             // Save Confirmation toast.
             Toast.makeText(this, "Preferences saved", Toast.LENGTH_SHORT).show();
@@ -59,3 +48,4 @@ public class UserProfileActivity extends AppCompatActivity {
         return new UserProfile();
     }
 }
+
