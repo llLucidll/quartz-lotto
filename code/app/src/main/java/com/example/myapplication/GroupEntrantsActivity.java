@@ -17,6 +17,9 @@ public class GroupEntrantsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_entrants);
 
+        // Ensure the notification channel is created
+        NotificationUtils.createNotificationChannel(this);
+
         groupType = getIntent().getStringExtra("groupType");
 
         textViewEntrants = findViewById(R.id.textViewEntrants);
@@ -38,6 +41,32 @@ public class GroupEntrantsActivity extends AppCompatActivity {
     }
 
     private void sendNotificationToGroup() {
+        // Sample UserProfile
+        UserProfile sampleUser = new UserProfile();
+        sampleUser.setReceiveNotifications(true); // Assume the user opted to receive notifications
+
+        // Notification message based on groupType
+        String title = "Notification for " + groupType + " entrants";
+        String description;
+
+        switch (groupType) {
+            case "waiting":
+                description = "Your status is: Waiting List";
+                break;
+            case "selected":
+                description = "Congratulations! You've been selected.";
+                break;
+            case "cancelled":
+                description = "Unfortunately, your status is: Cancelled";
+                break;
+            default:
+                description = "Status update for your group.";
+                break;
+        }
+
+        // Send notification using NotificationService
+        NotificationService.sendNotification(sampleUser, this, title, description);
+
         Toast.makeText(this, "Notification sent to " + groupType + " entrants", Toast.LENGTH_SHORT).show();
     }
 }

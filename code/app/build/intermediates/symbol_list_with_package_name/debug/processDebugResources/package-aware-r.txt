@@ -3671,6 +3671,7 @@ id phone_label
 id pin
 id position
 id postLayout
+id preferences_container
 id preferences_label
 id pressed
 id previewView
@@ -3789,6 +3790,7 @@ id textSpacerNoButtons
 id textSpacerNoTitle
 id textStart
 id textTop
+id textView
 id textViewEntrants
 id textViewNotifications
 id text_input_end_icon
@@ -3980,6 +3982,7 @@ layout activity_entrant_profile
 layout activity_group_entrants
 layout activity_main
 layout activity_manage_notification_groups
+layout activity_notification
 layout activity_organizer_profile
 layout activity_waitinglist
 layout custom_dialog
@@ -4058,7 +4061,6 @@ layout mtrl_search_bar
 layout mtrl_search_view
 layout notification_action
 layout notification_action_tombstone
-layout notification_page
 layout notification_template_custom_big
 layout notification_template_icon_group
 layout notification_template_part_chronometer
