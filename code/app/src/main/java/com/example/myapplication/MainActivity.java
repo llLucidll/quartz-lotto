@@ -1,6 +1,9 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
+
 import androidx.fragment.app.Fragment;
 import androidx.appcompat.app.AppCompatActivity;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -12,10 +15,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-<<<<<<< HEAD
-        //EdgeToEdge.enable(this);
-=======
->>>>>>> 83d7e857b79857f04bf19ec0259dff4a3a7e0b7c
+
         setContentView(R.layout.activity_main);
         NotificationUtils.createNotificationChannel(this); //Creating channel for notifications
 
@@ -39,8 +39,10 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new QRScannerFragment(); // Navigate to QRScannerFragment
                     break;
                 case R.id.nav_profile:
-                    selectedFragment = new EditProfileFragment();
-                    break;
+                    // Start OrgProfileActivity instead of navigating to a Fragment
+                    Intent intent = new Intent(this, OrganizerProfileActivity.class);
+                    startActivity(intent);
+                    return true;
             }
 
             if (selectedFragment != null) {
@@ -52,12 +54,5 @@ public class MainActivity extends AppCompatActivity {
             return true;
         });
 
-        //Test button to open NotificationActivity
-        //TODO REMOVE AND MOVE TO AYESHAS USER PROFILE PAGE
-        Button buttonNotif = findViewById(R.id.TEST);
-        buttonNotif.setOnClickListener(v -> {
-            Intent intent = new Intent(MainActivity.this, NotificationActivity.class);
-            startActivity(intent);
-        });
     }
 }

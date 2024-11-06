@@ -74,6 +74,7 @@ id notifications_label
 id notifications_switch
 id phone_field
 id phone_label
+id preferences_container
 id preferences_label
 id previewView
 id profile_image
@@ -91,6 +92,7 @@ id tabAttendees
 id tabDetails
 id tabLocations
 id tabWaitlist
+id textView
 id textViewEntrants
 id textViewNotifications
 id waitlistHeader
@@ -101,6 +103,7 @@ layout activity_entrant_profile
 layout activity_group_entrants
 layout activity_main
 layout activity_manage_notification_groups
+layout activity_notification
 layout activity_organizer_profile
 layout activity_waitinglist
 layout fragment_edit_profile
@@ -108,7 +111,6 @@ layout fragment_entrants_map
 layout fragment_home
 layout fragment_qr_scanner
 layout item_attendee
-layout notification_page
 menu bottom_nav_menu
 mipmap ic_launcher
 mipmap ic_launcher_round

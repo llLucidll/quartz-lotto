@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-42:12
-INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-42:12
-INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-42:12
-INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-42:12
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-44:12
+INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-44:12
+INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-44:12
+INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-44:12
 MERGED from [androidx.navigation:navigation-common:2.8.3] C:\Users\gfran\.gradle\caches\transforms-4\55a58994dfa7ad0eeb8476540b641fb6\transformed\navigation-common-2.8.3\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-runtime:2.8.3] C:\Users\gfran\.gradle\caches\transforms-4\778b85e3b16799d5c3e879704bf67fd3\transformed\navigation-runtime-2.8.3\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-fragment:2.8.3] C:\Users\gfran\.gradle\caches\transforms-4\a2292275ad2320586e3c932062e81faf\transformed\navigation-fragment-2.8.3\AndroidManifest.xml:17:1-22:12
@@ -103,14 +103,18 @@ MERGED from [com.google.android.odml:image:1.0.0-beta1] C:\Users\gfran\.gradle\c
 		INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml
 	xmlns:android
 		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.POST_NOTIFICATIONS
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:5:5-77
+	android:name
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:5:22-74
 uses-permission#android.permission.CAMERA
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:5:5-65
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:6:5-65
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\gfran\.gradle\caches\transforms-4\6abb20bd6ca24fd3e4e5c5e483e914df\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:22:5-65
 MERGED from [com.journeyapps:zxing-android-embedded:4.3.0] C:\Users\gfran\.gradle\caches\transforms-4\6abb20bd6ca24fd3e4e5c5e483e914df\transformed\zxing-android-embedded-4.3.0\AndroidManifest.xml:22:5-65
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:5:22-62
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:6:22-62
 uses-permission#android.permission.INTERNET
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:6:5-67
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:7:5-67
 MERGED from [com.google.android.gms:play-services-maps:18.1.0] C:\Users\gfran\.gradle\caches\transforms-4\7e0a394df1e76e804ba6ce83b09cb067\transformed\play-services-maps-18.1.0\AndroidManifest.xml:24:5-67
 MERGED from [com.google.android.gms:play-services-maps:18.1.0] C:\Users\gfran\.gradle\caches\transforms-4\7e0a394df1e76e804ba6ce83b09cb067\transformed\play-services-maps-18.1.0\AndroidManifest.xml:24:5-67
 MERGED from [com.google.firebase:firebase-firestore:25.1.1] C:\Users\gfran\.gradle\caches\transforms-4\b0f27e712df1388f693551bce6606a3b\transformed\firebase-firestore-25.1.1\AndroidManifest.xml:11:5-67
@@ -120,24 +124,24 @@ MERGED from [com.google.firebase:firebase-storage:21.0.1] C:\Users\gfran\.gradle
 MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\gfran\.gradle\caches\transforms-4\9708abf9c80379bdcdb93e929e95a6cc\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:26:5-67
 MERGED from [com.google.android.datatransport:transport-backend-cct:2.3.3] C:\Users\gfran\.gradle\caches\transforms-4\9708abf9c80379bdcdb93e929e95a6cc\transformed\transport-backend-cct-2.3.3\AndroidManifest.xml:26:5-67
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:6:22-64
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:7:22-64
 uses-feature#android.hardware.camera.any
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:7:5-88
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:8:5-88
 	android:required
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:7:62-85
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:8:62-85
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:7:19-61
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:8:19-61
 uses-permission#android.permission.ACCESS_FINE_LOCATION
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:8:5-79
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:9:5-79
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:8:22-76
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:9:22-76
 uses-permission#android.permission.ACCESS_COARSE_LOCATION
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:9:5-81
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:10:5-81
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:9:22-78
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:10:22-78
 application
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:11:5-40:19
-INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:11:5-40:19
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:12:5-42:19
+INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:12:5-42:19
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\gfran\.gradle\caches\transforms-4\1c5ca9bafb51808c25e5d618704c05df\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\gfran\.gradle\caches\transforms-4\1c5ca9bafb51808c25e5d618704c05df\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
 MERGED from [androidx.constraintlayout:constraintlayout:2.1.4] C:\Users\gfran\.gradle\caches\transforms-4\5446feb03b2e22c159cadea5027b0569\transformed\constraintlayout-2.1.4\AndroidManifest.xml:9:5-20
@@ -209,57 +213,61 @@ MERGED from [com.google.android.odml:image:1.0.0-beta1] C:\Users\gfran\.gradle\c
 	android:appComponentFactory
 		ADDED from [androidx.core:core:1.13.0] C:\Users\gfran\.gradle\caches\transforms-4\cca1fed428830b7a1d346ee46606b708\transformed\core-1.13.0\AndroidManifest.xml:28:18-86
 	android:supportsRtl
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:18:9-35
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:19:9-35
 	android:label
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:16:9-41
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:17:9-41
 	android:fullBackupContent
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:14:9-54
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:15:9-54
 	android:roundIcon
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:17:9-54
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:18:9-54
 	tools:targetApi
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:20:9-29
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:21:9-29
 	android:icon
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:15:9-43
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:16:9-43
 	android:allowBackup
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:12:9-35
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:13:9-35
 	android:theme
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:19:9-51
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:20:9-51
 	android:dataExtractionRules
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:13:9-65
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:14:9-65
 meta-data#com.google.android.geo.API_KEY
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:22:9-24:55
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:23:9-25:55
 	android:value
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:24:13-53
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:25:13-53
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:23:13-58
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:24:13-58
 activity#com.example.myapplication.MainActivity
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:27:9-34:20
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:28:9-35:20
 	android:exported
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:29:13-36
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:30:13-36
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:28:13-41
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:29:13-41
 intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:30:13-33:29
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:31:13-34:29
 action#android.intent.action.MAIN
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:31:17-69
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:32:17-69
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:31:25-66
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:32:25-66
 category#android.intent.category.LAUNCHER
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:32:17-77
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:33:17-77
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:32:27-74
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:33:27-74
 activity#com.example.myapplication.OrganizerProfileActivity
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:36:9-62
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:37:9-62
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:36:19-59
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:37:19-59
 activity#com.example.myapplication.ManageNotificationGroupsActivity
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:37:9-70
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:38:9-70
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:37:19-67
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:38:19-67
 activity#com.example.myapplication.GroupEntrantsActivity
-ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:38:9-59
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:39:9-59
 	android:name
-		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:38:19-56
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:39:19-56
+activity#com.example.myapplication.NotificationActivity
+ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:40:9-58
+	android:name
+		ADDED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml:40:19-55
 uses-sdk
 INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\gfran\Desktop\Fall 2024\CMPUT301_PROJ\quartz-lotto\code\app\src\main\AndroidManifest.xml
