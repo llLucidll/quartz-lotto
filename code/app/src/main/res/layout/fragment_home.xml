@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:padding="16dp">
+
+
+    <!-- Home Page Title -->
+    <TextView
+        android:id="@+id/edit_profile_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="32dp"
+        android:text="Home Page"
+        android:textSize="28sp"
+        android:textColor="#FFFFFF"
+        android:textStyle="bold" />
+
+    <!-- Selected Events Section -->
+    <TextView
+        android:id="@+id/selected_events_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/edit_profile_title"
+        android:layout_marginTop="24dp"
+        android:text="Selected Events"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <!-- Waitlist Section -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/selected_events_list"
+        android:layout_width="370dp"
+        android:layout_height="178dp"
+        android:layout_below="@id/selected_events_label"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/rounded_background"
+        android:padding="8dp" />
+
+    <TextView
+        android:id="@+id/waitlist_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/selected_events_list"
+        android:layout_marginTop="24dp"
+        android:text="Waitlisted Events"
+        android:textColor="#FFFFFF"
+        android:textSize="20sp"
+        android:textStyle="bold" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/waitlist_events_list"
+        android:layout_width="373dp"
+        android:layout_height="160dp"
+        android:layout_below="@id/waitlist_label"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/rounded_background"
+        android:padding="8dp" />
+
+    <!-- Bottom Navigation -->
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="13dp"
+        android:backgroundTint="#FFFFFF"
+        app:itemIconTint="@color/nav_icon_color"
+        app:itemTextColor="@color/nav_text_color"
+        app:labelVisibilityMode="unlabeled"
+        app:menu="@menu/bottom_nav_menu" />
+
+</RelativeLayout>
