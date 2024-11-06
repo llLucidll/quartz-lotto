@@ -32,7 +32,7 @@ public class UserProfile {
         return chosenFromWaitingList;
     }
 
-    public void setChosenFromWaitingList(boolean chosenFromWaitingList) {
+    public void setNotifyChosenFromWaitingList(boolean chosenFromWaitingList) {
         this.chosenFromWaitingList = chosenFromWaitingList;
     }
 
@@ -40,7 +40,7 @@ public class UserProfile {
         return notChosenFromWaitingList;
     }
 
-    public void setNotChosenFromWaitingList(boolean notChosenFromWaitingList) {
+    public void setNotifyNotChosenFromWaitingList(boolean notChosenFromWaitingList) {
         this.notChosenFromWaitingList = notChosenFromWaitingList;
     }
 }
