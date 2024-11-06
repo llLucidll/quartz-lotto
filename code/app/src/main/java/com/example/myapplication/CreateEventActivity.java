@@ -1,22 +1,32 @@
 package com.example.myapplication;
 
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-public class MainActivity extends AppCompatActivity {
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
+
+import java.util.Calendar;
+
+public class CreateEventActivity extends AppCompatActivity {
     private EditText eventNameEditText, dateEditText, timeEditText, descriptionEditText, maxAttendeesEditText, maxWaitlistEditText;
     private CheckBox geolocationCheckBox;
     private Button saveButton, generateQRButton;
+    private ImageView qrCodeImageView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
         geolocationCheckBox = findViewById(R.id.geolocationCheckBox);
         saveButton = findViewById(R.id.saveButton);
         generateQRButton = findViewById(R.id.generateQRButton);
+        qrCodeImageView = findViewById(R.id.qrCodeImageView);
 
         // Generate QR Code button action
         generateQRButton.setOnClickListener(view -> generateQRCode());
@@ -40,11 +51,24 @@ public class MainActivity extends AppCompatActivity {
         // Save button action
         saveButton.setOnClickListener(view -> saveEvent());
     }
-
     private void generateQRCode() {
-        // Stub for generating QR code; assume qrCodeLink generation logic here
-        String qrCodeLink = "https://example.com/qr/" + eventNameEditText.getText().toString();
-        Toast.makeText(this, "QR Code Generated", Toast.LENGTH_SHORT).show();
+        String eventName = eventNameEditText.getText().toString();
+        if (eventName.isEmpty()) {
+            Toast.makeText(this, "Event name is required to generate a QR code", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        // Generate a unique link based on the event name
+        String qrCodeLink = "https://example.com/event/" + eventName.replace(" ", "_"); // Replace spaces with underscores for URL
+
+        try {
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            Bitmap bitmap = barcodeEncoder.encodeBitmap(qrCodeLink, BarcodeFormat.QR_CODE, 300, 300);
+            qrCodeImageView.setImageBitmap(bitmap);
+        } catch (WriterException e) {
+            e.printStackTrace();
+            Toast.makeText(this, "Error generating QR code", Toast.LENGTH_SHORT).show();
+        }
     }
 
     private void saveEvent() {
@@ -67,11 +91,5 @@ public class MainActivity extends AppCompatActivity {
         finish();
     }
 
-//    @Override
-//    protected void onCreate(Bundle savedInstanceState) {
-//        super.onCreate(savedInstanceState);
-//        EdgeToEdge.enable(this);
-//        setContentView(R.layout.org_home_page);
-//
-//    }
 }
+
