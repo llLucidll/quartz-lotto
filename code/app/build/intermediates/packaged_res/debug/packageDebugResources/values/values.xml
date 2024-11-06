@@ -2,6 +2,7 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <item name="checkbox_chosen_from_waiting_list" type="id"/>
     <string name="app_name">My Application</string>
     <string name="default_web_client_id" translatable="false">840451516881-g0mjlq901dc3ra6ng1ccebffeq614b6r.apps.googleusercontent.com</string>
     <string name="gcm_defaultSenderId" translatable="false">840451516881</string>
