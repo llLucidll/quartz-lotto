@@ -93,7 +93,7 @@ public class Event {
     public void setQrCodeLink(String qrCodeLink) {
         this.qrCodeLink = qrCodeLink;
     }
-    
+
     public boolean addWaitingUser(UserProfile user, int waitingCapacity) {
         return waitingList.addWaiter(user, waitingCapacity);
     }
