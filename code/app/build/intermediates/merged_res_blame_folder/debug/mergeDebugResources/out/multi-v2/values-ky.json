@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.myapplication.app-mergeDebugResources-53:/values-ky/values-ky.xml",
+            "outputFile": "com.example.myapplication.app-mergeDebugResources-54:/values-ky/values-ky.xml",
             "map": [
                 {
                     "source": "/Users/ayesha/.gradle/caches/transforms-4/feaa3154db317a137a1e89c79e156f72/transformed/play-services-base-18.1.0/res/values-ky/values.xml",
