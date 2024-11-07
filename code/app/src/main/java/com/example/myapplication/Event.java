@@ -1,19 +1,22 @@
 package com.example.myapplication;
 import java.util.Date;
 import java.util.List;
+import android.content.Context;
+
 
 
 public class Event {
     private String eventName;
-    private Date date;
+    private String date;
     private String time;
     private String description;
     private int maxAttendees;
     private Integer maxWaitlist; // Nullable
     private boolean geolocationEnabled;
     private String qrCodeLink;
+    private WaitingList waitingList;
 
-    public Event(String eventName, Date date, String time, String description, int maxAttendees, Integer maxWaitlist, boolean geolocationEnabled, String qrCodeLink) {
+    public Event(String eventName, String date, String time, String description, int maxAttendees, Integer maxWaitlist, boolean geolocationEnabled, String qrCodeLink) {
         this.eventName = eventName;
         this.date = date;
         this.time = time;
@@ -22,6 +25,7 @@ public class Event {
         this.maxWaitlist = maxWaitlist;
         this.geolocationEnabled = geolocationEnabled;
         this.qrCodeLink = qrCodeLink;
+        this.waitingList = new WaitingList();
     }
 
     public String getEventName() {
@@ -32,11 +36,11 @@ public class Event {
         this.eventName = eventName;
     }
 
-    public Date getDate() {
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 

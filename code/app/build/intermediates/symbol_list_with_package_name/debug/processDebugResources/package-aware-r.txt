@@ -3174,6 +3174,7 @@ drawable ic_mtrl_checked_circle
 drawable ic_mtrl_chip_checked_black
 drawable ic_mtrl_chip_checked_circle
 drawable ic_mtrl_chip_close_circle
+drawable ic_notif
 drawable ic_notifications
 drawable ic_profile
 drawable ic_search_black_24
@@ -3414,11 +3415,13 @@ id counterclockwise
 id country_label
 id country_spinner
 id cradle
+id create_event_button
 id currentState
 id custom
 id customPanel
 id cut
 id dark
+id dateEditText
 id date_picker_actions
 id decelerate
 id decelerateAndComplete
@@ -3426,6 +3429,7 @@ id decor_content_parent
 id default_activity_button
 id deltaRelative
 id dependency_ordering
+id descriptionEditText
 id design_bottom_sheet
 id design_menu_item_action_area
 id design_menu_item_action_area_stub
@@ -3473,6 +3477,8 @@ id endToStart
 id enterAlways
 id enterAlwaysCollapsed
 id escape
+id eventNameEditText
+id event_list
 id exitUntilCollapsed
 id expand_activities_button
 id expanded_menu
@@ -3498,6 +3504,8 @@ id fragment_container
 id fragment_container_view_tag
 id frost
 id fullscreen_header
+id generateQRButton
+id geolocationCheckBox
 id ghost_view
 id ghost_view_holder
 id glide_custom_view_target_tag
@@ -3541,6 +3549,8 @@ id light
 id line1
 id line3
 id linear
+id linearLayout
+id linearLayout2
 id listMode
 id list_item
 id locale
@@ -3572,6 +3582,8 @@ id material_timepicker_ok_button
 id material_timepicker_view
 id material_value_index
 id matrix
+id maxAttendeesEditText
+id maxWaitlistEditText
 id menu
 id message
 id middle
@@ -3680,6 +3692,7 @@ id profile_image
 id profile_image_container
 id progress_circular
 id progress_horizontal
+id qrCodeImageView
 id qr_scanner_fragment
 id radio
 id ratio
@@ -3699,6 +3712,7 @@ id rounded
 id row_index_key
 id rtl
 id satellite
+id saveButton
 id save_changes_button
 id save_non_transition_alpha
 id save_overlay_view
@@ -3804,6 +3818,7 @@ id textinput_placeholder
 id textinput_prefix_text
 id textinput_suffix_text
 id time
+id timeEditText
 id title
 id titleDividerNoCustom
 id title_template
@@ -3826,6 +3841,7 @@ id unchecked
 id uniform
 id unlabeled
 id up
+id uploadPosterButton
 id useLogo
 id vertical_only
 id view_offset_helper
@@ -3984,6 +4000,7 @@ layout activity_manage_notification_groups
 layout activity_notification
 layout activity_organizer_profile
 layout activity_waitinglist
+layout create_event
 layout custom_dialog
 layout design_bottom_navigation_item
 layout design_bottom_sheet_dialog
@@ -4064,6 +4081,7 @@ layout notification_template_custom_big
 layout notification_template_icon_group
 layout notification_template_part_chronometer
 layout notification_template_part_time
+layout org_home_page
 layout select_dialog_item_material
 layout select_dialog_multichoice_material
 layout select_dialog_singlechoice_material
@@ -4071,6 +4089,7 @@ layout support_simple_spinner_dropdown_item
 layout zxing_barcode_scanner
 layout zxing_capture
 menu bottom_nav_menu
+menu bottom_navigation_menu
 mipmap ic_launcher
 mipmap ic_launcher_round
 navigation menu
@@ -4143,16 +4162,22 @@ string common_google_play_services_wear_update_text
 string common_open_on_phone
 string common_signin_button_text
 string common_signin_button_text_long
+string create_event
+string create_event_title
 string default_web_client_id
 string define_zxingandroidembedded
+string description
 string dest_title
+string enable_geolocation
 string error_a11y_label
 string error_icon_content_description
+string event_name
 string exposed_dropdown_menu_content_description
 string fab_transformation_scrim_behavior
 string fab_transformation_sheet_behavior
 string fcm_fallback_notification_channel_label
 string gcm_defaultSenderId
+string generate_qr_code
 string google_api_key
 string google_app_id
 string google_crash_reporting_api_key
@@ -4207,6 +4232,8 @@ string material_timepicker_minute
 string material_timepicker_pm
 string material_timepicker_select_time
 string material_timepicker_text_input_mode_description
+string max_attendees
+string max_on_waitlist
 string mtrl_badge_numberless_content_description
 string mtrl_checkbox_button_icon_path_checked
 string mtrl_checkbox_button_icon_path_group_name
@@ -4269,6 +4296,7 @@ string mtrl_switch_track_decoration_path
 string mtrl_switch_track_path
 string mtrl_timepicker_cancel
 string mtrl_timepicker_confirm
+string my_events
 string nav_app_bar_navigate_up_description
 string nav_app_bar_open_drawer_description
 string open_gallery
@@ -4278,14 +4306,18 @@ string path_password_eye_mask_strike_through
 string path_password_eye_mask_visible
 string path_password_strike_through
 string project_id
+string save_changes
 string search_menu_title
 string searchbar_scrolling_view_behavior
 string searchview_clear_text_content_description
 string searchview_navigation_content_description
+string select_date
+string select_time
 string side_sheet_accessibility_pane_title
 string side_sheet_behavior
 string status_bar_notification_info_overflow
 string toggle_flash
+string upload_poster
 string zxing_app_name
 string zxing_button_ok
 string zxing_msg_camera_framework_bug
