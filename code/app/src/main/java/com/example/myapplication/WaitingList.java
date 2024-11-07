@@ -20,6 +20,7 @@ public class WaitingList {
         this.random = new Random();
 
     }
+
     /*
     Adds a user to the waiting list.
      */
