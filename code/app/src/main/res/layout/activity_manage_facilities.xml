@@ -1,0 +1,40 @@
+<!-- File: res/layout/activity_manage_facilities.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="16dp"
+    android:background="@drawable/gradient_background">
+
+    <!-- Header -->
+    <TextView
+        android:id="@+id/manage_facilities_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="My Facilities"
+        android:textSize="24sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:layout_marginTop="16dp"/>
+
+    <!-- Add Facility Button -->
+    <Button
+        android:id="@+id/add_facility_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add Facility"
+        android:backgroundTint="#B76E79"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        android:layout_marginBottom="16dp" />
+
+    <!-- Facilities RecyclerView -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/facilities_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+</LinearLayout>

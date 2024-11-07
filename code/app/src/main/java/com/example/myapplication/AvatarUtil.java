@@ -1,74 +1,51 @@
-// AvatarUtil.java
+// File: AvatarUtil.java
 package com.example.myapplication;
 
-import android.graphics.*;
-import androidx.core.content.ContextCompat;
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
+
+import java.util.Locale;
 
 public class AvatarUtil {
 
-    /**
-     * generates a circular bitmap with a colored background and the first letter of the users name
-     *
-     * @param firstLetter The first letter of the user's name
-     * @param size        The size of the avatar in pixels
-     * @param context     The context to access resources
-     * @return A bitmap representing the avatar
-     */
-    public static Bitmap generateAvatar(String firstLetter, int size, android.content.Context context) {
-        // Determine background color based on the first letter
-        int backgroundColor = getColorForLetter(firstLetter.charAt(0), context);
-
-        // create a bitmap
+    public static Bitmap generateAvatar(String letter, int size, Context context) {
         Bitmap bitmap = Bitmap.createBitmap(size, size, Bitmap.Config.ARGB_8888);
         Canvas canvas = new Canvas(bitmap);
-
-        // draw the colored circle
+        //color stuff
         Paint paint = new Paint();
         paint.setAntiAlias(true);
-        paint.setColor(backgroundColor);
+        paint.setColor(getColorForLetter(letter));
         canvas.drawCircle(size / 2f, size / 2f, size / 2f, paint);
-
-        // draw the letter
+        //letter stuff
         Paint textPaint = new Paint();
-        textPaint.setAntiAlias(true);
-        textPaint.setColor(Color.WHITE); // text color
+        textPaint.setColor(Color.WHITE);
         textPaint.setTextSize(size / 2f);
+        textPaint.setAntiAlias(true);
         textPaint.setTextAlign(Paint.Align.CENTER);
+        //vertical center
+        Paint.FontMetrics fontMetrics = textPaint.getFontMetrics();
+        float y = size / 2f - (fontMetrics.ascent + fontMetrics.descent) / 2f;
 
-        // calculating vertical center for the text
-        Rect textBounds = new Rect();
-        textPaint.getTextBounds(firstLetter, 0, firstLetter.length(), textBounds);
-        float textHeight = textBounds.height();
-        float x = size / 2f;
-        float y = size / 2f + textHeight / 2f;
-
-        canvas.drawText(firstLetter, x, y, textPaint);
+        canvas.drawText(letter, size / 2f, y, textPaint);
 
         return bitmap;
     }
 
     /**
-     * Determines a background color based on the provided letter
+     * Generates a color based on the input letter.
      *
-     * @param letter  The letter to base the color on
-     * @param context The context to access resources
-     * @return An integer representing the color
+     * @param letter The input letter.
+     * @return An integer color.
      */
-    private static int getColorForLetter(char letter, android.content.Context context) {
-        //set of colors
-        int[] colors = {
-                ContextCompat.getColor(context, R.color.avatar_color_1),
-                ContextCompat.getColor(context, R.color.avatar_color_2),
-                ContextCompat.getColor(context, R.color.avatar_color_3),
-                ContextCompat.getColor(context, R.color.avatar_color_4),
-                ContextCompat.getColor(context, R.color.avatar_color_5),
-                ContextCompat.getColor(context, R.color.avatar_color_6)
-        };
-
-        //simple hash to assign a color based on the letter
-        int index = (Character.toLowerCase(letter) - 'a') % colors.length;
-        if (index < 0) index = 0; //non-letter characters
-
-        return colors[index];
+    private static int getColorForLetter(String letter) {
+        // hash to get a color based on the letter
+        int hash = letter.toUpperCase(Locale.US).charAt(0);
+        int r = (hash * 123) % 256;
+        int g = (hash * 456) % 256;
+        int b = (hash * 789) % 256;
+        return Color.rgb(r, g, b);
     }
 }

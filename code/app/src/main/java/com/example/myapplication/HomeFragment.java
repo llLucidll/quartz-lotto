@@ -24,9 +24,9 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 // next fragment will be aditi's thing
-              //  Fragment nextFragment = new NextFragment(); // destination fragment
+                //  Fragment nextFragment = new NextFragment(); // destination fragment
                 FragmentTransaction transaction = getParentFragmentManager().beginTransaction();
-              //  transaction.replace(R.id.fragment_container, nextFragment);
+                //  transaction.replace(R.id.fragment_container, nextFragment);
                 transaction.addToBackStack(null); //adds the transaction to the back stack
                 transaction.commit();
             }
