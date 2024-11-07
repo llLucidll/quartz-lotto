@@ -1,6 +1,8 @@
 package com.example.myapplication;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+
 import android.content.Context;
 
 
@@ -108,8 +110,8 @@ public class Event {
         return waitingList.sampleAttendees(selectedCapacity);
     }
 
-    public void notifySampledAttendees(List<UserProfile> sampledAttendees, Context context, NotificationService notificationService) {
-        for (UserProfile user: sampledAttendees) {
+    public void notifySampledAttendees(List<Map<String, Object>> sampledAttendees, Context context, NotificationService notificationService) {
+        for (Map<String, Object> user: sampledAttendees) {
             String title = "Congratulations!";
             String description = "You have been selected from the waiting list";
             NotificationService.sendNotification(user, context, title, description);

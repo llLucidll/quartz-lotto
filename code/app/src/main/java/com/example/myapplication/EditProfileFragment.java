@@ -410,6 +410,10 @@ public class EditProfileFragment extends Fragment {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
                     // navigateBack();
+
+                    if (notificationsEnabled) {
+                        NotificationService.sendNotification(userProfile, getContext(), "Success", "You have opted into notifications");
+                    }
                 })
                 .addOnFailureListener(e -> {
                     e.printStackTrace();

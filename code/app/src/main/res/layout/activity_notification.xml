@@ -13,20 +13,6 @@
         android:text="Receive All Notifications"
         android:checked="true" />
 
-    <CheckBox
-        android:id="@+id/checkbox_chosen_from_waiting_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Receive Notifications When Chosen from Waiting List"
-        android:checked="true" />
-
-    <CheckBox
-        android:id="@+id/checkbox_not_chosen_from_waiting_list"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Receive Notifications If Not Chosen from Waiting List"
-        android:checked="true" />
-
     <Button
         android:id="@+id/button_save_preferences"
         android:layout_width="wrap_content"

@@ -1,31 +1,29 @@
 package com.example.myapplication;
 
-import android.app.DatePickerDialog;
-import android.app.TimePickerDialog;
+
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.net.Uri;
+
 import android.os.Bundle;
-import android.view.View;
+
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-import java.util.Calendar;
+
 
 public class CreateEventActivity extends AppCompatActivity {
     private EditText eventNameEditText, dateEditText, timeEditText, descriptionEditText, maxAttendeesEditText, maxWaitlistEditText;
     private CheckBox geolocationCheckBox;
-    private Button saveButton, generateQRButton;
     private ImageView qrCodeImageView;
 
     @Override
@@ -41,8 +39,8 @@ public class CreateEventActivity extends AppCompatActivity {
         maxAttendeesEditText = findViewById(R.id.maxAttendeesEditText);
         maxWaitlistEditText = findViewById(R.id.maxWaitlistEditText);
         geolocationCheckBox = findViewById(R.id.geolocationCheckBox);
-        saveButton = findViewById(R.id.saveButton);
-        generateQRButton = findViewById(R.id.generateQRButton);
+        Button saveButton = findViewById(R.id.saveButton);
+        Button generateQRButton = findViewById(R.id.generateQRButton);
         qrCodeImageView = findViewById(R.id.qrCodeImageView);
 
         // Generate QR Code button action

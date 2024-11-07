@@ -3388,7 +3388,6 @@ id chains
 id checkBoxNotifications
 id checkbox
 id checkbox_chosen_from_waiting_list
-id checkbox_not_chosen_from_waiting_list
 id checkbox_receive_notifications
 id checked
 id chronometer

@@ -46,7 +46,6 @@
         <activity android:name=".OrganizerProfileActivity" />
         <activity android:name=".ManageNotificationGroupsActivity" />
         <activity android:name=".GroupEntrantsActivity" />
-        <activity android:name=".NotificationActivity" />
 
     </application>
 
