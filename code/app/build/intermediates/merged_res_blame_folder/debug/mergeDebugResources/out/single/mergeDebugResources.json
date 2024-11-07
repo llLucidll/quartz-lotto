@@ -1,90 +1,399 @@
 [
     {
-        "merged": "com.example.myapplication.app-debug-35:/layout_notification_page.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/layout/notification_page.xml"
+<<<<<<< HEAD
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_launcher_background.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_launcher_background.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/layout_activity_main.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/layout/activity_main.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_gallery.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_gallery.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/xml_backup_rules.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/xml/backup_rules.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_home.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_home.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/layout_activity_organizer_profile.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/layout/activity_organizer_profile.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-anydpi-v26/ic_launcher_round.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-xxxhdpi_ic_launcher.webp.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-xxxhdpi/ic_launcher.webp"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_sample_event_poster.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/sample_event_poster.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-xhdpi_ic_launcher.webp.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-xhdpi/ic_launcher.webp"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_activity_main.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/activity_main.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-xxhdpi_ic_launcher.webp.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-xxhdpi/ic_launcher.webp"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_activity_manage_notification_groups.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/activity_manage_notification_groups.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/drawable_ic_launcher_foreground.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/drawable/ic_launcher_foreground.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_profile.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_profile.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-xhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-xhdpi/ic_launcher_round.webp"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-mdpi/ic_launcher.webp"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/drawable_ic_launcher_background.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/drawable/ic_launcher_background.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_fragment_home.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/fragment_home.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-anydpi-v26_ic_launcher.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-anydpi-v26/ic_launcher.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_rounded_background.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/rounded_background.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-xxhdpi/ic_launcher_round.webp"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_gradient_background.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/gradient_background.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/layout_activity_manage_notification_groups.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/layout/activity_manage_notification_groups.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_back.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_back.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-xxxhdpi/ic_launcher_round.webp"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_activity_organizer_profile.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/activity_organizer_profile.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-mdpi_ic_launcher.webp.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-mdpi/ic_launcher.webp"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_launcher_foreground.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-mdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-mdpi/ic_launcher_round.webp"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_flash_on.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_flash_on.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/xml_data_extraction_rules.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/xml/data_extraction_rules.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-xxxhdpi/ic_launcher_round.webp"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/layout_activity_entrant_profile.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/layout/activity_entrant_profile.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_activity_notification.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/activity_notification.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-anydpi-v26/ic_launcher_round.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_fragment_qr_scanner.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/fragment_qr_scanner.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-hdpi_ic_launcher_round.webp.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-hdpi/ic_launcher_round.webp"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_scanner_border.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/scanner_border.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/layout_activity_group_entrants.xml.flat",
-        "source": "com.example.myapplication.app-main-37:/layout/activity_group_entrants.xml"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_flash_toggle_button.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/flash_toggle_button.xml"
     },
     {
-        "merged": "com.example.myapplication.app-debug-35:/mipmap-hdpi_ic_launcher.webp.flat",
-        "source": "com.example.myapplication.app-main-37:/mipmap-hdpi/ic_launcher.webp"
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_calendar.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_calendar.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_activity_entrant_profile.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/activity_entrant_profile.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/xml_backup_rules.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/navigation_menu.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/navigation/menu.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/menu_bottom_nav_menu.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/menu/bottom_nav_menu.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_circle.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_circle.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_activity_waitinglist.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/activity_waitinglist.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_activity_attending.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/activity_attending.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_fragment_edit_profile.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/fragment_edit_profile.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_item_attendee.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/item_attendee.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_flash_off.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_flash_off.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_notifications.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_notifications.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-55:/layout_fragment_home.xml.flat",
+        "source": "com.example.myapplication.app-main-57:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_fragment_entrants_map.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/fragment_entrants_map.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_circle_background.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/circle_background.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/xml_data_extraction_rules.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/layout_activity_group_entrants.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/layout/activity_group_entrants.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_camera.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_camera.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_ic_delete.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/ic_delete.xml"
+    },
+    {
+        "merged": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-debug-55:/drawable_gradient_popup_background.xml.flat",
+        "source": "/Users/ayesha/.gradle/daemon/8.7/com.example.myapplication.app-main-57:/drawable/gradient_popup_background.xml"
+=======
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_back.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_back.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_calendar.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_calendar.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_home.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_home.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-hdpi_ic_launcher.webp.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-hdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_fragment_qr_scanner.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/fragment_qr_scanner.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_flash_toggle_button.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/flash_toggle_button.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_rounded_background.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/rounded_background.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_activity_manage_notification_groups.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/activity_manage_notification_groups.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_launcher_foreground.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_launcher_foreground.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_activity_notification.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/activity_notification.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_fragment_entrants_map.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/fragment_entrants_map.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_launcher_background.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_launcher_background.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-xxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-xxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_flash_off.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_flash_off.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-hdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-hdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/navigation_menu.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/navigation/menu.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_circle.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_circle.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_gallery.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_gallery.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_item_attendee.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/item_attendee.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/menu_bottom_nav_menu.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/menu/bottom_nav_menu.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-xhdpi_ic_launcher.webp.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-xhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_activity_attending.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/activity_attending.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_camera.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_camera.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-anydpi-v26_ic_launcher_round.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-anydpi-v26/ic_launcher_round.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_fragment_edit_profile.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/fragment_edit_profile.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-mdpi_ic_launcher.webp.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-mdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-xxxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-xxxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_activity_waitinglist.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/activity_waitinglist.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_notifications.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_notifications.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_gradient_background.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/gradient_background.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_circle_background.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/circle_background.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_scanner_border.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/scanner_border.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_delete.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_delete.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_flash_on.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_flash_on.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_fragment_home.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/fragment_home.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-xxxhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-xxxhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/xml_data_extraction_rules.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/xml/data_extraction_rules.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_gradient_popup_background.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/gradient_popup_background.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/xml_backup_rules.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/xml/backup_rules.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-xhdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-xhdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-xxhdpi_ic_launcher.webp.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-xxhdpi/ic_launcher.webp"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_activity_entrant_profile.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/activity_entrant_profile.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_activity_main.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/activity_main.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_activity_organizer_profile.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/activity_organizer_profile.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/mipmap-mdpi_ic_launcher_round.webp.flat",
+        "source": "com.example.myapplication.app-main-58:/mipmap-mdpi/ic_launcher_round.webp"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_sample_event_poster.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/sample_event_poster.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/drawable_ic_profile.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/drawable/ic_profile.xml"
+    },
+    {
+        "merged": "com.example.myapplication.app-debug-56:/layout_activity_group_entrants.xml.flat",
+        "source": "com.example.myapplication.app-main-58:/layout/activity_group_entrants.xml"
+>>>>>>> 5e8808f21a0fc567d0153f2cef18818f36469687
     }
 ]

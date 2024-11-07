@@ -1,5 +1,14 @@
-<?xml version="1.0" encoding="utf-8"?>
+<!-- res/values/colors.xml -->
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <color name="nav_icon_color">#F497B7</color>
+    <color name="nav_text_color">#4A4A4A</color>
+
+    <!-- Avatar Background Colors -->
+    <color name="avatar_color_1">#E0918C</color>
+    <color name="avatar_color_2">#A16FA9</color>
+    <color name="avatar_color_3">#6C7294</color>
+    <color name="avatar_color_4">#6E8C99</color>
+    <color name="avatar_color_5">#84A685</color>
+    <color name="avatar_color_6">#9E9280</color>
+
 </resources>

@@ -48,3 +48,4 @@ public class NotificationActivity extends AppCompatActivity {
         return new UserProfile();
     }
 }
+

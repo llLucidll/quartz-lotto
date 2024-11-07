@@ -1,7 +1,113 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
+    <string-array name="country_array">
+        <item>United States</item>
+        <item>Canada</item>
+        <item>United Kingdom</item>
+        <item>Australia</item>
+        <item>India</item>
+        <item>Germany</item>
+        <item>France</item>
+        <item>China</item>
+        <item>Japan</item>
+        <item>Brazil</item>
+        <item>Mexico</item>
+        <item>Italy</item>
+        <item>Spain</item>
+        <item>Russia</item>
+        <item>South Korea</item>
+        <item>Netherlands</item>
+        <item>Switzerland</item>
+        <item>Sweden</item>
+        <item>Norway</item>
+        <item>Denmark</item>
+        <item>Finland</item>
+        <item>Belgium</item>
+        <item>Austria</item>
+        <item>Poland</item>
+        <item>Turkey</item>
+        <item>Saudi Arabia</item>
+        <item>Argentina</item>
+        <item>South Africa</item>
+        <item>New Zealand</item>
+        <item>Singapore</item>
+        <item>Malaysia</item>
+        <item>Thailand</item>
+        <item>Indonesia</item>
+        <item>Philippines</item>
+        <item>Vietnam</item>
+        <item>Egypt</item>
+        <item>Nigeria</item>
+        <item>Kenya</item>
+        <item>Israel</item>
+        <item>Ireland</item>
+        <item>Portugal</item>
+        <item>Greece</item>
+        <item>Czech Republic</item>
+        <item>Hungary</item>
+        <item>Romania</item>
+        <item>Ukraine</item>
+        <item>Pakistan</item>
+        <item>Bangladesh</item>
+        <item>Sri Lanka</item>
+        <item>Myanmar</item>
+        <item>Iran</item>
+        <item>Iraq</item>
+        <item>Colombia</item>
+        <item>Venezuela</item>
+        <item>Peru</item>
+        <item>Chile</item>
+        <item>Bolivia</item>
+        <item>Paraguay</item>
+        <item>Uruguay</item>
+        <item>Ghana</item>
+        <item>Morocco</item>
+        <item>Algeria</item>
+        <item>Tunisia</item>
+        <item>Libya</item>
+        <item>Jordan</item>
+        <item>Kuwait</item>
+        <item>Qatar</item>
+        <item>United Arab Emirates</item>
+        <item>Oman</item>
+        <item>Lebanon</item>
+        <item>Cyprus</item>
+        <item>Mongolia</item>
+        <item>Laos</item>
+        <item>Cambodia</item>
+        <item>Brunei</item>
+        <item>Maldives</item>
+        <item>Bhutan</item>
+        <item>Nepal</item>
+        <item>Afghanistan</item>
+        <item>Uzbekistan</item>
+        <item>Kazakhstan</item>
+        <item>Kyrgyzstan</item>
+        <item>Tajikistan</item>
+        <item>Turkmenistan</item>
+        <item>Armenia</item>
+        <item>Azerbaijan</item>
+        <item>Belarus</item>
+        <item>Estonia</item>
+        <item>Latvia</item>
+        <item>Lithuania</item>
+        <item>Slovakia</item>
+        <item>Slovenia</item>
+        <item>Luxembourg</item>
+        <item>Malta</item>
+        <item>Liechtenstein</item>
+        <item>Monaco</item>
+        <item>San Marino</item>
+        <item>Andorra</item>
+    </string-array>
+    <color name="avatar_color_1">#E0918C</color>
+    <color name="avatar_color_2">#A16FA9</color>
+    <color name="avatar_color_3">#6C7294</color>
+    <color name="avatar_color_4">#6E8C99</color>
+    <color name="avatar_color_5">#84A685</color>
+    <color name="avatar_color_6">#9E9280</color>
+    <color name="nav_icon_color">#F497B7</color>
+    <color name="nav_text_color">#4A4A4A</color>
     <item name="checkbox_chosen_from_waiting_list" type="id"/>
     <string name="app_name">My Application</string>
     <string name="default_web_client_id" translatable="false">840451516881-g0mjlq901dc3ra6ng1ccebffeq614b6r.apps.googleusercontent.com</string>
@@ -9,11 +115,12 @@
     <string name="google_api_key" translatable="false">AIzaSyD5HT4aH5PMB2JogjnMiGPrImAd38Vo6jw</string>
     <string name="google_app_id" translatable="false">1:840451516881:android:0e7de36787fbb74941d8f0</string>
     <string name="google_crash_reporting_api_key" translatable="false">AIzaSyD5HT4aH5PMB2JogjnMiGPrImAd38Vo6jw</string>
-    <string name="google_storage_bucket" translatable="false">quartz-lotto.appspot.com</string>
+    <string name="google_storage_bucket" translatable="false">quartz-lotto.firebasestorage.app</string>
+    <string name="open_gallery">Open Gallery</string>
     <string name="project_id" translatable="false">quartz-lotto</string>
+    <string name="toggle_flash">Toggle Flash</string>
     <style name="Base.Theme.MyApplication" parent="Theme.Material3.DayNight.NoActionBar">
-        
-        
+
     </style>
     <style name="Theme.MyApplication" parent="Base.Theme.MyApplication"/>
 </resources>
