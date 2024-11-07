@@ -56,6 +56,7 @@ id editTextContact
 id editTextDOB
 id editTextEmail
 id editTextName
+id edit_or_create_button
 id edit_profile_image_button
 id edit_profile_title
 id email_field
@@ -96,8 +97,6 @@ id textView
 id textViewEntrants
 id textViewNotifications
 id waitlistHeader
-id waitlist_events_list
-id waitlist_label
 layout activity_attending
 layout activity_entrant_profile
 layout activity_group_entrants

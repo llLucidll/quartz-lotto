@@ -1,10 +1,10 @@
-#Wed Nov 06 00:15:19 MST 2024
-base.0=C\:\\Users\\gfran\\Desktop\\Fall 2024\\CMPUT301_PROJ\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes.dex
-base.1=C\:\\Users\\gfran\\Desktop\\Fall 2024\\CMPUT301_PROJ\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\0\\classes.dex
-base.2=C\:\\Users\\gfran\\Desktop\\Fall 2024\\CMPUT301_PROJ\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\11\\classes.dex
-base.3=C\:\\Users\\gfran\\Desktop\\Fall 2024\\CMPUT301_PROJ\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeProjectDexDebug\\5\\classes.dex
-base.4=C\:\\Users\\gfran\\Desktop\\Fall 2024\\CMPUT301_PROJ\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes2.dex
-base.5=C\:\\Users\\gfran\\Desktop\\Fall 2024\\CMPUT301_PROJ\\quartz-lotto\\code\\app\\build\\intermediates\\dex\\debug\\mergeExtDexDebug\\classes3.dex
+#Wed Nov 06 19:07:27 MST 2024
+base.0=/Users/ayesha/Desktop/quartz-lotto/quartz-lotto/code/app/build/intermediates/dex/debug/mergeExtDexDebug/classes.dex
+base.1=/Users/ayesha/Desktop/quartz-lotto/quartz-lotto/code/app/build/intermediates/dex/debug/mergeProjectDexDebug/0/classes.dex
+base.2=/Users/ayesha/Desktop/quartz-lotto/quartz-lotto/code/app/build/intermediates/dex/debug/mergeProjectDexDebug/11/classes.dex
+base.3=/Users/ayesha/Desktop/quartz-lotto/quartz-lotto/code/app/build/intermediates/dex/debug/mergeProjectDexDebug/5/classes.dex
+base.4=/Users/ayesha/Desktop/quartz-lotto/quartz-lotto/code/app/build/intermediates/dex/debug/mergeExtDexDebug/classes2.dex
+base.5=/Users/ayesha/Desktop/quartz-lotto/quartz-lotto/code/app/build/intermediates/dex/debug/mergeExtDexDebug/classes3.dex
 path.0=classes.dex
 path.1=0/classes.dex
 path.2=11/classes.dex

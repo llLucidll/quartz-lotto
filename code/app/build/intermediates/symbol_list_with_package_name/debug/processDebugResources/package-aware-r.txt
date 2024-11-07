@@ -3459,6 +3459,7 @@ id editTextContact
 id editTextDOB
 id editTextEmail
 id editTextName
+id edit_or_create_button
 id edit_profile_image_button
 id edit_profile_title
 id edit_query
@@ -3836,8 +3837,6 @@ id view_tree_view_model_store_owner
 id visible
 id visible_removing_fragment_view_tag
 id waitlistHeader
-id waitlist_events_list
-id waitlist_label
 id west
 id wide
 id withText

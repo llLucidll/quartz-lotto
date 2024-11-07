@@ -134,7 +134,7 @@ public class OrganizerProfileActivity extends AppCompatActivity {
             public void afterTextChanged(Editable s) {}
         });
 
-        bottomNavigationView = findViewById(R.id.bottom_navigation);
+        //bottomNavigationView = findViewById(R.id.bottom_navigation);
         if (bottomNavigationView != null) {
             bottomNavigationView.setVisibility(View.GONE);
         }
