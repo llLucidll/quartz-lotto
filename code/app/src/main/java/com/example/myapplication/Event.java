@@ -1,8 +1,11 @@
 package com.example.myapplication;
+import java.util.Date;
+import java.util.List;
+
 
 public class Event {
     private String eventName;
-    private String date;
+    private Date date;
     private String time;
     private String description;
     private int maxAttendees;
@@ -10,7 +13,7 @@ public class Event {
     private boolean geolocationEnabled;
     private String qrCodeLink;
 
-    public Event(String eventName, String date, String time, String description, int maxAttendees, Integer maxWaitlist, boolean geolocationEnabled, String qrCodeLink) {
+    public Event(String eventName, Date date, String time, String description, int maxAttendees, Integer maxWaitlist, boolean geolocationEnabled, String qrCodeLink) {
         this.eventName = eventName;
         this.date = date;
         this.time = time;
@@ -29,11 +32,11 @@ public class Event {
         this.eventName = eventName;
     }
 
-    public String getDate() {
+    public Date getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(Date date) {
         this.date = date;
     }
 
@@ -84,4 +87,30 @@ public class Event {
     public void setQrCodeLink(String qrCodeLink) {
         this.qrCodeLink = qrCodeLink;
     }
+    
+    public boolean addWaitingUser(UserProfile user, int waitingCapacity) {
+        return waitingList.addWaiter(user, waitingCapacity);
+    }
+    /*
+    Removes a user from the waiting list
+     */
+    public boolean removeWaitingUser(UserProfile user) {
+        return waitingList.removeWaiter(user);
+    }
+    /*
+    Samples a specified number of users from the waiting list
+     */
+    public List<UserProfile> sampleAttendees(int selectedCapacity) {
+        return waitingList.sampleAttendees(selectedCapacity);
+    }
+
+    public void notifySampledAttendees(List<UserProfile> sampledAttendees, Context context, NotificationService notificationService) {
+        for (UserProfile user: sampledAttendees) {
+            String title = "Congratulations!";
+            String description = "You have been selected from the waiting list";
+            NotificationService.sendNotification(user, context, title, description);
+
+        }
+    }
 }
+
