@@ -1,5 +1,4 @@
-<<<<<<< HEAD
-=======
+
 *.iml
 .gradle
 /local.properties
@@ -15,7 +14,6 @@
 .externalNativeBuild
 .cxx
 local.properties
->>>>>>> 83d7e857b79857f04bf19ec0259dff4a3a7e0b7c
 /code/app/build/intermediates/
 /code/.gradle/8.7/
 /code/.gradle/buildOutputCleanup/buildOutputCleanup.lock
@@ -155,8 +153,5 @@ lint/tmp/
 .DS_Store
 # App Specific cases 
 app/release/output.json
-<<<<<<< HEAD
 .idea/codeStyles/
-=======
-.idea/codeStyles/
->>>>>>> 83d7e857b79857f04bf19ec0259dff4a3a7e0b7c
+
