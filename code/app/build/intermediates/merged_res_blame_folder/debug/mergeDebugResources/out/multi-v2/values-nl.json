@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.myapplication.app-mergeDebugResources-53:/values-nl/values-nl.xml",
+            "outputFile": "com.example.myapplication.app-mergeDebugResources-54:/values-nl/values-nl.xml",
             "map": [
                 {
                     "source": "/Users/ayesha/.gradle/caches/transforms-4/6abb20bd6ca24fd3e4e5c5e483e914df/transformed/zxing-android-embedded-4.3.0/res/values-nl/values-nl.xml",

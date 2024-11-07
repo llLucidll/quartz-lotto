@@ -27,7 +27,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private FirebaseFirestore firestore;
@@ -68,7 +67,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         void onUsersFetched(List<UserProfile> users);
         void onFailure(Exception e);
     }
-
 
     private void sendNotificationToUser(UserProfile user, String title, String message) {
         if (user.isReceivingNotifications()) {
