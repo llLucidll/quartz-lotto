@@ -68,7 +68,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         void onFailure(Exception e);
     }
 
-
     private void sendNotificationToUser(UserProfile user, String title, String message) {
         if (user.isReceivingNotifications()) {
             // Send the notification using NotificationService

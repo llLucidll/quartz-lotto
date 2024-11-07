@@ -1,7 +1,7 @@
 {
     "logs": [
         {
-            "outputFile": "com.example.myapplication.app-mergeDebugResources-53:/values-night-v8/values-night-v8.xml",
+            "outputFile": "com.example.myapplication.app-mergeDebugResources-54:/values-night-v8/values-night-v8.xml",
             "map": [
                 {
                     "source": "C:\\Users\\gfran\\Desktop\\Fall 2024\\CMPUT301_PROJ\\quartz-lotto\\code\\app\\src\\main\\res\\values-night\\themes.xml",
