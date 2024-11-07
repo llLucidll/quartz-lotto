@@ -95,7 +95,6 @@
         <activity android:name="com.example.myapplication.OrganizerProfileActivity" />
         <activity android:name="com.example.myapplication.ManageNotificationGroupsActivity" />
         <activity android:name="com.example.myapplication.GroupEntrantsActivity" />
-        <activity android:name="com.example.myapplication.NotificationActivity" />
 
         <receiver
             android:name="com.google.firebase.iid.FirebaseInstanceIdReceiver"

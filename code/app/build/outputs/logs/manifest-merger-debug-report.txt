@@ -1,9 +1,9 @@
 -- Merging decision tree log ---
 manifest
-ADDED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-53:12
-INJECTED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-53:12
-INJECTED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-53:12
-INJECTED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-53:12
+ADDED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-52:12
+INJECTED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-52:12
+INJECTED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-52:12
+INJECTED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:2:1-52:12
 MERGED from [com.google.firebase:firebase-messaging:23.1.0] C:\Users\akhil\.gradle\caches\transforms-4\c253e3877ed1f3ae70da9c43f3f99a5a\transformed\firebase-messaging-23.1.0\AndroidManifest.xml:17:1-61:12
 MERGED from [androidx.navigation:navigation-common:2.8.3] C:\Users\akhil\.gradle\caches\transforms-4\8d738144695d10481e4abc6e5f84e202\transformed\navigation-common-2.8.3\AndroidManifest.xml:17:1-22:12
 MERGED from [androidx.navigation:navigation-runtime:2.8.3] C:\Users\akhil\.gradle\caches\transforms-4\79b6f599295ea901239a710a62098327\transformed\navigation-runtime-2.8.3\AndroidManifest.xml:17:1-22:12
@@ -154,8 +154,8 @@ ADDED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\Androi
 	android:name
 		ADDED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:11:22-78
 application
-ADDED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:12:5-51:19
-INJECTED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:12:5-51:19
+ADDED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:12:5-50:19
+INJECTED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:12:5-50:19
 MERGED from [com.google.firebase:firebase-messaging:23.1.0] C:\Users\akhil\.gradle\caches\transforms-4\c253e3877ed1f3ae70da9c43f3f99a5a\transformed\firebase-messaging-23.1.0\AndroidManifest.xml:30:5-59:19
 MERGED from [com.google.firebase:firebase-messaging:23.1.0] C:\Users\akhil\.gradle\caches\transforms-4\c253e3877ed1f3ae70da9c43f3f99a5a\transformed\firebase-messaging-23.1.0\AndroidManifest.xml:30:5-59:19
 MERGED from [com.google.android.material:material:1.12.0] C:\Users\akhil\.gradle\caches\transforms-4\451afd4612ba964ac4085ee92414e007\transformed\material-1.12.0\AndroidManifest.xml:22:5-20
@@ -306,10 +306,6 @@ activity#com.example.myapplication.GroupEntrantsActivity
 ADDED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:48:9-59
 	android:name
 		ADDED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:48:19-56
-activity#com.example.myapplication.NotificationActivity
-ADDED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:49:9-58
-	android:name
-		ADDED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml:49:19-55
 uses-sdk
 INJECTED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml reason: use-sdk injection requested
 INJECTED from C:\Users\akhil\Documents\School\quartz-lotto\code\app\src\main\AndroidManifest.xml

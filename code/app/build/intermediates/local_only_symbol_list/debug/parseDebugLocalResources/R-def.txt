@@ -46,7 +46,6 @@ id cancelButton
 id cancelledHeader
 id checkBoxNotifications
 id checkbox_chosen_from_waiting_list
-id checkbox_not_chosen_from_waiting_list
 id checkbox_receive_notifications
 id confirmedHeader
 id country_label

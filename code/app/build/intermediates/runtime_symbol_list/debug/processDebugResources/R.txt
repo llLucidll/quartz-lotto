@@ -3387,7 +3387,6 @@ int id chains 0x7f09007f
 int id checkBoxNotifications 0x7f090080
 int id checkbox 0x7f090081
 int id checkbox_chosen_from_waiting_list 0x7f090082
-int id checkbox_not_chosen_from_waiting_list 0x7f090083
 int id checkbox_receive_notifications 0x7f090084
 int id checked 0x7f090085
 int id chronometer 0x7f090086

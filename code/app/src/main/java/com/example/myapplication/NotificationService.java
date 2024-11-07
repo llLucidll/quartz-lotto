@@ -15,7 +15,8 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 import androidx.core.content.ContextCompat;
 
-import java.util.List;
+
+import java.util.Map;
 
 public class NotificationService {
 
@@ -27,12 +28,9 @@ public class NotificationService {
      */
 
 
-
-    private static final int BASE_NOTIFICATION_ID = 100;
-
     //Send Notification method
-    public static void sendNotification(UserProfile user, Context context, String title, String description) {
-        if (!user.isReceivingNotifications()) {
+    public static void sendNotification(Map<String, Object> user, Context context, String title, String description) {
+        if (user == null || !Boolean.TRUE.equals(user.get("notificationsEnabled"))) {
             return;
         }
 
@@ -45,7 +43,6 @@ public class NotificationService {
         }
 
         String channelId = NotificationUtils.getChannelId();
-
         Intent intent = new Intent(context, MainActivity.class); //TODO Change MainActivity to Homepage if exists
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK); //creating a new activity when notif is clicked
 
@@ -67,28 +64,19 @@ public class NotificationService {
     }
 
     //Notification Permissions
-    public static void optOutOfNotifications(UserProfile user) {
-        user.setReceiveNotifications(false);
+    public static void optOutOfNotifications(Map<String,Object> user) {
+        if (user == null) return;
+        user.put("notificationsEnabled", false);
     }
 
-    public static void optInToNotifications(Context context, UserProfile user) {
-        user.setReceiveNotifications(true);
+    public static void optInToNotifications(Context context, Map<String,Object> user) {
+        if (user == null) return;
+        user.put("notificationsEnabled", true);
 
-        if (user.isChosenFromWaitingList()) {
+        if (Boolean.TRUE.equals(user.get("notificationsEnabled"))) {
             sendNotification(user, context, "Success", "You have opted into notifications");
         }
     }
-
-    //For notification preference when chosen from waiting list
-    public void updateChosenFromWaitingListPreference(UserProfile user, boolean preference) {
-        user.setNotifyChosenFromWaitingList(preference);
-    }
-
-    //For notification preference when not chosen from waiting list
-    public void updateNotChosenFromWaitingListPreference(UserProfile user, boolean preference) {
-        user.setNotifyNotChosenFromWaitingList(preference);
-    }
-
 }
 
 

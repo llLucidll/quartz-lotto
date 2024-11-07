@@ -5,8 +5,14 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
@@ -19,6 +25,7 @@ public class GroupEntrantsActivity extends AppCompatActivity {
     private TextView textViewEntrants;
     private Button buttonSendNotification;
     private String groupType;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,7 +42,7 @@ public class GroupEntrantsActivity extends AppCompatActivity {
 
         loadEntrantsList(groupType);
 
-        buttonSendNotification.setOnClickListener(v -> sendNotificationToGroup());
+        buttonSendNotification.setOnClickListener(v -> fetchUserProfileAndSendNotification());
     }
 
     private void loadEntrantsList(String groupType) {
@@ -48,10 +55,43 @@ public class GroupEntrantsActivity extends AppCompatActivity {
         }
     }
 
-    private void sendNotificationToGroup() {
-        // Sample UserProfile
-        UserProfile sampleUser = new UserProfile();
-        sampleUser.setReceiveNotifications(true); // Assume the user opted to receive notifications
+    /*
+    Retrieving User Profile Maps from the database.
+     */
+    private void fetchUserProfileAndSendNotification() {
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        DocumentReference userProfileRef = db.collection("users").document(userId);
+
+        userProfileRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                if (task.isSuccessful()) {
+                    DocumentSnapshot document = task.getResult();
+                    if (document.exists()) {
+                        // Retrieve user profile data from Firestore
+                        Map<String, Object> userProfile = document.getData();
+
+                        if (userProfile != null && Boolean.TRUE.equals(userProfile.get("notificationsEnabled"))) {
+                            sendNotificationToGroup(userProfile);
+                        } else {
+                            Toast.makeText(GroupEntrantsActivity.this, "User has not opted in for notifications", Toast.LENGTH_SHORT).show();
+                        }
+                    } else {
+                        Log.d("GroupEntrantsActivity", "No such document");
+                        Toast.makeText(GroupEntrantsActivity.this, "User profile not found", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.d("GroupEntrantsActivity", "get failed with ", task.getException());
+                    Toast.makeText(GroupEntrantsActivity.this, "Failed to retrieve user profile", Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+    }
+
+
+    private void sendNotificationToGroup(Map<String, Object>  userProfile) {
+
+        userProfile.put("notificationsEnabled", true); // Assume the user opted to receive notifications
 
         // Notification message based on groupType
         String title = "Notification for " + groupType + " entrants";
@@ -73,21 +113,21 @@ public class GroupEntrantsActivity extends AppCompatActivity {
         }
 
         // Send notification using NotificationService
-        NotificationService.sendNotification(sampleUser, this, title, description);
+        NotificationService.sendNotification(userProfile, this, title, description);
 
         // Save notification to Firestore
-        saveNotificationToFirestore(sampleUser, title, description);  // Pass the entire sampleUser object
+        saveNotificationToFirestore(userProfile, title, description);  // Pass the user map
 
         Toast.makeText(this, "Notification sent to " + groupType + " entrants", Toast.LENGTH_SHORT).show();
     }
 
 
-    private void saveNotificationToFirestore(UserProfile user, String title, String description) {
+    private void saveNotificationToFirestore(Map<String, Object> user, String title, String description) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
         // Create notification data with the user's name
         Map<String, Object> notificationData = new HashMap<>();
-        notificationData.put("userName", user.getName());  // Save the user's name
+        notificationData.put("userName", user.get("name"));  // Save the user's name
         notificationData.put("title", title);  // Save the title of the notification
         notificationData.put("description", description);  // Save the description/message
         notificationData.put("timestamp", FieldValue.serverTimestamp());  // Timestamp when notification was saved
