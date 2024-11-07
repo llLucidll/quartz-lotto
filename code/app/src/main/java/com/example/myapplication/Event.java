@@ -1,59 +1,93 @@
 package com.example.myapplication;
-
-import android.content.Context;
-
 import java.util.Date;
 import java.util.List;
 
+
 public class Event {
-    private WaitingList waitingList;
-
-    private int id;
-    private String name;
+    private String eventName;
     private Date date;
+    private String time;
     private String description;
-    private int waitingCapacity;
-    private int selectedCapacity;
+    private int maxAttendees;
+    private Integer maxWaitlist; // Nullable
+    private boolean geolocationEnabled;
+    private String qrCodeLink;
 
-    public Event(int id, String name, String description, int waitingCapacity, int selectedCapacity, Date date) {
-        this.id = id;
-        this.name = name;
-        this.description = description;
-        this.waitingCapacity = waitingCapacity;
-        this.selectedCapacity = selectedCapacity;
+    public Event(String eventName, Date date, String time, String description, int maxAttendees, Integer maxWaitlist, boolean geolocationEnabled, String qrCodeLink) {
+        this.eventName = eventName;
         this.date = date;
-        this.waitingList = new WaitingList();
+        this.time = time;
+        this.description = description;
+        this.maxAttendees = maxAttendees;
+        this.maxWaitlist = maxWaitlist;
+        this.geolocationEnabled = geolocationEnabled;
+        this.qrCodeLink = qrCodeLink;
     }
 
-    //Getters and Setters
-    public int getId() {
-        return id;
+    public String getEventName() {
+        return eventName;
     }
 
-    public String getName() {
-        return name;
+    public void setEventName(String eventName) {
+        this.eventName = eventName;
     }
 
     public Date getDate() {
         return date;
     }
 
-    public WaitingList getWaitingList() {
-        return waitingList;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public void setDate(Date date) {
         this.date = date;
     }
 
-    //Methods
-    /*
-    Adds a user to the waiting list
-     */
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public int getMaxAttendees() {
+        return maxAttendees;
+    }
+
+    public void setMaxAttendees(int maxAttendees) {
+        this.maxAttendees = maxAttendees;
+    }
+
+    public Integer getMaxWaitlist() {
+        return maxWaitlist;
+    }
+
+    public void setMaxWaitlist(Integer maxWaitlist) {
+        this.maxWaitlist = maxWaitlist;
+    }
+
+    public boolean isGeolocationEnabled() {
+        return geolocationEnabled;
+    }
+
+    public void setGeolocationEnabled(boolean geolocationEnabled) {
+        this.geolocationEnabled = geolocationEnabled;
+    }
+
+    public String getQrCodeLink() {
+        return qrCodeLink;
+    }
+
+    public void setQrCodeLink(String qrCodeLink) {
+        this.qrCodeLink = qrCodeLink;
+    }
+    
     public boolean addWaitingUser(UserProfile user, int waitingCapacity) {
         return waitingList.addWaiter(user, waitingCapacity);
     }
@@ -78,5 +112,5 @@ public class Event {
 
         }
     }
-
 }
+
