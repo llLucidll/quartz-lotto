@@ -34,7 +34,7 @@ android {
 
 dependencies { 
     implementation(libs.appcompat)
-    implementation(libs.firebase.messaging)  // Add Firebase Messaging
+    implementation("com.google.firebase:firebase-messaging:24.0.3")  // Add Firebase Messaging
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
