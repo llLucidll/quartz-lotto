@@ -61,4 +61,10 @@ public class WaitinglistActivity extends AppCompatActivity {
             }
         });
     }
+
+    public List<Attendee> getAttendees() {
+        return attendees;
+    }
+
+
 }
