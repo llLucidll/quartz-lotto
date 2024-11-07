@@ -195,7 +195,6 @@
                 android:text="Preferences"
                 android:textColor="#4A4A4A"
                 android:textStyle="bold"
-                android:layout_marginBottom="4dp"
                 android:onClick="togglePreferences" />
 
             <LinearLayout
@@ -244,5 +243,14 @@
             android:text="Notification Groups"
             android:textColor="@android:color/white"
             android:textStyle="bold" />
+
+        <Button
+            android:id="@+id/buttonManageFacilities"
+            android:layout_width="364dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonManageNotifications"
+            android:backgroundTint="#B76E79"
+            android:text="Manage Facilities" />
+
     </LinearLayout>
 </ScrollView>

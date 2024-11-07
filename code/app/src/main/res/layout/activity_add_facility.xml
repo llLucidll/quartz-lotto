@@ -1,0 +1,81 @@
+<!-- File: res/layout/activity_add_facility.xml -->
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/gradient_background">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/add_facility_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Add Facility"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Facility Image -->
+
+        <!-- Upload Image Button -->
+
+        <ImageView
+            android:id="@+id/facilityImageView"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:contentDescription="Facility Image"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_placeholder_image" />
+
+        <Button
+            android:id="@+id/uploadFacilityImageButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Upload Facility Image"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Facility Name Input -->
+        <EditText
+            android:id="@+id/facility_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Facility Name"
+            android:layout_marginBottom="8dp"
+            android:padding="10dp"
+            android:backgroundTint="#4A4A4A"
+            android:textColor="@android:color/black" />
+
+        <!-- Facility Location Input -->
+        <EditText
+            android:id="@+id/facility_location"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:hint="Facility Location"
+            android:layout_marginBottom="16dp"
+            android:padding="10dp"
+            android:backgroundTint="#4A4A4A"
+            android:textColor="@android:color/black" />
+
+
+        <!-- Save Facility Button -->
+        <Button
+            android:id="@+id/saveFacilityButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save Facility"
+            android:backgroundTint="#B76E79"
+            android:textColor="@android:color/white"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</ScrollView>

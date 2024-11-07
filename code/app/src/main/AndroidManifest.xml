@@ -9,6 +9,8 @@
     <uses-feature android:name="android.hardware.camera.any" android:required="true" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -46,6 +48,8 @@
         <activity android:name=".OrganizerProfileActivity" />
         <activity android:name=".ManageNotificationGroupsActivity" />
         <activity android:name=".GroupEntrantsActivity" />
+        <activity android:name=".ManageFacilitiesActivity" />
+        <activity android:name=".AddFacilityActivity" />
 
     </application>
 
