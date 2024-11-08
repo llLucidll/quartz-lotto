@@ -6,6 +6,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.view.View;
+import android.widget.Button;
+import android.widget.ImageButton;
+
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -55,6 +59,14 @@ public class AttendingActivity extends AppCompatActivity {
         recyclerViewConfirmed.setAdapter(confirmedAdapter);
 
         loadAttendees();
+
+        final ImageButton backButton = findViewById(R.id.back_button);
+        backButton.setOnClickListener(v -> {new View.OnClickListener() {
+            public void onClick(View v) {
+                finish();
+            }
+        };
+        });
     }
 
     private void loadAttendees() {
