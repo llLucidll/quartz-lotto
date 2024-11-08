@@ -52,6 +52,7 @@
         <activity android:name=".AddFacilityActivity" />
         <activity android:name=".EditProfileActivity" />
 
+
     </application>
 
 </manifest>

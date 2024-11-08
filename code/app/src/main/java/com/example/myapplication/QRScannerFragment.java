@@ -1,7 +1,6 @@
 package com.example.myapplication;
 
-import android.Manifest;
-import android.content.pm.PackageManager;
+import android.content.Intent;
 import android.media.Image;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,23 +8,18 @@ import android.view.*;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.*;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.Fragment;
-
 import androidx.camera.core.*;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
+import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
-import com.example.myapplication.R;
 import com.google.common.util.concurrent.ListenableFuture;
 import com.google.mlkit.vision.barcode.*;
 import com.google.mlkit.vision.barcode.common.Barcode;
 import com.google.mlkit.vision.common.InputImage;
 
-import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -40,8 +34,6 @@ public class QRScannerFragment extends Fragment {
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ExecutorService cameraExecutor;
 
-    private ActivityResultLauncher<String> requestPermissionLauncher;
-
     private BarcodeScanner barcodeScanner;
 
     private Camera camera;
@@ -51,14 +43,13 @@ public class QRScannerFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_qr_scanner, container, false);
 
-        //ui
+        // UI initialization
         previewView = view.findViewById(R.id.previewView);
         flashToggleButton = view.findViewById(R.id.flash_toggle_button);
 
-
         cameraExecutor = Executors.newSingleThreadExecutor();
 
-        //ML Kit's Barcode Scanner
+        // ML Kit's Barcode Scanner
         BarcodeScannerOptions options =
                 new BarcodeScannerOptions.Builder()
                         .setBarcodeFormats(
@@ -66,39 +57,16 @@ public class QRScannerFragment extends Fragment {
                         .build();
         barcodeScanner = BarcodeScanning.getClient(options);
 
-
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
 
-        setupPermissionLauncher();
+        // Request camera permission if not granted (Assuming permissions are handled elsewhere)
 
-        //request camera permission if not granted
-        if (allPermissionsGranted()) {
-            startCamera();
-        } else {
-            requestPermissionLauncher.launch(Manifest.permission.CAMERA);
-        }
+        startCamera();
 
         // Set up flash toggle button
         flashToggleButton.setOnClickListener(v -> toggleFlash());
 
         return view;
-    }
-
-    private void setupPermissionLauncher() {
-        requestPermissionLauncher =
-                registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-                    if (isGranted) {
-                        //permission granted> Start camera
-                        startCamera();
-                    } else {
-                        Toast.makeText(getContext(), "Camera permission is required to scan QR codes", Toast.LENGTH_SHORT).show();
-                    }
-                });
-    }
-
-    private boolean allPermissionsGranted() {
-        return ContextCompat.checkSelfPermission(
-                requireContext(), Manifest.permission.CAMERA) == PackageManager.PERMISSION_GRANTED;
     }
 
     private void startCamera() {
@@ -114,12 +82,10 @@ public class QRScannerFragment extends Fragment {
 
     private void bindCameraUseCases(ProcessCameraProvider cameraProvider) {
 
-
         Preview preview = new Preview.Builder()
                 .build();
 
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
-
 
         ImageAnalysis imageAnalysis =
                 new ImageAnalysis.Builder()
@@ -130,14 +96,11 @@ public class QRScannerFragment extends Fragment {
             processImageProxy(imageProxy);
         });
 
-
         CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
-
 
         cameraProvider.unbindAll();
 
         try {
-
             camera = cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageAnalysis);
         } catch (Exception e) {
@@ -160,24 +123,42 @@ public class QRScannerFragment extends Fragment {
             InputImage image =
                     InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
 
-            //pass Image to ML Kit's Barcode Scanner
+            // Pass Image to ML Kit's Barcode Scanner
             barcodeScanner.process(image)
                     .addOnSuccessListener(barcodes -> {
                         for (Barcode barcode : barcodes) {
                             String rawValue = barcode.getRawValue();
                             if (rawValue != null) {
                                 Log.d(TAG, "Scanned QR Code: " + rawValue);
-                                Toast.makeText(getContext(), "Scanned: " + rawValue, Toast.LENGTH_SHORT).show();
-                                // Will handle qr code scanning here
+                                // Handle the QR code content
+                                handleScannedData(rawValue);
+                                // Close the imageProxy after processing
+                                imageProxy.close();
+                                return; // Exit after handling one barcode
                             }
                         }
+                        imageProxy.close();
                     })
                     .addOnFailureListener(e -> {
                         Log.e(TAG, "Barcode scanning failed", e);
-                    })
-                    .addOnCompleteListener(task -> {
                         imageProxy.close();
                     });
+        }
+    }
+
+    private void handleScannedData(String data) {
+        // Assuming the data is in the format: eventapp://event/<eventId>
+        if (data.startsWith("eventapp://event/")) {
+            String eventId = data.substring(data.lastIndexOf('/') + 1);
+
+            // Start EventDetailsActivity with the eventId
+            Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
+            intent.putExtra("eventId", eventId);
+            startActivity(intent);
+
+
+        } else {
+            Toast.makeText(getContext(), "Invalid QR code", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -191,7 +172,6 @@ public class QRScannerFragment extends Fragment {
             camera.getCameraControl().enableTorch(!isFlashOn);
             isFlashOn = !isFlashOn;
 
-            // Update Flash Icon
             if (isFlashOn) {
                 flashToggleButton.setImageResource(R.drawable.ic_flash_on);
             } else {

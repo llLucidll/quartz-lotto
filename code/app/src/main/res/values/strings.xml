@@ -11,7 +11,7 @@
     <string name="max_on_waitlist">Max on Waitlist (Optional) </string>
     <string name="upload_poster">Upload Poster</string>
     <string name="select_time">Select Time</string>
-    <string name="description">Description</string>
+
     <string name="generate_qr_code">Generate QR Code</string>
     <string name="event_name">Event Name</string>
 
