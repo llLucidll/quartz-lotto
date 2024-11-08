@@ -7,15 +7,16 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
-import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class AttendingActivity extends AppCompatActivity {
 
@@ -58,47 +59,55 @@ public class AttendingActivity extends AppCompatActivity {
         recyclerViewCancelled.setAdapter(cancelledAdapter);
         recyclerViewConfirmed.setAdapter(confirmedAdapter);
 
-        loadAttendees();
+        loadEventWaitlist("eventId_1");
 
         final ImageButton backButton = findViewById(R.id.back_button);
-        backButton.setOnClickListener(v -> {new View.OnClickListener() {
-            public void onClick(View v) {
-                finish();
+        backButton.setOnClickListener(v -> finish());
+    }
+
+    private void loadEventWaitlist(String eventId) {
+        DocumentReference eventRef = db.collection("Events").document(eventId);
+
+        eventRef.get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                List<Map<String, Object>> waitlistArray = (List<Map<String, Object>>) task.getResult().get("waitlist");
+
+                if (waitlistArray != null) {
+                    for (Map<String, Object> entry : waitlistArray) {
+                        List<Object> arrayField = (List<Object>) entry.get("arrayField");
+                        if (arrayField != null && arrayField.size() > 1) {
+                            String userId = (String) arrayField.get(0);
+                            String status = (String) arrayField.get(1);
+
+                            if (!"not chosen".equals(status)) {
+                                fetchUserNameAndSort(userId, status);
+                            }
+                        }
+                    }
+                }
             }
-        };
         });
     }
 
-    private void loadAttendees() {
+    private void fetchUserNameAndSort(String userId, String status) {
         CollectionReference usersRef = db.collection("Users");
 
-        usersRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                // Clear the lists to avoid duplicates if loadAttendees() is called again
-                waitlist.clear();
-                cancelledList.clear();
-                confirmedList.clear();
+        usersRef.document(userId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful() && task.getResult() != null) {
+                String name = task.getResult().getString("name");
 
-                for (QueryDocumentSnapshot document : task.getResult()) {
-                    String userID = document.getId(); // Get the unique document ID
-                    String name = document.getString("name");
-                    String status = document.getString("status");
+                Attendee attendee = new Attendee(userId, name, status);
 
-                    // Create a new Attendee with the userID, name, and status
-                    Attendee attendee = new Attendee(userID, name, status);
-
-                    // Sort attendee based on status
-                    switch (status) {
-                        case "waiting":
-                            waitlist.add(attendee);
-                            break;
-                        case "cancelled":
-                            cancelledList.add(attendee);
-                            break;
-                        case "confirmed":
-                            confirmedList.add(attendee);
-                            break;
-                    }
+                switch (status) {
+                    case "waiting":
+                        waitlist.add(attendee);
+                        break;
+                    case "cancelled":
+                        cancelledList.add(attendee);
+                        break;
+                    case "confirmed":
+                        confirmedList.add(attendee);
+                        break;
                 }
 
                 // Notify adapters of data change
