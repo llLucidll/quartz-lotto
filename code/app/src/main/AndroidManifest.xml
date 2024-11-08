@@ -51,6 +51,7 @@
         <activity android:name=".ManageFacilitiesActivity" />
         <activity android:name=".AddFacilityActivity" />
         <activity android:name=".EditProfileActivity" />
+        <activity android:name=".EventDetailsActivity" />
 
 
     </application>
