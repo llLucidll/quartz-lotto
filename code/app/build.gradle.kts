@@ -37,10 +37,14 @@ android {
 }
 
 dependencies {
-    implementation("com.google.firebase:firebase-messaging:23.1.0")  // Add Firebase Messaging
+    implementation(libs.firebase.messaging)  // Add Firebase Messaging
     implementation(libs.appcompat)
+    implementation(platform(libs.firebase.bom)) // Check the latest version on Firebase docs
+
     implementation(libs.material)
     implementation(libs.activity)
+    implementation (libs.firebase.auth.v2301)
+
     implementation(libs.constraintlayout)
     implementation(libs.firebase.firestore)
     implementation(libs.navigation.fragment)
@@ -48,23 +52,20 @@ dependencies {
     implementation(libs.firebase.storage)
     implementation(libs.zxing)
     implementation(libs.firebase.crashlytics.buildtools)
+    implementation(libs.ext.junit)
+    implementation(libs.rules)
     testImplementation(libs.junit)
-
-    // Mockito for mocking
-    testImplementation("org.mockito:mockito-core:4.0.0")
-
-    // Robolectric for Android UI testing
-    testImplementation("org.robolectric:robolectric:4.8.1")
-
-    testImplementation ("org.junit.jupiter:junit-jupiter-api:5.0.1")
-    testImplementation(libs.junit.jupiter)
-
-
-    // JUnit Vintage to allow JUnit 4 tests to run on JUnit 5 platform
-    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.8.1")
-
+    testImplementation(libs.robolectric)
     implementation(libs.circleimageview)
     implementation(libs.glide)
+    testImplementation(libs.core)
+    testImplementation(libs.ext.junit)
+    testImplementation(libs.espresso.core)
+    testImplementation(libs.espresso.core)
+    testImplementation(libs.espresso.core)
+    testImplementation(libs.espresso.core)
+    testImplementation(libs.espresso.core)
+    testImplementation(libs.espresso.core)
     annotationProcessor(libs.glide.compiler)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)

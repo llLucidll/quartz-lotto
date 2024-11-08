@@ -15,7 +15,9 @@ import com.example.myapplication.R;
 
 import java.util.ArrayList;
 import java.util.List;
-
+/*
+Attendee adapter for handling the list of attendees in the attending activity.
+ */
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.ViewHolder> {
 
     private List<Attendee> attendeeList;

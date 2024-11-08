@@ -1,19 +1,23 @@
 [versions]
 agp = "8.6.0"
 firebaseAuth = "23.1.0"
+roboelectric = "4.5.1"
 firebaseAuthVersion = "23.0.1"
 firebaseBom = "33.5.1"
+firebaseMessagingVersion = "24.0.3"
 junit = "4.13.2"
 firebaseMessaging = "24.0.3"
 junitVersion = "1.2.1"
 junitJupiter = "5.8.1"
 espressoCore = "3.6.1"
 appcompat = "1.7.0"
+junitVintageEngine = "5.8.1"
 material = "1.12.0"
 activity = "1.8.0"
 constraintlayout = "2.1.4"
 googleGmsGoogleServices = "4.4.2"
 firebaseFirestore = "25.1.1"
+mockitoCore = "4.0.0"
 navigationFragment = "2.8.3"
 navigationUi = "2.8.3"
 firebaseStorage = "21.0.1"
@@ -26,27 +30,36 @@ camerax = "1.2.1"
 mlkit_barcode_scanning = "17.0.3"
 guava = "31.1-android"
 coroutines = "1.6.4"
+robolectric = "4.8.1"
 zxing_version = "4.3.0"
 retrofit = "2.9.0"
 converter_gson = "2.9.0"
 okhttp_logging = "4.9.3"
 googleMaps = "18.1.0"
 location = "21.0.1"
+core = "1.6.1"
+rules = "1.6.1"
 
 [libraries]
+
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 firebase-auth-v2301 = { module = "com.google.firebase:firebase-auth", version = "12.0.1" }
 firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
 firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseAuth" }
+firebase-messaging-v2403 = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseMessagingVersion" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiter" }
+junit-vintage-engine = { module = "org.junit.vintage:junit-vintage-engine", version.ref = "junitVintageEngine" }
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
 firebase-firestore = { group = "com.google.firebase", name = "firebase-firestore", version.ref = "firebaseFirestore" }
+mockito-core = { module = "org.mockito:mockito-core", version.ref = "mockitoCore" }
 navigation-fragment = { group = "androidx.navigation", name = "navigation-fragment", version.ref = "navigationFragment" }
 navigation-ui = { group = "androidx.navigation", name = "navigation-ui", version.ref = "navigationUi" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
@@ -71,6 +84,8 @@ converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", ve
 okhttp-logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-interceptor", version.ref = "okhttp_logging" }
 google-maps = { group = "com.google.android.gms", name = "play-services-maps", version.ref = "googleMaps" }
 play-services-location = { group = "com.google.android.gms", name = "play-services-location", version.ref = "location" }
+core = { group = "androidx.test", name = "core", version.ref = "core" }
+rules = { group = "androidx.test", name = "rules", version.ref = "rules" }
 
 
 [plugins]
