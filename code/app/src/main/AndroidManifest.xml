@@ -10,6 +10,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -50,6 +51,8 @@
         <activity android:name=".GroupEntrantsActivity" />
         <activity android:name=".ManageFacilitiesActivity" />
         <activity android:name=".AddFacilityActivity" />
+        <activity android:name=".EditProfileActivity" />
+
 
     </application>
 

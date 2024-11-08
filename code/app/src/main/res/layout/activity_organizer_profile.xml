@@ -180,49 +180,7 @@
             android:popupBackground="@drawable/gradient_popup_background"
             android:layout_marginBottom="10dp" />
 
-        <!-- Collapsible Preferences Section -->
-        <LinearLayout
-            android:id="@+id/preferences_container"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:layout_marginBottom="10dp">
 
-            <TextView
-                android:id="@+id/preferences_label"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Preferences"
-                android:textColor="#4A4A4A"
-                android:textStyle="bold"
-                android:onClick="togglePreferences" />
-
-            <LinearLayout
-                android:id="@+id/notifications_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:padding="8dp"
-                android:layout_marginBottom="6dp"
-                android:visibility="gone">
-
-                <TextView
-                    android:id="@+id/notifications_label"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:drawableStart="@drawable/ic_notifications"
-                    android:drawablePadding="8dp"
-                    android:text="Notifications"
-                    android:textColor="#4A4A4A"
-                    android:textStyle="bold" />
-
-                <Switch
-                    android:id="@+id/notifications_switch"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content" />
-            </LinearLayout>
-        </LinearLayout>
 
         <!-- Buttons -->
         <Button
@@ -246,11 +204,19 @@
 
         <Button
             android:id="@+id/buttonManageFacilities"
-            android:layout_width="364dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/buttonManageNotifications"
             android:backgroundTint="#B76E79"
             android:text="Manage Facilities" />
+
+        <Button
+            android:id="@+id/buttonSwitchAttendee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonManageFacilities"
+            android:backgroundTint="#B76E79"
+            android:text="Switch to Entrant Mode" />
 
     </LinearLayout>
 </ScrollView>
