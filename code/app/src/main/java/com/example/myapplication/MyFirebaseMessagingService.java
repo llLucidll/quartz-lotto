@@ -27,17 +27,30 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * MyFirebaseMessagingService is a Firebase Messaging Service that handles incoming messages,
+ * manages Firebase Firestore operations, and sends notifications to users.
+ */
 public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
     private FirebaseFirestore firestore;
 
+    /**
+     * Initializes the Firestore instance when the service is created.
+     */
     @Override
     public void onCreate() {
         super.onCreate();
         firestore = FirebaseFirestore.getInstance();
     }
 
-    // This method fetches users based on the groupType and a listener
+    /**
+     * Fetches users from Firestore based on the specified group type and whether they have
+     * notifications enabled.
+     *
+     * @param groupType The group type to filter users by.
+     * @param listener An instance of OnUsersFetchedListener to handle the result of the fetch.
+     */
     public void fetchUsersWithNotificationsEnabled(String groupType, OnUsersFetchedListener listener) {
         FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -59,22 +72,45 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 .addOnFailureListener(listener::onFailure);  // Pass the failure to the listener
     }
 
-
-
-
-    // Define the listener interface to handle the result
+    /**
+     * Interface to handle the result of fetching users with notifications enabled.
+     */
     public interface OnUsersFetchedListener {
+        /**
+         * Called when the users are successfully fetched from Firestore.
+         *
+         * @param users List of users who match the specified criteria.
+         */
         void onUsersFetched(List<UserProfile> users);
+
+        /**
+         * Called if an error occurs during the user fetch.
+         *
+         * @param e Exception detailing the error.
+         */
         void onFailure(Exception e);
     }
 
-    private void sendNotificationToUser(Map<String,Object> user, String title, String message) {
+    /**
+     * Sends a notification to a specified user using the NotificationService.
+     *
+     * @param user The user to whom the notification should be sent.
+     * @param title The title of the notification.
+     * @param message The message content of the notification.
+     */
+    private void sendNotificationToUser(Map<String, Object> user, String title, String message) {
         if (user != null || Boolean.TRUE.equals(user.get("notificationsEnabled"))) {
             // Send the notification using NotificationService
             NotificationService.sendNotification(user, this, title, message);
         }
     }
 
+    /**
+     * Called when a new token for the device is generated. This can be used to send
+     * the token to your server for user identification and push notifications.
+     *
+     * @param token The new FCM token for the device.
+     */
     @Override
     public void onNewToken(@NonNull String token) {
         // Handle token refresh (send to your server if needed)
