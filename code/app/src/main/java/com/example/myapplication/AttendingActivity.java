@@ -20,6 +20,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/*
+Activity view when choosing to attend an event.
+ */
 public class AttendingActivity extends AppCompatActivity {
 
     private RecyclerView recyclerViewWaitlist;

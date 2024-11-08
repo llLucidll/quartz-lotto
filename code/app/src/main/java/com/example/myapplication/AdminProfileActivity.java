@@ -10,6 +10,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
 
+/*
+Used to display the profile for the admin
+ */
 public class AdminProfileActivity extends AppCompatActivity {
 
     private static final String PREFS_NAME = "UserProfilePrefs";
@@ -47,7 +50,9 @@ public class AdminProfileActivity extends AppCompatActivity {
             }
         });
     }
-
+    /*
+    Loads the user profile from SharedPreferences
+     */
     private void loadUserProfile() {
         // Retrieve data from SharedPreferences
         String name = sharedPreferences.getString("name", "");
@@ -66,7 +71,9 @@ public class AdminProfileActivity extends AppCompatActivity {
         checkBoxNotifications.setChecked(receiveNotifications);
     }
 
-
+    /*
+    Saves the user profile to SharedPreferences
+     */
     private void saveUserProfile() {
         // Get data from UI elements
         String name = editTextName.getText().toString().trim();

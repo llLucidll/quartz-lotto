@@ -28,6 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.UUID;
 
+/*
+Activity that displays the Add Facility Screen. Users can add facilities using this
+ */
+
 public class AddFacilityActivity extends AppCompatActivity {
 
     private static final String TAG = "AddFacilityActivity";
@@ -35,7 +39,6 @@ public class AddFacilityActivity extends AppCompatActivity {
 
     private ImageView facilityImageView;
     private EditText facilityNameField, facilityLocationField;
-    private Button uploadFacilityImageButton, saveFacilityButton;
 
     private Uri facilityImageUri;
 
@@ -79,8 +82,8 @@ public class AddFacilityActivity extends AppCompatActivity {
         facilityImageView = findViewById(R.id.facilityImageView);
         facilityNameField = findViewById(R.id.facility_name);
         facilityLocationField = findViewById(R.id.facility_location);
-        uploadFacilityImageButton = findViewById(R.id.uploadFacilityImageButton);
-        saveFacilityButton = findViewById(R.id.saveFacilityButton);
+        Button uploadFacilityImageButton = findViewById(R.id.uploadFacilityImageButton);
+        Button saveFacilityButton = findViewById(R.id.saveFacilityButton);
 
         Intent intent = getIntent();
         if (intent.hasExtra("facilityId")) {
@@ -93,12 +96,19 @@ public class AddFacilityActivity extends AppCompatActivity {
         saveFacilityButton.setOnClickListener(v -> saveFacilityDetails());
     }
 
+    /*
+    Opens the image picker to select an image for the facility
+     */
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         imagePickerLauncher.launch(intent);
         Toast.makeText(this, "Select an image for the facility", Toast.LENGTH_SHORT).show();
     }
+
+    /*
+    Loads the details of the facility from Firestore
+     */
     private void loadFacilityDetails(String facilityId) {
         db.collection(FACILITY_COLLECTION).document(facilityId)
                 .get()
@@ -124,7 +134,9 @@ public class AddFacilityActivity extends AppCompatActivity {
                 });
     }
 
-
+    /*
+    uses saveFacilityToFirestore to save the facility details to Firestore
+     */
     private void saveFacilityDetails() {
         String name = facilityNameField.getText().toString().trim();
         String location = facilityLocationField.getText().toString().trim();
@@ -156,7 +168,9 @@ public class AddFacilityActivity extends AppCompatActivity {
             saveFacilityToFirestore(name, location, null);
         }
     }
-
+    /*
+    Used to store the facility details to firestore
+     */
     private void saveFacilityToFirestore(String name, String location, List<String> imageUrls) {
         Map<String, Object> facility = new HashMap<>();
         facility.put("name", name);

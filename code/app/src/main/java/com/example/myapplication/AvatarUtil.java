@@ -9,6 +9,10 @@ import android.graphics.Paint;
 
 import java.util.Locale;
 
+/*
+Utility class for generating avatars.
+ */
+
 public class AvatarUtil {
 
     public static Bitmap generateAvatar(String letter, int size, Context context) {

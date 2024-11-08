@@ -25,6 +25,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+/*
+Activity view for creating an event.
+ */
 public class CreateEventActivity extends AppCompatActivity {
     private EditText eventNameEditText, dateEditText, timeEditText, descriptionEditText, maxAttendeesEditText, maxWaitlistEditText;
     private CheckBox geolocationCheckBox;
