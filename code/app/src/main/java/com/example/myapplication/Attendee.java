@@ -13,6 +13,11 @@ public class Attendee {
         this.status = status;
     }
 
+    public Attendee(String name, String status) {
+        this.name = name;
+        this.status = status;
+    }
+
     public String getUserID() {
         return userID;
     }
