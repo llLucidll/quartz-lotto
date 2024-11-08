@@ -5,100 +5,202 @@ import android.util.Log;
 import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
-
-import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldValue;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.HashMap;
 
+/**
+ * Activity for displaying and managing group entrants based on their status.
+ * Allows viewing of entrants for different groups and sending notifications to eligible users.
+ */
 public class GroupEntrantsActivity extends AppCompatActivity {
 
+    private static final String TAG = "GroupEntrantsActivity";
     private TextView textViewEntrants;
     private Button buttonSendNotification;
+    private FirebaseFirestore db;
     private String groupType;
-    private String userId;
 
+    /**
+     * Initializes the activity, sets up UI elements, Firebase, and loads the list of entrants.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down, this contains the data it most recently supplied.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_group_entrants);
 
-        // Ensure the notification channel is created
-        NotificationUtils.createNotificationChannel(this);
+        // Initialize Firebase
+        FirebaseApp.initializeApp(this);
 
-        groupType = getIntent().getStringExtra("groupType");
-
+        db = FirebaseFirestore.getInstance();
         textViewEntrants = findViewById(R.id.textViewEntrants);
         buttonSendNotification = findViewById(R.id.buttonSendNotification);
 
-        loadEntrantsList(groupType);
+        // Retrieve group type from the Intent to determine the group to notify
+        groupType = getIntent().getStringExtra("groupType");
 
-        buttonSendNotification.setOnClickListener(v -> fetchUserProfileAndSendNotification());
+        // Ensure the notification channel is created before sending notifications
+        NotificationUtils.createNotificationChannel(this);
+
+        // Load entrants into the TextView
+        loadEntrantsList();
+
+        // Set up click listener for sending notifications
+        buttonSendNotification.setOnClickListener(v -> sendNotificationsToAllEntrants());
     }
 
-    private void loadEntrantsList(String groupType) {
-        if (groupType.equals("waiting")) {
-            textViewEntrants.setText("Waiting List Entrants:\n- Entrant 1\n- Entrant 2");
-        } else if (groupType.equals("selected")) {
-            textViewEntrants.setText("Selected Entrants:\n- Entrant 3\n- Entrant 4");
-        } else if (groupType.equals("cancelled")) {
-            textViewEntrants.setText("Cancelled Entrants:\n- Entrant 5\n- Entrant 6");
-        }
-    }
-
-    /*
-    Retrieving User Profile Maps from the database.
+    /**
+     * Loads the list of entrants from Firestore and displays those matching the group type.
+     * Only entrants with matching group status are displayed.
      */
-    private void fetchUserProfileAndSendNotification() {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-        DocumentReference userProfileRef = db.collection("users").document(userId);
+    private void loadEntrantsList() {
+        DocumentReference waitlistRef = db.collection("Waitlists").document("Waitlist_1");
 
-        userProfileRef.get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
-            @Override
-            public void onComplete(@NonNull Task<DocumentSnapshot> task) {
-                if (task.isSuccessful()) {
-                    DocumentSnapshot document = task.getResult();
-                    if (document.exists()) {
-                        // Retrieve user profile data from Firestore
-                        Map<String, Object> userProfile = document.getData();
+        waitlistRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                Map<String, Object> data = documentSnapshot.getData();
+                if (data != null && !data.isEmpty()) {
+                    StringBuilder entrantsDisplay = new StringBuilder();
+                    for (Map.Entry<String, Object> entry : data.entrySet()) {
+                        Object entrantObject = entry.getValue();
 
-                        if (userProfile != null && Boolean.TRUE.equals(userProfile.get("notificationsEnabled"))) {
-                            sendNotificationToGroup(userProfile);
+                        if (entrantObject instanceof List) {
+                            List<?> entrant = (List<?>) entrantObject;
+                            if (entrant.size() >= 2) {
+                                String userId = (String) entrant.get(0);
+                                String status = (String) entrant.get(1);
+
+                                if (userId != null && !userId.isEmpty()) {
+                                    // Filter entrants based on groupType
+                                    if (status != null && status.equalsIgnoreCase(groupType)) {
+                                        // Fetch user profile using userId as document ID
+                                        DocumentReference userProfileRef = db.collection("users").document(userId);
+
+                                        userProfileRef.get().addOnSuccessListener(userProfileDoc -> {
+                                            if (userProfileDoc.exists()) {
+                                                String name = userProfileDoc.getString("name");
+                                                // Append the name and status to the entrants display if available
+                                                if (name != null) {
+                                                    entrantsDisplay.append("Entrant: ").append(name)
+                                                            .append("\nStatus: ").append(status).append("\n\n");
+                                                    // Update UI on the main thread
+                                                    runOnUiThread(() -> textViewEntrants.setText(entrantsDisplay.toString()));
+                                                }
+                                            } else {
+                                                Log.d(TAG, "User profile not found for ID: " + userId);
+                                            }
+                                        }).addOnFailureListener(e -> Log.e(TAG, "Error fetching user profile for ID: " + userId, e));
+                                    } else {
+                                        Log.d(TAG, "Entrant " + userId + " does not match groupType " + groupType);
+                                    }
+                                } else {
+                                    Log.e(TAG, "Invalid user ID in entrants list.");
+                                    Toast.makeText(this, "Invalid user ID in waitlist.", Toast.LENGTH_SHORT).show();
+                                }
+                            } else {
+                                Log.e(TAG, "Incomplete entrant data.");
+                            }
                         } else {
-                            Toast.makeText(GroupEntrantsActivity.this, "User has not opted in for notifications", Toast.LENGTH_SHORT).show();
+                            Log.e(TAG, "Entrant data is not in the expected format.");
                         }
-                    } else {
-                        Log.d("GroupEntrantsActivity", "No such document");
-                        Toast.makeText(GroupEntrantsActivity.this, "User profile not found", Toast.LENGTH_SHORT).show();
+                    }
+                    // Handle case where no entrants match the groupType
+                    if (entrantsDisplay.length() == 0) {
+                        runOnUiThread(() -> textViewEntrants.setText("No entrants found for this group."));
                     }
                 } else {
-                    Log.d("GroupEntrantsActivity", "get failed with ", task.getException());
-                    Toast.makeText(GroupEntrantsActivity.this, "Failed to retrieve user profile", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "No entrants found in waitlist.");
+                    Toast.makeText(this, "No entrants found in waitlist.", Toast.LENGTH_SHORT).show();
                 }
+            } else {
+                Log.e(TAG, "Waitlist_1 document does not exist or is null.");
+                Toast.makeText(this, "Waitlist document not found.", Toast.LENGTH_SHORT).show();
             }
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Failed to fetch Waitlist_1 document", e);
+            Toast.makeText(this, "Failed to load waitlist.", Toast.LENGTH_SHORT).show();
         });
     }
 
+    /**
+     * Sends notifications to all entrants in the specified group who meet notification criteria.
+     * Only sends notifications to entrants with notifications enabled and a matching status.
+     */
+    private void sendNotificationsToAllEntrants() {
+        DocumentReference waitlistRef = db.collection("Waitlists").document("Waitlist_1");
 
-    private void sendNotificationToGroup(Map<String, Object>  userProfile) {
+        waitlistRef.get().addOnSuccessListener(documentSnapshot -> {
+            if (documentSnapshot.exists()) {
+                List<?> entrantData = (List<?>) documentSnapshot.get("user_1");
+                if (entrantData != null && entrantData.size() >= 2) {
+                    String userId = (String) entrantData.get(0);
+                    String status = (String) entrantData.get(1);
 
-        userProfile.put("notificationsEnabled", true); // Assume the user opted to receive notifications
+                    if (userId != null && !userId.isEmpty()) {
+                        // Fetch user profile using userId as document ID
+                        DocumentReference userProfileRef = db.collection("users").document(userId);
 
-        // Notification message based on groupType
+                        userProfileRef.get().addOnSuccessListener(userProfileDoc -> {
+                            if (userProfileDoc.exists()) {
+                                Boolean notificationsEnabled = userProfileDoc.getBoolean("notificationsEnabled");
+                                String name = userProfileDoc.getString("name");
+
+                                // Prepare user data with null checks
+                                Map<String, Object> user = new HashMap<>();
+                                user.put("userId", userId);
+                                user.put("name", name != null ? name : "Unknown User");
+                                user.put("notificationsEnabled", notificationsEnabled != null ? notificationsEnabled : false);
+
+                                // Check if the user's status matches the selected group type and notifications are enabled
+                                if (status != null && status.equalsIgnoreCase(groupType)
+                                        && Boolean.TRUE.equals(user.get("notificationsEnabled"))) {
+                                    Log.d(TAG, "User " + userId + " meets notification criteria. Sending notification.");
+                                    sendNotificationToEntrant(user, status);
+                                } else {
+                                    Log.d(TAG, "User " + userId + " does not meet notification criteria.");
+                                }
+                            } else {
+                                Log.d(TAG, "User profile not found for ID: " + userId);
+                            }
+                        }).addOnFailureListener(e -> Log.e(TAG, "Error fetching user profile for ID: " + userId, e));
+                    } else {
+                        Log.e(TAG, "Invalid user ID in entrants list.");
+                        Toast.makeText(this, "Invalid user ID in waitlist.", Toast.LENGTH_SHORT).show();
+                    }
+                } else {
+                    Log.e(TAG, "Entrant data is incomplete in Waitlist_1.");
+                    Toast.makeText(this, "No entrants found in waitlist.", Toast.LENGTH_SHORT).show();
+                }
+            } else {
+                Log.e(TAG, "Waitlist_1 document does not exist or is null.");
+                Toast.makeText(this, "Waitlist document not found.", Toast.LENGTH_SHORT).show();
+            }
+        }).addOnFailureListener(e -> {
+            Log.e(TAG, "Failed to fetch Waitlist_1 document", e);
+            Toast.makeText(this, "Failed to load waitlist.", Toast.LENGTH_SHORT).show();
+        });
+    }
+
+    /**
+     * Sends a notification to a specific entrant with a status-based message.
+     *
+     * @param user   A map containing user details including "userId" and "name".
+     * @param status The status of the entrant (e.g., "not chosen", "selected", "cancelled").
+     */
+    private void sendNotificationToEntrant(Map<String, Object> user, String status) {
         String title = "Notification for " + groupType + " entrants";
         String description;
 
-        switch (groupType) {
-            case "waiting":
+        switch (status) {
+            case "not chosen":
                 description = "Your status is: Waiting List";
                 break;
             case "selected":
@@ -112,38 +214,8 @@ public class GroupEntrantsActivity extends AppCompatActivity {
                 break;
         }
 
-        // Send notification using NotificationService
-        NotificationService.sendNotification(userProfile, this, title, description);
-
-        // Save notification to Firestore
-        saveNotificationToFirestore(userProfile, title, description);  // Pass the user map
-
-        Toast.makeText(this, "Notification sent to " + groupType + " entrants", Toast.LENGTH_SHORT).show();
+        // Call NotificationService to send and save the notification in Firestore
+        NotificationService.sendNotification(user, this, title, description);
     }
-
-
-    private void saveNotificationToFirestore(Map<String, Object> user, String title, String description) {
-        FirebaseFirestore db = FirebaseFirestore.getInstance();
-
-        // Create notification data with the user's name
-        Map<String, Object> notificationData = new HashMap<>();
-        notificationData.put("userName", user.get("name"));  // Save the user's name
-        notificationData.put("title", title);  // Save the title of the notification
-        notificationData.put("description", description);  // Save the description/message
-        notificationData.put("timestamp", FieldValue.serverTimestamp());  // Timestamp when notification was saved
-
-        // Store in the notifications collection
-        db.collection("notifications")
-                .add(notificationData)
-                .addOnSuccessListener(documentReference -> {
-                    // Optionally handle success (like showing a toast)
-                    Log.d("MyFirebaseMessagingService", "Notification saved successfully.");
-                })
-                .addOnFailureListener(e -> {
-                    // Handle failure in saving to Firestore
-                    Log.e("MyFirebaseMessagingService", "Error saving notification", e);
-                });
-    }
-
 
 }

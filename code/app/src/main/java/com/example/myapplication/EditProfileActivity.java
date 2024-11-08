@@ -35,6 +35,10 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * Activity for editing user profile information, including name, email, date of birth,
+ * phone number, country, profile image, and notification preferences.
+ */
 public class EditProfileActivity extends AppCompatActivity {
 
     private static final int MIN_AGE = 1;
@@ -67,6 +71,11 @@ public class EditProfileActivity extends AppCompatActivity {
                 removeProfileImageButton.setVisibility(View.VISIBLE);
             });
 
+    /**
+     * Initializes the activity, sets up UI elements, Firebase, and event listeners.
+     *
+     * @param savedInstanceState If the activity is being re-initialized after previously being shut down, this contains the data it most recently supplied.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -96,6 +105,7 @@ public class EditProfileActivity extends AppCompatActivity {
 
         setupDateOfBirthField();
 
+        // Update profile image based on name changes
         nameField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
@@ -129,6 +139,9 @@ public class EditProfileActivity extends AppCompatActivity {
         loadUserProfile();
     }
 
+    /**
+     * Removes the profile image by deleting it from Firebase Storage and updating Firestore.
+     */
     private void removeProfileImage() {
         StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
 
@@ -151,12 +164,18 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Opens the file chooser for selecting a profile image.
+     */
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         imagePickerLauncher.launch(intent);
     }
 
+    /**
+     * Sets up the date of birth field, including a calendar picker and format validation.
+     */
     private void setupDateOfBirthField() {
         dobField.setInputType(InputType.TYPE_CLASS_NUMBER);
         dobField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_calendar, 0);
@@ -172,6 +191,9 @@ public class EditProfileActivity extends AppCompatActivity {
         dobField.addTextChangedListener(new DateOfBirthTextWatcher());
     }
 
+    /**
+     * Displays a date picker dialog for selecting date of birth with validation on age range.
+     */
     private void showDatePicker() {
         final Calendar calendar = Calendar.getInstance();
         final int currentYear = calendar.get(Calendar.YEAR);
@@ -220,6 +242,9 @@ public class EditProfileActivity extends AppCompatActivity {
         datePickerDialog.show();
     }
 
+    /**
+     * Validates and formats date of birth input.
+     */
     private class DateOfBirthTextWatcher implements TextWatcher {
         private boolean isUpdating;
         private final String dateFormat = "MM/dd/yyyy";
@@ -279,7 +304,9 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Saves the updated profile data to Firestore and updates the profile image if changed.
+     */
     private void saveProfileData() {
         String name = nameField.getText() != null ? nameField.getText().toString().trim() : "";
         String email = emailField.getText() != null ? emailField.getText().toString().trim() : "";
@@ -335,6 +362,9 @@ public class EditProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Loads user profile data from Firestore and populates UI fields accordingly.
+     */
     private void loadUserProfile() {
         DocumentReference userProfileRef = db.collection("users").document(userId);
         userProfileRef.get()
@@ -362,17 +392,17 @@ public class EditProfileActivity extends AppCompatActivity {
                         }
                         if (phone != null) phoneField.setText(phone);
 
-                        // Create a userProfile map with the retrieved data
-                        Map<String, Object> userProfile = new HashMap<>();
-                        userProfile.put("name", name);
-                        userProfile.put("email", email);
-                        userProfile.put("dob", dob);
-                        userProfile.put("country", country);
-                        userProfile.put("notificationsEnabled", notificationsEnabled);
-                        userProfile.put("phone", phone);
+                        // Set the notificationsSwitch state based on notificationsEnabled
+                        if (notificationsEnabled != null) {
+                            notificationsSwitch.setChecked(notificationsEnabled);
+                        } else {
+                            notificationsSwitch.setChecked(false);
+                        }
 
                         // Send a notification if notifications are enabled
                         if (notificationsEnabled != null && notificationsEnabled) {
+                            Map<String, Object> userProfile = new HashMap<>();
+                            userProfile.put("name", name);
                             NotificationService.sendNotification(userProfile, this, "Success", "You have opted into notifications");
                         }
 
@@ -385,7 +415,9 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
-
+    /**
+     * Loads the profile image from Firebase Storage or generates an avatar if none is available.
+     */
     private void loadProfileImage() {
         StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
         storageRef.getDownloadUrl()
@@ -411,6 +443,12 @@ public class EditProfileActivity extends AppCompatActivity {
                 });
     }
 
+    /**
+     * Validates email format to ensure it ends with .com or .ca.
+     *
+     * @param email The email to validate.
+     * @return True if the email is valid, false otherwise.
+     */
     private boolean isValidEmail(String email) {
         return Patterns.EMAIL_ADDRESS.matcher(email).matches()
                 && (email.endsWith(".com") || email.endsWith(".ca"));
