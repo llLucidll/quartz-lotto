@@ -93,75 +93,58 @@ public class WaitinglistActivity extends AppCompatActivity {
      *
      * @param eventId The unique ID of the event whose waitlist is to be loaded.
      */
-    public void loadEventWaitlist(String eventId) {
-        DocumentReference eventRef = db.collection("Events").document(eventId);
+    private void loadEventWaitlist(String eventId) {
+        db.collection("Waitlist")
+                .whereEqualTo("event_id", eventId) // Filter by event_id
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        for (QueryDocumentSnapshot document : task.getResult()) {
+                            // Get the waitlist data
+                            Map<String, Object> waitlistData = document.getData();
 
-        eventRef.get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot document = task.getResult();
-                if (document.exists()) {
-                    // Get the waitlist (which is an array of maps)
-                    List<Map<String, Object>> waitlist = (List<Map<String, Object>>) document.get("waitlist");
+                            // Check each user in the waitlist
+                            for (Map.Entry<String, Object> entry : waitlistData.entrySet()) {
+                                // Skip non-user fields (like event_id)
+                                if (entry.getKey().startsWith("user_")) {
+                                    List<String> userInfo = (List<String>) entry.getValue();
+                                    String status = userInfo.get(1); // User's status (not chosen, waiting, etc.)
 
-                    if (waitlist != null) {
-                        List<Attendee> selectedEntries = new ArrayList<>();
-
-                        // Iterate through each entry in the waitlist
-                        for (Map<String, Object> entry : waitlist) {
-                            // Assuming "arrayField" contains the user ID at index 0 and status at index 1
-                            List<Object> arrayField = (List<Object>) entry.get("arrayField");
-                            if (arrayField != null && arrayField.size() > 1) {
-                                String userId = (String) arrayField.get(0);
-                                String status = (String) arrayField.get(1);
-
-                                // Only add attendees with "not chosen" status for waiting list
-                                if ("not chosen".equals(status)) {
-                                    Attendee attendee = new Attendee(userId, "", status);
-                                    selectedEntries.add(attendee);
+                                    // If status is "not chosen", add the user to the list
+                                    if ("not chosen".equals(status)) {
+                                        String userId = userInfo.get(0); // User profile ID
+                                        // Fetch the user's name from the "Users" collection
+                                        fetchUserName(userId);
+                                    }
                                 }
                             }
                         }
-
-                        // Update your adapter's data
-                        attendeesAdapter = new AttendeeAdapter(selectedEntries, true, false);
-                        recyclerViewAttendees.setAdapter(attendeesAdapter);
-                        attendeesAdapter.notifyDataSetChanged();
-                    } else {
-                        Log.d("WaitinglistActivity", "No waitlist found for event.");
                     }
-                } else {
-                    Log.d("WaitinglistActivity", "Event does not exist.");
-                }
-            } else {
-                Log.e("WaitinglistActivity", "Error getting event: " + task.getException());
-            }
-        });
+                });
     }
 
-    /**
-     * Loads attendees based on the selected entries.
-     * @param selectedEntries
-     */
-    private void loadAttendees(List<Object> selectedEntries) {
-        for (Object userId : selectedEntries) {
-            // fetch user data based on userId
-            fetchUserData(userId.toString());
-        }
-    }
+
 
     /**
-     * Fetches user data based on the provided user ID.
+     * Fetches user name based on the provided user ID.
      * @param userId
      */
-    private void fetchUserData(String userId) {
-        db.collection("Users").document(userId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful()) {
-                DocumentSnapshot userDoc = task.getResult();
-                String name = userDoc.getString("name");
-                Attendee attendee = new Attendee(userId, name, "waiting");
-                attendees.add(attendee);
-                attendeesAdapter.notifyDataSetChanged();
-            }
-        });
+    private void fetchUserName(String userId) {
+        db.collection("Users")
+                .document(userId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        DocumentSnapshot document = task.getResult();
+                        String userName = document.getString("name");
+
+                        if (userName != null) {
+                            // Add the user to the attendees list
+                            attendees.add(new Attendee(userName, "not chosen"));
+                            attendeesAdapter.notifyDataSetChanged(); // Update RecyclerView
+                        }
+                    }
+                });
     }
+
 }
