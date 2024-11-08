@@ -20,7 +20,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
 
-            android:text="Edit Profile"
+            android:text="@string/edit_profile"
             android:textColor="#4A4A4A"
             android:textSize="24sp"
             android:textStyle="bold" />
@@ -46,7 +46,7 @@
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:src="@drawable/circle_background"
-                android:contentDescription="Profile Image"
+                android:contentDescription="@string/profile_image"
                 app:civ_border_width="2dp"
                 app:civ_border_color="#FFFFFF" />
 
@@ -58,7 +58,7 @@
                 android:layout_marginEnd="-6dp"
                 android:layout_marginBottom="-8dp"
                 android:background="@null"
-                android:contentDescription="Edit Profile Image"
+                android:contentDescription="@string/edit_profile_image"
                 android:src="@drawable/ic_camera" />
 
             <ImageButton
@@ -69,7 +69,7 @@
                 android:layout_marginEnd="-2dp"
                 android:layout_marginBottom="-4dp"
                 android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="delete profile pic"
+                android:contentDescription="@string/delete_profile_pic"
                 android:src="@drawable/ic_delete"
                 android:visibility="visible" />
 
@@ -80,7 +80,7 @@
             android:id="@+id/name_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Name *"
+            android:text="@string/name"
             android:textColor="#4A4A4A"
             android:textStyle="bold"
             android:layout_marginBottom="4dp" />
@@ -90,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#4A4A4A"
-            android:hint="Enter your name"
+            android:hint="@string/enter_your_name"
             android:padding="10dp"
             android:layout_marginBottom="10dp"
             android:textColor="@android:color/black" />
@@ -99,7 +99,7 @@
             android:id="@+id/email_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Email *"
+            android:text="@string/email"
             android:textColor="#4A4A4A"
             android:textStyle="bold"
             android:layout_marginBottom="4dp" />
@@ -109,7 +109,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#4A4A4A"
-            android:hint="Enter your email"
+            android:hint="@string/enter_your_email"
             android:inputType="textEmailAddress"
             android:padding="10dp"
             android:layout_marginBottom="10dp"
@@ -119,7 +119,7 @@
             android:id="@+id/dob_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Date of Birth (MM/DD/YYYY) *"
+            android:text="@string/date_of_birth_mm_dd_yyyy"
             android:textColor="#4A4A4A"
             android:textStyle="bold"
             android:layout_marginBottom="4dp" />
@@ -129,7 +129,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#4A4A4A"
-            android:hint="MM/DD/YYYY"
+            android:hint="@string/mm_dd_yyyy"
             android:inputType="number"
             android:padding="10dp"
             android:layout_marginBottom="10dp"
@@ -144,7 +144,7 @@
             android:id="@+id/phone_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Phone Number (Optional)"
+            android:text="@string/phone_number_optional"
             android:textColor="#4A4A4A"
             android:textStyle="bold"
             android:layout_marginBottom="4dp" />
@@ -154,7 +154,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#4A4A4A"
-            android:hint="Enter your phone number"
+            android:hint="@string/enter_your_phone_number"
             android:inputType="phone"
             android:padding="10dp"
             android:layout_marginBottom="10dp"
@@ -165,7 +165,7 @@
             android:id="@+id/country_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Country/Region *"
+            android:text="@string/country_region"
             android:textColor="#4A4A4A"
             android:textStyle="bold"
             android:layout_marginBottom="4dp" />
@@ -185,7 +185,7 @@
             android:id="@+id/preferences_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Preferences (Click)"
+            android:text="@string/preferences_click"
             android:textColor="#4A4A4A"
             android:textStyle="bold"
             android:layout_marginBottom="6dp" />
@@ -205,7 +205,7 @@
                 android:layout_weight="1"
                 android:drawableStart="@drawable/ic_notifications"
                 android:drawablePadding="8dp"
-                android:text="Notifications"
+                android:text="@string/notifications"
                 android:textColor="#4A4A4A"
                 android:textStyle="bold" />
 
