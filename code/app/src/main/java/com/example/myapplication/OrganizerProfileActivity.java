@@ -36,8 +36,7 @@ public class OrganizerProfileActivity extends AppCompatActivity {
     private ImageButton editProfileImageButton, backButton;
     private EditText nameField, emailField, dobField, phoneField;
     private Spinner countrySpinner;
-    private Switch notificationsSwitch;
-    private Button saveChangesButton, buttonNotificationGroups, buttonManageFacilities;
+    private Button saveChangesButton, buttonNotificationGroups, buttonManageFacilities, buttonSwitchAttendee;
 
     private Uri imageUri;
     private FirebaseFirestore db;
@@ -75,11 +74,12 @@ public class OrganizerProfileActivity extends AppCompatActivity {
         dobField = findViewById(R.id.dob_field);
         phoneField = findViewById(R.id.phone_field);
         countrySpinner = findViewById(R.id.country_spinner);
-        notificationsSwitch = findViewById(R.id.notifications_switch);
         saveChangesButton = findViewById(R.id.save_changes_button);
         removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
         buttonNotificationGroups = findViewById(R.id.buttonManageNotifications);
         buttonManageFacilities = findViewById(R.id.buttonManageFacilities);
+        buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
+
 
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
         saveChangesButton.setOnClickListener(v -> saveProfileData());
@@ -87,6 +87,8 @@ public class OrganizerProfileActivity extends AppCompatActivity {
         removeProfileImageButton.setOnClickListener(v -> removeProfileImage());
         buttonNotificationGroups.setOnClickListener(v -> openManageNotifications());
         buttonManageFacilities.setOnClickListener(v -> openManageFacilities());
+        buttonManageFacilities.setOnClickListener(v -> openManageFacilities());
+        buttonSwitchAttendee.setOnClickListener(v -> switchProfileAttendee());
 
 
         setupDOBInputRestrictions();
@@ -286,7 +288,6 @@ public class OrganizerProfileActivity extends AppCompatActivity {
                             int spinnerPosition = adapter.getPosition(country);
                             countrySpinner.setSelection(spinnerPosition);
                         }
-                        if (notificationsEnabled != null) notificationsSwitch.setChecked(notificationsEnabled);
                         if (phone != null) phoneField.setText(phone);
 
                         if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
@@ -331,7 +332,6 @@ public class OrganizerProfileActivity extends AppCompatActivity {
         String email = emailField.getText().toString().trim();
         String dob = dobField.getText().toString().trim();
         String country = countrySpinner.getSelectedItem().toString();
-        boolean notificationsEnabled = notificationsSwitch.isChecked();
         String phone = phoneField.getText().toString().trim();
 
         if (name.isEmpty() || email.isEmpty() || dob.isEmpty() || country.isEmpty()) {
@@ -355,7 +355,6 @@ public class OrganizerProfileActivity extends AppCompatActivity {
         userProfile.put("email", email);
         userProfile.put("dob", dob);
         userProfile.put("country", country);
-        userProfile.put("notificationsEnabled", notificationsEnabled);
         if (!phone.isEmpty()) userProfile.put("phone", phone);
 
         DocumentReference userProfileRef = db.collection("Organizers").document(userId);
@@ -415,6 +414,11 @@ public class OrganizerProfileActivity extends AppCompatActivity {
 
     private void openManageFacilities() {
         Intent intent = new Intent(OrganizerProfileActivity.this, ManageFacilitiesActivity.class);
+        startActivity(intent);
+    }
+
+    private void switchProfileAttendee() {
+        Intent intent = new Intent(OrganizerProfileActivity.this, EditProfileActivity.class);
         startActivity(intent);
     }
 

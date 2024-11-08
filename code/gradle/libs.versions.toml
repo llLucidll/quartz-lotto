@@ -1,5 +1,6 @@
 [versions]
 agp = "8.6.0"
+firebaseAuth = "23.1.0"
 junit = "4.13.2"
 firebaseMessaging = "24.0.3"
 junitVersion = "1.2.1"
@@ -30,6 +31,7 @@ googleMaps = "18.1.0"
 location = "21.0.1"
 
 [libraries]
+firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

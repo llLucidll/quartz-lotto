@@ -5,33 +5,39 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.*;
+import android.text.Editable;
+import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Patterns;
-import android.view.*;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.*;
 
-import androidx.activity.OnBackPressedCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.*;
-import androidx.fragment.app.Fragment;
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.firestore.*;
-import com.google.firebase.storage.*;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import java.text.*;
-import java.util.*;
+public class EditProfileActivity extends AppCompatActivity {
 
-
-
-public class EditProfileFragment extends Fragment {
-
-    private static final int MIN_AGE = 1; // Minimum age set to 1
+    private static final int MIN_AGE = 1;
     private static final int MAX_AGE = 100;
 
     private ImageButton removeProfileImageButton;
@@ -46,16 +52,13 @@ public class EditProfileFragment extends Fragment {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
-    private BottomNavigationView bottomNavigationView;
-
     private String userId = "userProfile";
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
-                if (result.getResultCode() == requireActivity().RESULT_OK && result.getData() != null) {
+                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                     imageUri = result.getData().getData();
-
                     Glide.with(this)
                             .load(imageUri)
                             .apply(RequestOptions.circleCropTransform())
@@ -64,159 +67,96 @@ public class EditProfileFragment extends Fragment {
                 removeProfileImageButton.setVisibility(View.VISIBLE);
             });
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.fragment_edit_profile, container, false);
-
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_edit_profile);
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        // UI elements
-        profileImageView = view.findViewById(R.id.profile_image);
-        editProfileImageButton = view.findViewById(R.id.edit_profile_image_button);
-        backButton = view.findViewById(R.id.back_button);
-        nameField = view.findViewById(R.id.name_field);
-        emailField = view.findViewById(R.id.email_field);
-        dobField = view.findViewById(R.id.dob_field);
-        phoneField = view.findViewById(R.id.phone_field);
-        countrySpinner = view.findViewById(R.id.country_spinner);
-        notificationsSwitch = view.findViewById(R.id.notifications_switch);
-        saveChangesButton = view.findViewById(R.id.save_changes_button);
-        removeProfileImageButton = view.findViewById(R.id.remove_profile_image_button); // Initialize here
+        // Initialize UI elements
+        profileImageView = findViewById(R.id.profile_image);
+        editProfileImageButton = findViewById(R.id.edit_profile_image_button);
+        backButton = findViewById(R.id.back_button);
+        nameField = findViewById(R.id.name_field);
+        emailField = findViewById(R.id.email_field);
+        dobField = findViewById(R.id.dob_field);
+        phoneField = findViewById(R.id.phone_field);
+        countrySpinner = findViewById(R.id.country_spinner);
+        notificationsSwitch = findViewById(R.id.notifications_switch);
+        saveChangesButton = findViewById(R.id.save_changes_button);
+        removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
 
-
-        // Buttons and fields
+        // Set listeners
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
         saveChangesButton.setOnClickListener(v -> saveProfileData());
-        backButton.setOnClickListener(v -> navigateBack());
-        removeProfileImageButton.setOnClickListener(v -> removeProfileImage()); // Set click listener
-
+        backButton.setOnClickListener(v -> finish());
+        removeProfileImageButton.setOnClickListener(v -> removeProfileImage());
 
         setupDateOfBirthField();
-        //adding textchanged listener
+
         nameField.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                // Not needed
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if (db == null) return;
-
                 DocumentReference userProfileRef = db.collection("users").document(userId);
                 userProfileRef.get()
                         .addOnSuccessListener(documentSnapshot -> {
                             if (documentSnapshot.exists()) {
                                 String profileImageUrl = documentSnapshot.getString("profileImageUrl");
                                 if (profileImageUrl == null || profileImageUrl.isEmpty()) {
-                                    //no uploaded profile image, regenerate avatar
                                     String name = nameField.getText() != null ? nameField.getText().toString().trim() : "";
                                     if (!name.isEmpty()) {
                                         String firstLetter = String.valueOf(name.charAt(0)).toUpperCase(Locale.US);
-                                        Bitmap avatarBitmap = AvatarUtil.generateAvatar(firstLetter, 200, requireContext());
+                                        Bitmap avatarBitmap = AvatarUtil.generateAvatar(firstLetter, 200, EditProfileActivity.this);
                                         profileImageView.setImageBitmap(avatarBitmap);
                                     } else {
-                                        //generic pfp
                                         profileImageView.setImageResource(R.drawable.ic_profile);
                                     }
                                 }
                             }
                         })
-                        .addOnFailureListener(e -> {
-                            e.printStackTrace();
-                        });
+                        .addOnFailureListener(Throwable::printStackTrace);
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-            }
+            public void afterTextChanged(Editable s) {}
         });
 
-        return view;
+        loadUserProfile();
     }
 
-
     private void removeProfileImage() {
-
-        //reference to the profile image in Firebase Storage
         StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
 
-        // delete image from Firebase Storage
         storageRef.delete()
                 .addOnSuccessListener(aVoid -> {
-                    // when we successfully deleted the image from Storage
-                    // remove the profileImageUrl field from Firestore
                     DocumentReference userProfileRef = db.collection("users").document(userId);
                     userProfileRef.update("profileImageUrl", FieldValue.delete())
                             .addOnSuccessListener(aVoid1 -> {
-                                Toast.makeText(getContext(), "Profile image removed", Toast.LENGTH_SHORT).show();
-                                //reload the profile image to update the ImageView
+                                Toast.makeText(this, "Profile image removed", Toast.LENGTH_SHORT).show();
                                 loadProfileImage();
                             })
                             .addOnFailureListener(e -> {
                                 e.printStackTrace();
-                                Toast.makeText(getContext(), "Failed to remove profile image URL", Toast.LENGTH_SHORT).show();
+                                Toast.makeText(this, "Failed to remove profile image URL", Toast.LENGTH_SHORT).show();
                             });
                 })
                 .addOnFailureListener(e -> {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Failed to delete profile image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to delete profile image", Toast.LENGTH_SHORT).show();
                 });
-
     }
 
-    @Override
-    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
-        super.onViewCreated(view, savedInstanceState);
-
-        //hide BottomNavigationView when entering EditProfileFragment
-        bottomNavigationView = requireActivity().findViewById(R.id.bottom_navigation);
-        if (bottomNavigationView != null) {
-            bottomNavigationView.setVisibility(View.GONE);
-        }
-
-        //back button
-        requireActivity().getOnBackPressedDispatcher().addCallback(
-                getViewLifecycleOwner(),
-                new OnBackPressedCallback(true) {
-                    @Override
-                    public void handleOnBackPressed() {
-                        navigateBack();
-                    }
-                });
-
-        // Load user data from Firestore
-        loadUserProfile();
-    }
-
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-
-        // get BottomNavigationView back when leaving EditProfileFragment
-        if (bottomNavigationView != null) {
-            bottomNavigationView.setVisibility(View.VISIBLE);
-        }
-    }
-
-    //Navigate back by popping the back stack
-    private void navigateBack() {
-        requireActivity().getSupportFragmentManager().popBackStack();
-    }
-
-    //Open file chooser to select profile image
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         imagePickerLauncher.launch(intent);
     }
 
-    // Set up the Date of Birth field with slash checkers and calendar icon
     private void setupDateOfBirthField() {
         dobField.setInputType(InputType.TYPE_CLASS_NUMBER);
         dobField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_calendar, 0);
@@ -232,7 +172,6 @@ public class EditProfileFragment extends Fragment {
         dobField.addTextChangedListener(new DateOfBirthTextWatcher());
     }
 
-    //Date picker dialog for date of birth and validate age
     private void showDatePicker() {
         final Calendar calendar = Calendar.getInstance();
         final int currentYear = calendar.get(Calendar.YEAR);
@@ -240,7 +179,6 @@ public class EditProfileFragment extends Fragment {
         int month = calendar.get(Calendar.MONTH);
         int day = calendar.get(Calendar.DAY_OF_MONTH);
 
-        // existing date if available
         String dobText = dobField.getText().toString();
         if (dobText.length() == 10) {
             try {
@@ -256,7 +194,7 @@ public class EditProfileFragment extends Fragment {
         }
 
         DatePickerDialog datePickerDialog = new DatePickerDialog(
-                getContext(),
+                this,
                 (view, year1, month1, dayOfMonth) -> {
                     Calendar selectedDate = Calendar.getInstance();
                     selectedDate.set(year1, month1, dayOfMonth);
@@ -265,12 +203,11 @@ public class EditProfileFragment extends Fragment {
                     if (age >= MIN_AGE && age <= MAX_AGE) {
                         dobField.setText(String.format(Locale.US, "%02d/%02d/%04d", month1 + 1, dayOfMonth, year1));
                     } else {
-                        Toast.makeText(getContext(), "Age must be between " + MIN_AGE + " and " + MAX_AGE, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Age must be between " + MIN_AGE + " and " + MAX_AGE, Toast.LENGTH_SHORT).show();
                     }
                 },
                 year, month, day);
 
-        // age constraints
         Calendar minDate = Calendar.getInstance();
         minDate.set(currentYear - MAX_AGE, Calendar.JANUARY, 1);
 
@@ -283,46 +220,23 @@ public class EditProfileFragment extends Fragment {
         datePickerDialog.show();
     }
 
-    //TextWatcher for date of birth field to auto-insert slashes
     private class DateOfBirthTextWatcher implements TextWatcher {
         private boolean isUpdating;
         private final String dateFormat = "MM/dd/yyyy";
-        private final Calendar calendar = Calendar.getInstance();
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            if (isUpdating) {
-                isUpdating = false;
-                return;
-            }
+            if (isUpdating) return;
 
-            String input = s.toString();
-            String cleanInput = input.replaceAll("[^\\d]", "");
-
-            if (cleanInput.length() > 8) {
-                cleanInput = cleanInput.substring(0, 8);
-            }
-
-            int length = cleanInput.length();
-
+            String cleanInput = s.toString().replaceAll("[^\\d]", "");
             StringBuilder formatted = new StringBuilder();
-
-            if (length >= 2) {
-                formatted.append(cleanInput.substring(0, 2));
-                formatted.append("/");
-                if (length >= 4) {
-                    formatted.append(cleanInput.substring(2, 4));
-                    formatted.append("/");
-                    if (length > 4) {
-                        formatted.append(cleanInput.substring(4));
-                    }
-                } else if (length > 2) {
-                    formatted.append(cleanInput.substring(2));
-                }
+            if (cleanInput.length() >= 2) {
+                formatted.append(cleanInput.substring(0, 2)).append("/");
+                if (cleanInput.length() >= 4) formatted.append(cleanInput.substring(2, 4)).append("/");
+                if (cleanInput.length() > 4) formatted.append(cleanInput.substring(4));
             } else {
                 formatted.append(cleanInput);
             }
@@ -330,44 +244,42 @@ public class EditProfileFragment extends Fragment {
             isUpdating = true;
             dobField.setText(formatted.toString());
             dobField.setSelection(formatted.length());
+            isUpdating = false;
+        }
 
-            //validate date if length is 10 (MM/DD/YYYY)
-            if (formatted.length() == 10) {
+        @Override
+        public void afterTextChanged(Editable s) {
+            // Only validate if the length is exactly 10 (MM/DD/YYYY format)
+            if (s.length() == 10) {
+                String inputDate = s.toString();
                 SimpleDateFormat sdf = new SimpleDateFormat(dateFormat, Locale.US);
                 sdf.setLenient(false);
 
                 try {
-                    Date date = sdf.parse(formatted.toString());
-                    // Check if date is within the allowed range
-                    Calendar selectedDate = Calendar.getInstance();
-                    selectedDate.setTime(date);
+                    Date date = sdf.parse(inputDate);
+                    Calendar calendar = Calendar.getInstance();
+                    Calendar minDate = Calendar.getInstance();
+                    minDate.add(Calendar.YEAR, -MAX_AGE);
+                    Calendar maxDate = Calendar.getInstance();
+                    maxDate.add(Calendar.YEAR, -MIN_AGE);
 
-                    int age = calendar.get(Calendar.YEAR) - selectedDate.get(Calendar.YEAR);
-                    if (age < MIN_AGE || age > MAX_AGE) {
-                        dobField.setError("Age must be between " + MIN_AGE + " and " + MAX_AGE);
+                    calendar.setTime(date);
+
+                    if (calendar.before(minDate) || calendar.after(maxDate)) {
+                        dobField.setError("Age must be between " + MIN_AGE + " and " + MAX_AGE + " years.");
                     } else {
                         dobField.setError(null);
                     }
                 } catch (ParseException e) {
-                    dobField.setError("Invalid date");
+                    dobField.setError("Invalid date format. Use MM/DD/YYYY.");
                 }
             } else {
                 dobField.setError(null);
             }
         }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-        }
     }
 
-    //validates email is correct
-    private boolean isValidEmail(String email) {
-        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
-                && (email.endsWith(".com") || email.endsWith(".ca"));
-    }
 
-    //saves profile data to Firestore
     private void saveProfileData() {
         String name = nameField.getText() != null ? nameField.getText().toString().trim() : "";
         String email = emailField.getText() != null ? emailField.getText().toString().trim() : "";
@@ -378,25 +290,21 @@ public class EditProfileFragment extends Fragment {
         boolean notificationsEnabled = notificationsSwitch.isChecked();
         String phone = phoneField.getText() != null ? phoneField.getText().toString().trim() : "";
 
-        // Validation
         if (name.isEmpty() || email.isEmpty() || dob.isEmpty() || country.isEmpty()) {
-            Toast.makeText(getContext(), "Please fill out all required fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill out all required fields", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //email validation
         if (!isValidEmail(email)) {
-            Toast.makeText(getContext(), "Invalid email format.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid email format.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //date of birth validation
         if (dobField.getError() != null) {
-            Toast.makeText(getContext(), "Please enter a valid date of birth", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please enter a valid date of birth", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        //save user profile data in Firestore
         Map<String, Object> userProfile = new HashMap<>();
         userProfile.put("name", name);
         userProfile.put("email", email);
@@ -407,38 +315,26 @@ public class EditProfileFragment extends Fragment {
 
         DocumentReference userProfileRef = db.collection("users").document(userId);
         userProfileRef.set(userProfile)
-                .addOnSuccessListener(aVoid -> {
-                    Toast.makeText(getContext(), "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                    // navigateBack();
-
-                    if (notificationsEnabled) {
-                        NotificationService.sendNotification(userProfile, getContext(), "Success", "You have opted into notifications");
-                    }
-                })
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Error updating profile", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Error updating profile", Toast.LENGTH_SHORT).show();
                 });
 
-        //upload profile image to Firebase Storage if a new image is selected
         if (imageUri != null) {
             StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
             storageRef.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> {
-                        storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                            // save the download URL to Firestore if needed
-                            userProfileRef.update("profileImageUrl", uri.toString());
-                        });
-                        Toast.makeText(getContext(), "Profile image uploaded", Toast.LENGTH_SHORT).show();
-                    })
+                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        userProfileRef.update("profileImageUrl", uri.toString());
+                        Toast.makeText(this, "Profile image uploaded", Toast.LENGTH_SHORT).show();
+                    }))
                     .addOnFailureListener(e -> {
                         e.printStackTrace();
-                        Toast.makeText(getContext(), "Failed to upload profile image", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(this, "Failed to upload profile image", Toast.LENGTH_SHORT).show();
                     });
         }
     }
 
-    //Load user profile data from Firestore
     private void loadUserProfile() {
         DocumentReference userProfileRef = db.collection("users").document(userId);
         userProfileRef.get()
@@ -451,14 +347,12 @@ public class EditProfileFragment extends Fragment {
                         Boolean notificationsEnabled = documentSnapshot.getBoolean("notificationsEnabled");
                         String phone = documentSnapshot.getString("phone");
 
-                        //set the values to the fields
                         if (name != null) nameField.setText(name);
                         if (email != null) emailField.setText(email);
                         if (dob != null) dobField.setText(dob);
                         if (country != null) {
-                            //set the spinner selection
                             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                                    requireContext(), R.array.country_array, android.R.layout.simple_spinner_item);
+                                    this, R.array.country_array, android.R.layout.simple_spinner_item);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                             countrySpinner.setAdapter(adapter);
 
@@ -474,11 +368,10 @@ public class EditProfileFragment extends Fragment {
                 })
                 .addOnFailureListener(e -> {
                     e.printStackTrace();
-                    Toast.makeText(getContext(), "Failed to load profile", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show();
                 });
     }
 
-    //load profile image from Firebase Storage or set default avatar
     private void loadProfileImage() {
         StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
         storageRef.getDownloadUrl()
@@ -488,25 +381,24 @@ public class EditProfileFragment extends Fragment {
                             .apply(RequestOptions.circleCropTransform())
                             .placeholder(R.drawable.ic_profile)
                             .into(profileImageView);
-
-                    // Show the remove button since an image exists
                     removeProfileImageButton.setVisibility(View.VISIBLE);
                 })
                 .addOnFailureListener(e -> {
                     e.printStackTrace();
-                    //if there's no image, generate a default one with the first letter of the user's name
                     String name = nameField.getText() != null ? nameField.getText().toString().trim() : "";
                     if (!name.isEmpty()) {
                         String firstLetter = String.valueOf(name.charAt(0)).toUpperCase(Locale.US);
-                        Bitmap avatarBitmap = AvatarUtil.generateAvatar(firstLetter, 200, requireContext());
+                        Bitmap avatarBitmap = AvatarUtil.generateAvatar(firstLetter, 200, this);
                         profileImageView.setImageBitmap(avatarBitmap);
                     } else {
-                        // Set generic default image if the name is unavailable
                         profileImageView.setImageResource(R.drawable.ic_profile);
                     }
-
-                    //hide rm button
                     removeProfileImageButton.setVisibility(View.GONE);
                 });
+    }
+
+    private boolean isValidEmail(String email) {
+        return Patterns.EMAIL_ADDRESS.matcher(email).matches()
+                && (email.endsWith(".com") || email.endsWith(".ca"));
     }
 }
