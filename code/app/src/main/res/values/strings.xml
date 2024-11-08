@@ -17,6 +17,35 @@
 
     <string name="toggle_flash">Toggle Flash</string>
     <string name="open_gallery">Open Gallery</string>
+    <string name="add_facility">Add Facility</string>
+    <string name="facility_image">Facility Image</string>
+    <string name="upload_facility_image">Upload Facility Image</string>
+    <string name="facility_name">Facility Name</string>
+    <string name="facility_location">Facility Location</string>
+    <string name="save_facility">Save Facility</string>
+    <string name="back">Back</string>
+    <string name="details">Details</string>
+    <string name="waitlist">Waitlist</string>
+    <string name="attendees">Attendees</string>
+    <string name="locations">Locations</string>
+    <string name="confirmed">Confirmed</string>
+    <string name="waiting">Waiting</string>
+    <string name="cancelled">Cancelled</string>
+    <string name="edit_profile">Edit Profile</string>
+    <string name="profile_image">Profile Image</string>
+    <string name="edit_profile_image">Edit Profile Image</string>
+    <string name="delete_profile_pic">delete profile pic</string>
+    <string name="name">Name *</string>
+    <string name="enter_your_name">Enter your name</string>
+    <string name="email">Email *</string>
+    <string name="enter_your_email">Enter your email</string>
+    <string name="date_of_birth_mm_dd_yyyy">Date of Birth (MM/DD/YYYY) *</string>
+    <string name="mm_dd_yyyy">MM/DD/YYYY</string>
+    <string name="phone_number_optional">Phone Number (Optional)</string>
+    <string name="enter_your_phone_number">Enter your phone number</string>
+    <string name="country_region">Country/Region *</string>
+    <string name="preferences_click">Preferences (Click)</string>
+    <string name="notifications">Notifications</string>
 
 
 </resources>

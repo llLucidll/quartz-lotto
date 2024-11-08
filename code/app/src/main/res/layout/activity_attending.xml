@@ -12,7 +12,7 @@
         android:layout_gravity="start"
         android:layout_marginBottom="8dp"
         android:background="@null"
-        android:contentDescription="Back"
+        android:contentDescription="@string/back"
         android:src="@drawable/ic_back" />
     <!-- Tabs Navigation -->
     <LinearLayout
@@ -27,7 +27,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Details" />
+            android:text="@string/details" />
 
         <Button
             android:id="@+id/tabWaitlist"
@@ -35,7 +35,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Waitlist" />
+            android:text="@string/waitlist" />
 
         <Button
             android:id="@+id/tabAttendees"
@@ -43,7 +43,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Attendees" />
+            android:text="@string/attendees" />
 
         <Button
             android:id="@+id/tabLocations"
@@ -51,14 +51,14 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Locations" />
+            android:text="@string/locations" />
     </LinearLayout>
     <!-- Confirmed Header -->
     <TextView
         android:id="@+id/confirmedHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Confirmed"
+        android:text="@string/confirmed"
         android:textSize="18sp"
         android:layout_marginTop="24dp"/>
 
@@ -74,7 +74,7 @@
         android:id="@+id/waitlistHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Waiting"
+        android:text="@string/waiting"
         android:textSize="18sp"
         android:layout_marginTop="16dp"/>
 
@@ -90,7 +90,7 @@
         android:id="@+id/cancelledHeader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancelled"
+        android:text="@string/cancelled"
         android:textSize="18sp"
         android:layout_marginTop="24dp"/>
 
