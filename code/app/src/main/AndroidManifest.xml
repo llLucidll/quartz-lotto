@@ -43,13 +43,14 @@
             </intent-filter>
         </activity>
         <activity android:name=".CreateEventActivity" />
+        <activity android:name=".WaitinglistActivity" />
+        <activity android:name=".AttendingActivity" />
         <activity android:name=".OrganizerProfileActivity" />
         <activity android:name=".ManageNotificationGroupsActivity" />
         <activity android:name=".GroupEntrantsActivity" />
         <activity android:name=".ManageFacilitiesActivity" />
         <activity android:name=".AddFacilityActivity" />
         <activity android:name=".EditProfileActivity" />
-        <activity android:name=".WaitinglistActivity" /> <!-- Closing tag added here -->
 
     </application>
 

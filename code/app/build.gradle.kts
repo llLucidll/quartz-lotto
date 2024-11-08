@@ -30,6 +30,10 @@ android {
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
+
+    tasks.withType<Test>{
+        useJUnitPlatform()
+    }
 }
 
 dependencies {
@@ -45,6 +49,20 @@ dependencies {
     implementation(libs.zxing)
     implementation(libs.firebase.crashlytics.buildtools)
     testImplementation(libs.junit)
+
+    // Mockito for mocking
+    testImplementation("org.mockito:mockito-core:4.0.0")
+
+    // Robolectric for Android UI testing
+    testImplementation("org.robolectric:robolectric:4.8.1")
+
+    testImplementation ("org.junit.jupiter:junit-jupiter-api:5.0.1")
+    testImplementation(libs.junit.jupiter)
+
+
+    // JUnit Vintage to allow JUnit 4 tests to run on JUnit 5 platform
+    testRuntimeOnly("org.junit.vintage:junit-vintage-engine:5.8.1")
+
     implementation(libs.circleimageview)
     implementation(libs.glide)
     annotationProcessor(libs.glide.compiler)

@@ -5,7 +5,15 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:padding="16dp">
-
+    <ImageButton
+        android:id="@+id/back_button"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="start"
+        android:layout_marginBottom="8dp"
+        android:background="@null"
+        android:contentDescription="Back"
+        android:src="@drawable/ic_back" />
     <!-- Tabs Navigation -->
     <LinearLayout
         android:layout_width="match_parent"
