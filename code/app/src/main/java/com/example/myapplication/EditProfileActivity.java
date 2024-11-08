@@ -347,6 +347,7 @@ public class EditProfileActivity extends AppCompatActivity {
                         Boolean notificationsEnabled = documentSnapshot.getBoolean("notificationsEnabled");
                         String phone = documentSnapshot.getString("phone");
 
+                        // Populate fields with retrieved data
                         if (name != null) nameField.setText(name);
                         if (email != null) emailField.setText(email);
                         if (dob != null) dobField.setText(dob);
@@ -359,9 +360,21 @@ public class EditProfileActivity extends AppCompatActivity {
                             int spinnerPosition = adapter.getPosition(country);
                             countrySpinner.setSelection(spinnerPosition);
                         }
-                        if (notificationsEnabled != null)
-                            notificationsSwitch.setChecked(notificationsEnabled);
                         if (phone != null) phoneField.setText(phone);
+
+                        // Create a userProfile map with the retrieved data
+                        Map<String, Object> userProfile = new HashMap<>();
+                        userProfile.put("name", name);
+                        userProfile.put("email", email);
+                        userProfile.put("dob", dob);
+                        userProfile.put("country", country);
+                        userProfile.put("notificationsEnabled", notificationsEnabled);
+                        userProfile.put("phone", phone);
+
+                        // Send a notification if notifications are enabled
+                        if (notificationsEnabled != null && notificationsEnabled) {
+                            NotificationService.sendNotification(userProfile, this, "Success", "You have opted into notifications");
+                        }
 
                         loadProfileImage();
                     }
@@ -371,6 +384,7 @@ public class EditProfileActivity extends AppCompatActivity {
                     Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show();
                 });
     }
+
 
     private void loadProfileImage() {
         StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");

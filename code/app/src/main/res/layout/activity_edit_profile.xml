@@ -185,7 +185,7 @@
             android:id="@+id/preferences_label"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Preferences"
+            android:text="Preferences (Click)"
             android:textColor="#4A4A4A"
             android:textStyle="bold"
             android:layout_marginBottom="6dp" />
