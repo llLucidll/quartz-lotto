@@ -31,8 +31,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_1_8
     }
 
-    tasks.withType<Test>{
-        useJUnitPlatform()
+    testOptions {
+
+        unitTests {
+            isIncludeAndroidResources = true
+        }
     }
 }
 
