@@ -45,7 +45,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".CreateEventActivity" />
-
+        <activity android:name=".WaitinglistActivity" />
+        <activity android:name=".AttendingActivity" />
         <activity android:name=".OrganizerProfileActivity" />
         <activity android:name=".ManageNotificationGroupsActivity" />
         <activity android:name=".GroupEntrantsActivity" />
