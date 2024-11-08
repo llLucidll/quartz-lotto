@@ -1,6 +1,8 @@
 [versions]
 agp = "8.6.0"
 firebaseAuth = "23.1.0"
+firebaseAuthVersion = "23.0.1"
+firebaseBom = "33.5.1"
 junit = "4.13.2"
 firebaseMessaging = "24.0.3"
 junitVersion = "1.2.1"
@@ -32,6 +34,9 @@ location = "21.0.1"
 
 [libraries]
 firebase-auth = { module = "com.google.firebase:firebase-auth", version.ref = "firebaseAuth" }
+firebase-auth-v2301 = { module = "com.google.firebase:firebase-auth", version = "12.0.1" }
+firebase-bom = { module = "com.google.firebase:firebase-bom", version.ref = "firebaseBom" }
+firebase-messaging = { module = "com.google.firebase:firebase-messaging", version.ref = "firebaseAuth" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 ext-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }

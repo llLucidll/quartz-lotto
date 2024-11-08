@@ -33,10 +33,8 @@ public class OrganizerProfileActivity extends AppCompatActivity {
 
     private ImageButton removeProfileImageButton;
     private CircleImageView profileImageView;
-    private ImageButton editProfileImageButton, backButton;
     private EditText nameField, emailField, dobField, phoneField;
     private Spinner countrySpinner;
-    private Button saveChangesButton, buttonNotificationGroups, buttonManageFacilities, buttonSwitchAttendee;
 
     private Uri imageUri;
     private FirebaseFirestore db;
@@ -67,18 +65,18 @@ public class OrganizerProfileActivity extends AppCompatActivity {
         storage = FirebaseStorage.getInstance();
 
         profileImageView = findViewById(R.id.profile_image);
-        editProfileImageButton = findViewById(R.id.edit_profile_image_button);
-        backButton = findViewById(R.id.back_button);
+        ImageButton editProfileImageButton = findViewById(R.id.edit_profile_image_button);
+        ImageButton backButton = findViewById(R.id.back_button);
         nameField = findViewById(R.id.name_field);
         emailField = findViewById(R.id.email_field);
         dobField = findViewById(R.id.dob_field);
         phoneField = findViewById(R.id.phone_field);
         countrySpinner = findViewById(R.id.country_spinner);
-        saveChangesButton = findViewById(R.id.save_changes_button);
+        Button saveChangesButton = findViewById(R.id.save_changes_button);
         removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
-        buttonNotificationGroups = findViewById(R.id.buttonManageNotifications);
-        buttonManageFacilities = findViewById(R.id.buttonManageFacilities);
-        buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
+        Button buttonNotificationGroups = findViewById(R.id.buttonManageNotifications);
+        Button buttonManageFacilities = findViewById(R.id.buttonManageFacilities);
+        Button buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
 
 
         editProfileImageButton.setOnClickListener(v -> openFileChooser());

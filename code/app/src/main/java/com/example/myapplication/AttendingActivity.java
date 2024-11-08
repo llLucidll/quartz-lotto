@@ -1,5 +1,6 @@
 package com.example.myapplication;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageButton;
 
 import com.google.firebase.firestore.CollectionReference;
@@ -31,6 +33,7 @@ public class AttendingActivity extends AppCompatActivity {
     private List<Attendee> confirmedList;
 
     private FirebaseFirestore db;
+    private String eventId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +41,7 @@ public class AttendingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_attending);
 
         db = FirebaseFirestore.getInstance();
+        eventId = getIntent().getStringExtra("event_id");
 
         recyclerViewWaitlist = findViewById(R.id.recyclerViewWaitlist);
         recyclerViewCancelled = findViewById(R.id.recyclerViewCancelled);
@@ -59,13 +63,24 @@ public class AttendingActivity extends AppCompatActivity {
         recyclerViewCancelled.setAdapter(cancelledAdapter);
         recyclerViewConfirmed.setAdapter(confirmedAdapter);
 
-        loadEventWaitlist("eventId_1");
+        loadAttendinglist(eventId);
 
         final ImageButton backButton = findViewById(R.id.back_button);
         backButton.setOnClickListener(v -> finish());
+
+        Button tabWaitlist = findViewById(R.id.tabWaitlist);
+        tabWaitlist.setOnClickListener(view -> {
+            Intent intent = new Intent(this, WaitinglistActivity.class);
+            intent.putExtra("event_id", eventId);
+            startActivity(intent);
+        });
     }
 
-    private void loadEventWaitlist(String eventId) {
+    /**
+     * Loads the attending list for a specific event from Firestore.
+     * @param eventId
+     */
+    private void loadAttendinglist(String eventId) {
         DocumentReference eventRef = db.collection("Events").document(eventId);
 
         eventRef.get().addOnCompleteListener(task -> {
@@ -89,11 +104,14 @@ public class AttendingActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Fetches user data based on the provided user ID and updates the corresponding list.
+     * @param userId
+     * @param status
+     */
     private void fetchUserNameAndSort(String userId, String status) {
-        CollectionReference usersRef = db.collection("Users");
-
-        usersRef.document(userId).get().addOnCompleteListener(task -> {
-            if (task.isSuccessful() && task.getResult() != null) {
+        db.collection("Users").document(userId).get().addOnCompleteListener(task -> {
+            if (task.isSuccessful()) {
                 String name = task.getResult().getString("name");
 
                 Attendee attendee = new Attendee(userId, name, status);
@@ -118,6 +136,10 @@ public class AttendingActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Moves an attendee to the cancelled list.
+     * @param position
+     */
     public void moveToCancelled(int position) {
         Attendee attendee = waitlist.get(position);
         waitlist.remove(position);
@@ -129,6 +151,10 @@ public class AttendingActivity extends AppCompatActivity {
         cancelledAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Moves an attendee to the confirmed list.
+     * @param position
+     */
     public void moveToConfirmed(int position) {
         Attendee attendee = waitlist.get(position);
         waitlist.remove(position);
@@ -140,6 +166,11 @@ public class AttendingActivity extends AppCompatActivity {
         confirmedAdapter.notifyDataSetChanged();
     }
 
+    /**
+     * Updates the status of an attendee in Firestore.
+     * @param attendee
+     * @param newStatus
+     */
     private void updateStatusInFirestore(Attendee attendee, String newStatus) {
         db.collection("Users").document(attendee.getUserID())
                 .update("status", newStatus);

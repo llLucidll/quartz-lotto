@@ -9,6 +9,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Attendee;
+import com.example.myapplication.AttendingActivity;
+import com.example.myapplication.R;
+
+import java.util.ArrayList;
 import java.util.List;
 
 public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.ViewHolder> {
@@ -18,8 +23,9 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.ViewHo
     private boolean notChosen;
 
     public AttendeeAdapter(List<Attendee> attendeeList, boolean isWaiting, boolean notChosen) {
-        this.attendeeList = attendeeList;
+        this.attendeeList = attendeeList != null ? attendeeList : new ArrayList<>();
         this.isWaiting = isWaiting;
+        this.notChosen = notChosen;
     }
 
     @NonNull
@@ -49,8 +55,7 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.ViewHo
 
         if (notChosen) {
             holder.status.setVisibility(View.GONE);
-        }
-        else {
+        } else {
             holder.status.setVisibility(View.VISIBLE);
         }
     }
@@ -60,6 +65,9 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.ViewHo
         return attendeeList.size();
     }
 
+    /**
+     * Updates the data in the adapter.
+     */
     public static class ViewHolder extends RecyclerView.ViewHolder {
         TextView name, status;
         Button cancelButton;

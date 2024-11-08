@@ -1,37 +1,43 @@
 package com.example.myapplication;
 
-
+import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
-
 import android.os.Bundle;
-
+import android.util.Log;
+import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Toast;
 
-
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
 
-
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class CreateEventActivity extends AppCompatActivity {
     private EditText eventNameEditText, dateEditText, timeEditText, descriptionEditText, maxAttendeesEditText, maxWaitlistEditText;
     private CheckBox geolocationCheckBox;
     private ImageView qrCodeImageView;
+    private FirebaseFirestore db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_event);
 
-        // Initialize UI elements
+        db = FirebaseFirestore.getInstance();
+
         eventNameEditText = findViewById(R.id.eventNameEditText);
         dateEditText = findViewById(R.id.dateEditText);
         timeEditText = findViewById(R.id.timeEditText);
@@ -43,12 +49,17 @@ public class CreateEventActivity extends AppCompatActivity {
         Button generateQRButton = findViewById(R.id.generateQRButton);
         qrCodeImageView = findViewById(R.id.qrCodeImageView);
 
-        // Generate QR Code button action
         generateQRButton.setOnClickListener(view -> generateQRCode());
-
-        // Save button action
-        saveButton.setOnClickListener(view -> saveEvent());
+        //saveButton.setOnClickListener(view -> saveEvent());
+        saveButton.setOnClickListener(view -> {
+            saveEvent();
+            finish();
+        });
     }
+
+    /**
+     * Generates a QR code for the event and displays it in the ImageView.
+     */
     private void generateQRCode() {
         String eventName = eventNameEditText.getText().toString();
         if (eventName.isEmpty()) {
@@ -56,8 +67,7 @@ public class CreateEventActivity extends AppCompatActivity {
             return;
         }
 
-        // Generate a unique link based on the event name
-        String qrCodeLink = "https://example.com/event/" + eventName.replace(" ", "_"); // Replace spaces with underscores for URL
+        String qrCodeLink = "https://example.com/event/" + eventName.replace(" ", "_");
 
         try {
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
@@ -69,25 +79,53 @@ public class CreateEventActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Saves the event details to Firestore.
+     */
     private void saveEvent() {
         String eventName = eventNameEditText.getText().toString();
         String date = dateEditText.getText().toString();
         String time = timeEditText.getText().toString();
         String description = descriptionEditText.getText().toString();
         int maxAttendees = Integer.parseInt(maxAttendeesEditText.getText().toString());
-        Integer maxWaitlist = !maxWaitlistEditText.getText().toString().isEmpty() ?
-                Integer.parseInt(maxWaitlistEditText.getText().toString()) : null;
+        Integer maxWaitlist = !maxWaitlistEditText.getText().toString().isEmpty() ? Integer.parseInt(maxWaitlistEditText.getText().toString()) : null;
         boolean geolocationEnabled = geolocationCheckBox.isChecked();
-        String qrCodeLink = "https://example.com/qr/" + eventName; // Placeholder link
+        String qrCodeLink = "https://example.com/qr/" + eventName;
 
-        Event event = new Event(eventName, date, time, description, maxAttendees, maxWaitlist, geolocationEnabled, qrCodeLink);
+        // Generate unique IDs for the event and its waitlist
+        CollectionReference eventsRef = db.collection("Events");
+        String eventId = eventsRef.document().getId(); // Generate event ID
+        String waitlistId = db.collection("Waitlists").document().getId(); // Generate waitlist ID
 
-        // Passing event data back to HomePageActivity
-        Intent intent = new Intent();
-        intent.putExtra("eventName", eventName);
-        setResult(RESULT_OK, intent);
-        finish();
+        // Create a map to store the event details
+        Map<String, Object> event = new HashMap<>();
+        event.put("eventName", eventName);
+        event.put("description", description);
+        event.put("drawDate", date);
+        event.put("eventDateTime", time);
+        event.put("maxAttendees", maxAttendees);
+        event.put("maxOnWaitList", maxWaitlist);
+        event.put("geolocationEnabled", geolocationEnabled);
+        event.put("qrHash", qrCodeLink);
+        event.put("waitlist_id", waitlistId);
+
+        // Save the event to Firestore
+        eventsRef.document(eventId).set(event)
+                .addOnSuccessListener(aVoid -> {
+                    // Event saved successfully, now create a new waitlist document
+                    Map<String, Object> emptyWaitlist = new HashMap<>();
+                    // Add initial empty data as required
+                    db.collection("Waitlists").document(waitlistId).set(emptyWaitlist)
+                            .addOnSuccessListener(waitlistVoid -> {
+                                // Waitlist created successfully
+                                Log.d("Firestore", "Event and empty waitlist saved successfully.");
+                            })
+                            .addOnFailureListener(e -> {
+                                Log.e("Firestore", "Error saving waitlist", e);
+                            });
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Firestore", "Error saving event", e);
+                });
     }
-
 }
-
