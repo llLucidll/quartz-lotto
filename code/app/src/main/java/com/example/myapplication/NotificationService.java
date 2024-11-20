@@ -71,6 +71,7 @@ public class NotificationService {
                 PendingIntent.FLAG_IMMUTABLE
         );
 
+        //Build the structure of the notification
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, channelId)
                 .setSmallIcon(R.drawable.ic_launcher_background) // Replace with your app icon
                 .setContentTitle(title)
@@ -79,7 +80,9 @@ public class NotificationService {
                 .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
+        //Generate a unique notification ID
         int notificationID = (int) System.currentTimeMillis();
+        //Send the actual Notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(notificationID, builder.build());
 
