@@ -74,10 +74,9 @@ public class AdminProfileActivity extends AppCompatActivity {
         countrySpinner = findViewById(R.id.country_spinner);
         Button saveChangesButton = findViewById(R.id.save_changes_button);
         removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
-        Button buttonNotificationGroups = findViewById(R.id.buttonManageNotifications);
-        Button buttonManageFacilities = findViewById(R.id.buttonManageFacilities);
         Button buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
         Button browseUserProfilesButton = findViewById(R.id.button_browse_user_profiles);
+        Button browseFacilitiesButton = findViewById(R.id.button_browse_facilities);
 
 
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
@@ -90,6 +89,10 @@ public class AdminProfileActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
+        browseFacilitiesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminProfileActivity.this, BrowseFacilitiesActivity.class);
+            startActivity(intent);
+        });
 
 
         setupDOBInputRestrictions();
