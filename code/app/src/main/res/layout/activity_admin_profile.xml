@@ -1,0 +1,215 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/gradient_background"
+    android:padding="12dp"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:background="@android:color/transparent">
+
+        <!-- Title and Back Button -->
+        <TextView
+            android:id="@+id/edit_profile_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="Edit Profile"
+            android:textColor="#4A4A4A"
+            android:textSize="24sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/back_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="start"
+            android:layout_marginBottom="8dp"
+            android:background="@null"
+            android:contentDescription="Back"
+            android:src="@drawable/ic_back" />
+
+        <!-- Profile Image Section -->
+        <FrameLayout
+            android:id="@+id/profile_image_container"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp">
+
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/profile_image"
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/circle_background"
+                android:contentDescription="Profile Image"
+                app:civ_border_width="2dp"
+                app:civ_border_color="#FFFFFF" />
+
+            <ImageButton
+                android:id="@+id/edit_profile_image_button"
+                android:layout_width="36dp"
+                android:layout_height="36dp"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="-6dp"
+                android:layout_marginBottom="-8dp"
+                android:background="@null"
+                android:contentDescription="Edit Profile Image"
+                android:src="@drawable/ic_camera" />
+
+            <ImageButton
+                android:id="@+id/remove_profile_image_button"
+                android:layout_width="36dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="bottom|start"
+                android:layout_marginEnd="-2dp"
+                android:layout_marginBottom="-4dp"
+                android:background="?attr/selectableItemBackgroundBorderless"
+                android:contentDescription="delete profile pic"
+                android:src="@drawable/ic_delete"
+                android:visibility="visible" />
+        </FrameLayout>
+
+        <!-- Name Input -->
+        <TextView
+            android:id="@+id/name_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Name *"
+            android:textColor="#4A4A4A"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp" />
+
+        <EditText
+            android:id="@+id/name_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#4A4A4A"
+            android:hint="Enter your name"
+            android:padding="10dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@android:color/black" />
+
+        <!-- Email Input -->
+        <TextView
+            android:id="@+id/email_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Email *"
+            android:textColor="#4A4A4A"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp" />
+
+        <EditText
+            android:id="@+id/email_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#4A4A4A"
+            android:hint="Enter your email"
+            android:inputType="textEmailAddress"
+            android:padding="10dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@android:color/black" />
+
+        <!-- Date of Birth Input -->
+        <TextView
+            android:id="@+id/dob_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date of Birth (MM/DD/YYYY) *"
+            android:textColor="#4A4A4A"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp" />
+
+        <EditText
+            android:id="@+id/dob_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#4A4A4A"
+            android:hint="MM/DD/YYYY"
+            android:inputType="number"
+            android:padding="10dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@android:color/black"
+            android:drawableEnd="@drawable/ic_calendar" />
+
+        <!-- Phone Input -->
+        <TextView
+            android:id="@+id/phone_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Phone Number (Optional)"
+            android:textColor="#4A4A4A"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp" />
+
+        <EditText
+            android:id="@+id/phone_field"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#4A4A4A"
+            android:hint="Enter your phone number"
+            android:inputType="phone"
+            android:padding="10dp"
+            android:layout_marginBottom="8dp"
+            android:textColor="@android:color/black" />
+
+        <!-- Country/Region Selection -->
+        <TextView
+            android:id="@+id/country_label"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Country/Region *"
+            android:textColor="#4A4A4A"
+            android:textStyle="bold"
+            android:layout_marginBottom="2dp" />
+
+        <Spinner
+            android:id="@+id/country_spinner"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#4A4A4A"
+            android:entries="@array/country_array"
+            android:popupBackground="@drawable/gradient_popup_background"
+            android:layout_marginBottom="10dp" />
+
+
+
+        <!-- Buttons -->
+        <Button
+            android:id="@+id/save_changes_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#B76E79"
+            android:text="Save changes"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginBottom="8dp" />
+
+        <Button
+            android:id="@+id/button_browse_user_profiles"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#B76E79"
+            android:text="Browse User Profiles"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginTop="8dp" />
+
+        <Button
+            android:id="@+id/buttonSwitchAttendee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/buttonManageFacilities"
+            android:backgroundTint="#B76E79"
+            android:text="Switch to Entrant Mode" />
+
+    </LinearLayout>
+</ScrollView>
