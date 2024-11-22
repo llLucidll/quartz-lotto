@@ -52,6 +52,9 @@
         <activity android:name=".AddFacilityActivity" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".EventDetailsActivity" />
+        <activity android:name=".AdminProfileActivity" />
+        <activity android:name=".BrowseUsersActivity" />
+
 
 
     </application>
