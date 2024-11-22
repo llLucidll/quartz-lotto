@@ -30,6 +30,7 @@ public class QRScannerFragment extends Fragment {
     private PreviewView previewView;
     private ImageButton flashToggleButton;
     private boolean isFlashOn = false;
+    private boolean isScanning = true;
 
     private ListenableFuture<ProcessCameraProvider> cameraProviderFuture;
     private ExecutorService cameraExecutor;
@@ -118,23 +119,24 @@ public class QRScannerFragment extends Fragment {
 
     @OptIn(markerClass = ExperimentalGetImage.class)
     private void processImageProxy(ImageProxy imageProxy) {
+        if (!isScanning) {
+            imageProxy.close();
+            return;
+        }
+
         Image mediaImage = imageProxy.getImage();
         if (mediaImage != null) {
-            InputImage image =
-                    InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
+            InputImage image = InputImage.fromMediaImage(mediaImage, imageProxy.getImageInfo().getRotationDegrees());
 
-            // Pass Image to ML Kit's Barcode Scanner
             barcodeScanner.process(image)
                     .addOnSuccessListener(barcodes -> {
                         for (Barcode barcode : barcodes) {
                             String rawValue = barcode.getRawValue();
                             if (rawValue != null) {
                                 Log.d(TAG, "Scanned QR Code: " + rawValue);
-                                // Handle the QR code content
+                                isScanning = false; // Stop further scanning
                                 handleScannedData(rawValue);
-                                // Close the imageProxy after processing
-                                imageProxy.close();
-                                return; // Exit after handling one barcode
+                                break;
                             }
                         }
                         imageProxy.close();
@@ -145,6 +147,7 @@ public class QRScannerFragment extends Fragment {
                     });
         }
     }
+
 
     private void handleScannedData(String data) {
         // Assuming the data is in the format: eventapp://event/<eventId>
@@ -180,6 +183,12 @@ public class QRScannerFragment extends Fragment {
         } else {
             Toast.makeText(getContext(), "Flash not available on this device", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        isScanning = true;
     }
 
     @Override
