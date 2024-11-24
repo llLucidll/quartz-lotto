@@ -14,6 +14,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity for browsing a list of users.
+ * This activity fetches user data from Firestore and displays it in a RecyclerView.
+ */
 public class BrowseUsersActivity extends AppCompatActivity {
 
     private RecyclerView userRecyclerView;
@@ -21,6 +25,11 @@ public class BrowseUsersActivity extends AppCompatActivity {
     private UserAdapter userAdapter;
     private List<User> userList;
 
+    /**
+     * Initializes the activity, sets up the RecyclerView, and fetches user profiles from Firestore.
+     *
+     * @param savedInstanceState The saved instance state from a previous activity instance, if any.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +48,11 @@ public class BrowseUsersActivity extends AppCompatActivity {
         fetchUserProfiles();
     }
 
+    /**
+     * Fetches user data from the "users" collection in Firestore.
+     * On success, the data is displayed in the RecyclerView.
+     * On failure, a toast message is shown to indicate the error.
+     */
     private void fetchUserProfiles() {
         db.collection("users")
                 .get()
