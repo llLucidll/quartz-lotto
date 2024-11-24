@@ -6,7 +6,7 @@
     android:padding="16dp"
     android:background="@drawable/gradient_background">
 
-    <!-- Header -->
+    <!-- Header     TODO EXTRACT STRING RESOURCES -->
     <TextView
         android:id="@+id/manage_facilities_title"
         android:layout_width="wrap_content"
@@ -18,22 +18,40 @@
         android:layout_marginBottom="16dp"
         android:layout_marginTop="16dp"/>
 
-    <!-- Add Facility Button -->
-    <Button
-        android:id="@+id/add_facility_button"
-        android:layout_width="match_parent"
+    <!--Facility Image -->
+    <ImageView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Add Facility"
-        android:backgroundTint="#B76E79"
-        android:textColor="@android:color/white"
-        android:textStyle="bold"
-        android:layout_marginBottom="16dp" />
+        android:id="@+id/facilityImageView"/>
 
-    <!-- Facilities RecyclerView -->
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/facilities_recycler_view"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1" />
+    <!--Facility Name -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/facility_name_text_view"/>
+
+    <!--Facility Location -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/facility_location_text_view"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/edit_facility_button"
+        android:backgroundTint="#B76E79"
+        android:text="Edit Facility"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/delete_facility_button"
+        android:text="Delete Facility"
+        android:layout_gravity="center"
+        android:layout_marginBottom="16dp"
+        android:visibility="gone"/>
 
 </LinearLayout>

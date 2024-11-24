@@ -17,6 +17,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.myapplication.Views.ManageFacilityView;
 import com.google.firebase.firestore.*;
 import com.google.firebase.storage.*;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
@@ -411,7 +412,7 @@ public class OrganizerProfileActivity extends AppCompatActivity {
     }
 
     private void openManageFacilities() {
-        Intent intent = new Intent(OrganizerProfileActivity.this, ManageFacilitiesActivity.class);
+        Intent intent = new Intent(OrganizerProfileActivity.this, ManageFacilityView.class);
         startActivity(intent);
     }
 
