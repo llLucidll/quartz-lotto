@@ -221,7 +221,17 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:backgroundTint="#B76E79"
-            android:text="Save changes"
+            android:text="Save Changes"
+            android:textColor="@android:color/white"
+            android:textStyle="bold"
+            android:layout_marginBottom="10dp" />
+
+        <Button
+            android:id="@+id/add_facility_button"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="#B76E79"
+            android:text="Add Facility"
             android:textColor="@android:color/white"
             android:textStyle="bold"
             android:layout_marginBottom="10dp" />

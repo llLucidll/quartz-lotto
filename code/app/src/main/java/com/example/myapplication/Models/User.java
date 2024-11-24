@@ -28,6 +28,9 @@ public class User {
     private Facility facility;
     private List<Event> events;
 
+    //Default empty constructor for firebase
+    public User() {}
+
 
     public User(String userID, String name, String profileImageUrl, String email, String dob, String phone, String country, boolean isAdmin) {
         this.userID = userID;
@@ -119,7 +122,7 @@ public class User {
     public boolean getNotificationsPerm() {
         return notificationsPerm;
     }
-    public void setNotificationPerm() {
+    public void setNotificationPerm(boolean notificationsPerm) {
         notificationsPerm = true;
     }
 

@@ -35,7 +35,7 @@
         </service>
 
         <activity
-            android:name=".MainActivity"
+            android:name=".Views.EntrantProfileView"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -48,8 +48,8 @@
         <activity android:name=".OrganizerProfileActivity" />
         <activity android:name=".ManageNotificationGroupsActivity" />
         <activity android:name=".GroupEntrantsActivity" />
-        <activity android:name=".ManageFacilitiesActivity" />
-        <activity android:name=".AddFacilityActivity" />
+        <activity android:name=".Views.ManageFacilityView" />
+        <activity android:name=".Views.AddFacilityView" />
         <activity android:name=".EditProfileActivity" />
         <activity android:name=".EventDetailsActivity" />
 
