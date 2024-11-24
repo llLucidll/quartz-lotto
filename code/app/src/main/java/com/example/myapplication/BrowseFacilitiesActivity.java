@@ -14,6 +14,10 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity for browsing a list of facilities.
+ * This activity fetches facility data from Firestore and displays it in a RecyclerView.
+ */
 public class BrowseFacilitiesActivity extends AppCompatActivity {
 
     private RecyclerView facilityRecyclerView;
@@ -21,6 +25,11 @@ public class BrowseFacilitiesActivity extends AppCompatActivity {
     private FacilityAdapterAdmin facilityAdapter;
     private List<Facility> facilityList;
 
+    /**
+     * Initializes the activity, sets up the RecyclerView, and fetches facilities from Firestore.
+     *
+     * @param savedInstanceState The saved instance state from a previous activity instance, if any.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +48,11 @@ public class BrowseFacilitiesActivity extends AppCompatActivity {
         fetchFacilities();
     }
 
+    /**
+     * Fetches facility data from the "Facilities" collection in Firestore.
+     * On success, the data is displayed in the RecyclerView.
+     * On failure, a toast message is shown to indicate the error.
+     */
     private void fetchFacilities() {
         db.collection("Facilities")
                 .get()
