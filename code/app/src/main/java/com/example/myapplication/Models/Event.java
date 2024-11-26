@@ -41,6 +41,11 @@ public class Event {
         this.qrCodeLink = qrCodeLink;
         this.waitingList = new EntrantList(this.maxWaitlist, this.maxAttendees);
     }
+    // Simplified constructor
+    public Event(String eventId, String eventName) {
+        this.eventId = eventId;
+        this.eventName = eventName;
+    }
 
     public String getEventId() {
         return eventId;

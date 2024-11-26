@@ -72,11 +72,14 @@ public class AdminProfileActivity extends AppCompatActivity {
         dobField = findViewById(R.id.dob_field);
         phoneField = findViewById(R.id.phone_field);
         countrySpinner = findViewById(R.id.country_spinner);
-        Button saveChangesButton = findViewById(R.id.save_changes_button);
         removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
+
         Button buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
         Button browseUserProfilesButton = findViewById(R.id.button_browse_user_profiles);
         Button browseFacilitiesButton = findViewById(R.id.button_browse_facilities);
+        Button browseEventsButton = findViewById(R.id.button_browse_events);
+        Button saveChangesButton = findViewById(R.id.save_changes_button);
+
 
 
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
@@ -84,6 +87,7 @@ public class AdminProfileActivity extends AppCompatActivity {
         backButton.setOnClickListener(v -> onBackPressed());
         removeProfileImageButton.setOnClickListener(v -> removeProfileImage());
         buttonSwitchAttendee.setOnClickListener(v -> switchProfileAttendee());
+
         browseUserProfilesButton.setOnClickListener(v -> {
             Intent intent = new Intent(AdminProfileActivity.this, BrowseUsersActivity.class);
             startActivity(intent);
@@ -91,6 +95,11 @@ public class AdminProfileActivity extends AppCompatActivity {
 
         browseFacilitiesButton.setOnClickListener(v -> {
             Intent intent = new Intent(AdminProfileActivity.this, BrowseFacilitiesActivity.class);
+            startActivity(intent);
+        });
+
+        browseEventsButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminProfileActivity.this, BrowseEventsActivity.class);
             startActivity(intent);
         });
 
