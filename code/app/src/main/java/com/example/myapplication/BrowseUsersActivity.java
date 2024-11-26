@@ -1,9 +1,10 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
-import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,13 +19,13 @@ import java.util.List;
  * Activity for browsing a list of users.
  * This activity fetches user data from Firestore and displays it in a RecyclerView.
  */
-public class BrowseUsersActivity extends BaseActivity { // Changed to extend BaseActivity
+public class BrowseUsersActivity extends BaseActivity {
 
     private RecyclerView userRecyclerView;
     private FirebaseFirestore db;
     private UserAdapter userAdapter;
     private List<User> userList;
-    private String currentUserId; // To store the current user's UID
+    private String currentUserId;
 
     /**
      * Initializes the activity, sets up the RecyclerView, and fetches user profiles from Firestore.
@@ -36,27 +37,46 @@ public class BrowseUsersActivity extends BaseActivity { // Changed to extend Bas
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_users);
 
+        // Set up toolbar with back button
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         // Initialize Firestore and RecyclerView
         db = FirebaseFirestore.getInstance();
         userRecyclerView = findViewById(R.id.user_recycler_view);
         userRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         userList = new ArrayList<>();
-
-        // Retrieve the current user's UID from BaseActivity
         currentUserId = getUserId();
+
         if (currentUserId == null) {
             Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
-            finish(); // Close the activity if user is not authenticated
+            finish();
             return;
         }
 
-        // Initialize UserAdapter with the currentUserId
         userAdapter = new UserAdapter(this, userList, currentUserId);
         userRecyclerView.setAdapter(userAdapter);
 
-        // Fetch user profiles
         fetchUserProfiles();
+    }
+
+    /**
+     * Handles back button press in the toolbar.
+     *
+     * @param item The menu item selected.
+     * @return True if the action was handled, false otherwise.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed();
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
