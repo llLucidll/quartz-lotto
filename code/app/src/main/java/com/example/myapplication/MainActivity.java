@@ -2,29 +2,35 @@ package com.example.myapplication;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.widget.Toast;
 
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.EditText;
-
+import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
-import androidx.appcompat.app.AppCompatActivity;
+
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.auth.AuthResult;
 
-public class MainActivity extends AppCompatActivity {
-    private EditText eventNameEditText, dateEditText, timeEditText, descriptionEditText, maxAttendeesEditText, maxWaitlistEditText;
-    private CheckBox geolocationCheckBox;
-    private Button saveButton, generateQRButton;
-
+/**
+ * MainActivity initializes anonymous authentication and handles navigation.
+ */
+public class MainActivity extends BaseActivity {
+    private static final String TAG = "MainActivity";
+    private FirebaseAuth mAuth;
     private BottomNavigationView bottomNavigationView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.activity_main);
-        NotificationUtils.createNotificationChannel(this); //Creating channel for notifications
 
+        // Initialize Firebase Auth
+        mAuth = FirebaseAuth.getInstance();
+
+        // Sign in anonymously
+        signInAnonymously();
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -45,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
                     selectedFragment = new QRScannerFragment(); // Navigate to QRScannerFragment
                     break;
                 case R.id.nav_profile:
-                    // Start OrgProfileActivity instead of navigating to a Fragment
+                    // Start AdminProfileActivity instead of navigating to a Fragment
                     Intent intent = new Intent(this, AdminProfileActivity.class);
                     startActivity(intent);
                     return true;
@@ -59,7 +65,37 @@ public class MainActivity extends AppCompatActivity {
             }
             return true;
         });
+    }
 
+    /**
+     * Signs in the user anonymously and handles the result.
+     */
+    private void signInAnonymously() {
+        mAuth.signInAnonymously()
+                .addOnCompleteListener(this, task -> {
+                    if (task.isSuccessful()) {
+                        // Sign in success, update UI with the signed-in user's information
+                        Log.d(TAG, "signInAnonymously:success");
+                        FirebaseUser user = mAuth.getCurrentUser();
+                        // You can now use user.getUid() as the unique identifier
+                    } else {
+                        // If sign in fails, display a message to the user.
+                        Log.w(TAG, "signInAnonymously:failure", task.getException());
+                        Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
+    /**
+     * Retrieves the current user's UID.
+     *
+     * @return The UID of the current user, or null if not signed in.
+     */
+    public String getCurrentUserId() {
+        FirebaseUser user = mAuth.getCurrentUser();
+        if (user != null) {
+            return user.getUid();
+        }
+        return null;
     }
 }
-

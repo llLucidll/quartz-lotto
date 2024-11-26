@@ -5,28 +5,54 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.*;
+import android.text.InputFilter;
+import android.text.InputType;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Patterns;
-import android.view.*;
-import android.widget.*;
+import android.view.MotionEvent;
+import android.view.View;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
+import android.widget.ImageButton;
+import android.widget.Spinner;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.*;
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.firebase.firestore.*;
-import com.google.firebase.storage.*;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.example.myapplication.AvatarUtil;
+import com.example.myapplication.BaseActivity;
+import com.example.myapplication.BrowseFacilitiesActivity;
+import com.example.myapplication.BrowseUsersActivity;
+import com.example.myapplication.EditProfileActivity;
+import com.example.myapplication.R;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import java.text.*;
-import java.util.*;
-
-public class AdminProfileActivity extends AppCompatActivity {
+/**
+ * AdminProfileActivity allows admins to view and edit their profiles.
+ * It extends BaseActivity to utilize dynamic user identification.
+ */
+public class AdminProfileActivity extends BaseActivity {
 
     private static final int MIN_AGE = 1;
     private static final int MAX_AGE = 100;
@@ -40,7 +66,8 @@ public class AdminProfileActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
-    private String userId = "Org1";
+    // Define userId as a class member
+    private String userId;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -56,14 +83,22 @@ public class AdminProfileActivity extends AppCompatActivity {
             });
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_profile);
-
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
+        // Initialize userId
+        userId = getUserId();
+        if (userId == null) {
+            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // Initialize UI elements
         profileImageView = findViewById(R.id.profile_image);
         ImageButton editProfileImageButton = findViewById(R.id.edit_profile_image_button);
         ImageButton backButton = findViewById(R.id.back_button);
@@ -78,7 +113,7 @@ public class AdminProfileActivity extends AppCompatActivity {
         Button browseUserProfilesButton = findViewById(R.id.button_browse_user_profiles);
         Button browseFacilitiesButton = findViewById(R.id.button_browse_facilities);
 
-
+        // Set listeners
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
         saveChangesButton.setOnClickListener(v -> saveProfileData());
         backButton.setOnClickListener(v -> onBackPressed());
@@ -94,25 +129,27 @@ public class AdminProfileActivity extends AppCompatActivity {
             startActivity(intent);
         });
 
-
         setupDOBInputRestrictions();
         setupDateOfBirthField();
 
-
         setupNameFieldTextWatcher();
-
 
         loadUserProfile();
     }
+
+    /**
+     * Opens the file chooser to select a profile image.
+     */
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         imagePickerLauncher.launch(intent);
     }
 
-
+    /**
+     * Sets up input restrictions for the Date of Birth field.
+     */
     private void setupDOBInputRestrictions() {
-
         InputFilter[] filters = new InputFilter[]{
                 new InputFilter.LengthFilter(10),
                 (source, start, end, dest, dstart, dend) -> {
@@ -128,6 +165,9 @@ public class AdminProfileActivity extends AppCompatActivity {
         dobField.setFilters(filters);
     }
 
+    /**
+     * Sets up the Date of Birth field with a DatePicker.
+     */
     private void setupDateOfBirthField() {
         dobField.setInputType(InputType.TYPE_CLASS_DATETIME);
         dobField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_calendar, 0);
@@ -143,6 +183,9 @@ public class AdminProfileActivity extends AppCompatActivity {
         dobField.addTextChangedListener(new DateOfBirthTextWatcher());
     }
 
+    /**
+     * Displays a DatePickerDialog for selecting Date of Birth.
+     */
     private void showDatePicker() {
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -162,19 +205,22 @@ public class AdminProfileActivity extends AppCompatActivity {
                         dobField.setError(null);
                     } else {
                         dobField.setError("Age must be between " + MIN_AGE + " and " + MAX_AGE);
-
                     }
                 },
                 year, month, day);
         datePickerDialog.show();
     }
 
-
+    /**
+     * Calculates the age based on the selected date.
+     *
+     * @param selectedDate The selected birth date.
+     * @return The calculated age.
+     */
     private int calculateAge(Calendar selectedDate) {
         Calendar today = Calendar.getInstance();
 
         int age = today.get(Calendar.YEAR) - selectedDate.get(Calendar.YEAR);
-
 
         if (today.get(Calendar.DAY_OF_YEAR) < selectedDate.get(Calendar.DAY_OF_YEAR)) {
             age--;
@@ -183,16 +229,17 @@ public class AdminProfileActivity extends AppCompatActivity {
         return age;
     }
 
+    /**
+     * TextWatcher for formatting and validating the Date of Birth field.
+     */
     private class DateOfBirthTextWatcher implements TextWatcher {
         private boolean isUpdating;
 
         @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
         @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
+        public void onTextChanged(CharSequence s, int start, int before, int count) {}
 
         @Override
         public void afterTextChanged(Editable s) {
@@ -213,15 +260,21 @@ public class AdminProfileActivity extends AppCompatActivity {
                 if (!isDOBValid(formattedDate)) {
                     dobField.setError("Invalid date or age not between " + MIN_AGE + " and " + MAX_AGE);
                 } else {
-                    dobField.setError(null); //clear error if valid
+                    dobField.setError(null); // Clear error if valid
                 }
             } else {
-                dobField.setError(null); //clear error if incomplete
+                dobField.setError(null); // Clear error if incomplete
             }
 
             isUpdating = false;
         }
 
+        /**
+         * Formats the input string into MM/DD/YYYY format.
+         *
+         * @param input The raw input string.
+         * @return The formatted date string.
+         */
         private String formatDate(String input) {
             StringBuilder sb = new StringBuilder();
 
@@ -236,13 +289,13 @@ public class AdminProfileActivity extends AppCompatActivity {
         }
     }
 
-
+    /**
+     * Sets up a TextWatcher to update the profile picture based on the first letter of the name.
+     */
     private void setupNameFieldTextWatcher() {
         nameField.addTextChangedListener(new TextWatcher() {
             @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
@@ -250,12 +303,15 @@ public class AdminProfileActivity extends AppCompatActivity {
             }
 
             @Override
-            public void afterTextChanged(Editable s) {
-
-            }
+            public void afterTextChanged(Editable s) {}
         });
     }
 
+    /**
+     * Updates the profile picture based on the first letter of the user's name.
+     *
+     * @param name The user's name.
+     */
     private void updateProfilePictureBasedOnFirstLetter(String name) {
         if (!name.isEmpty()) {
             String firstLetter = String.valueOf(name.charAt(0)).toUpperCase(Locale.US);
@@ -268,6 +324,9 @@ public class AdminProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Loads the user profile data from Firestore using the dynamic userId.
+     */
     private void loadUserProfile() {
         DocumentReference userProfileRef = db.collection("Admin").document(userId);
         userProfileRef.get()
@@ -295,7 +354,6 @@ public class AdminProfileActivity extends AppCompatActivity {
                         if (phone != null) phoneField.setText(phone);
 
                         if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-
                             Glide.with(this)
                                     .load(profileImageUrl)
                                     .apply(RequestOptions.circleCropTransform())
@@ -310,6 +368,11 @@ public class AdminProfileActivity extends AppCompatActivity {
                 .addOnFailureListener(e -> Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Generates a default avatar based on the first letter of the user's name.
+     *
+     * @param name The user's name.
+     */
     private void generateDefaultAvatar(String name) {
         if (name != null && !name.isEmpty()) {
             String firstLetter = String.valueOf(name.charAt(0)).toUpperCase(Locale.US);
@@ -320,6 +383,10 @@ public class AdminProfileActivity extends AppCompatActivity {
         }
         removeProfileImageButton.setVisibility(View.GONE);
     }
+
+    /**
+     * Removes the profile image from Firebase Storage and updates Firestore.
+     */
     private void removeProfileImage() {
         StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
         storageRef.delete().addOnSuccessListener(aVoid -> {
@@ -331,6 +398,9 @@ public class AdminProfileActivity extends AppCompatActivity {
         }).addOnFailureListener(e -> Toast.makeText(this, "Failed to delete profile image", Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Saves the updated profile data to Firestore and uploads the profile image to Firebase Storage.
+     */
     private void saveProfileData() {
         String name = nameField.getText().toString().trim();
         String email = emailField.getText().toString().trim();
@@ -347,7 +417,6 @@ public class AdminProfileActivity extends AppCompatActivity {
             Toast.makeText(this, "Invalid email format.", Toast.LENGTH_SHORT).show();
             return;
         }
-
 
         if (!isDOBValid(dob)) {
             dobField.setError("Invalid date or age not between " + MIN_AGE + " and " + MAX_AGE);
@@ -381,6 +450,12 @@ public class AdminProfileActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Validates the Date of Birth format and age range.
+     *
+     * @param dob The Date of Birth string.
+     * @return True if valid, false otherwise.
+     */
     private boolean isDOBValid(String dob) {
         SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
         sdf.setLenient(false);
@@ -403,7 +478,6 @@ public class AdminProfileActivity extends AppCompatActivity {
 
         int age = today.get(Calendar.YEAR) - dobCalendar.get(Calendar.YEAR);
 
-
         if (today.get(Calendar.DAY_OF_YEAR) < dobCalendar.get(Calendar.DAY_OF_YEAR)) {
             age--;
         }
@@ -411,10 +485,11 @@ public class AdminProfileActivity extends AppCompatActivity {
         return age >= MIN_AGE && age <= MAX_AGE;
     }
 
-
+    /**
+     * Switches the profile to attendee mode.
+     */
     private void switchProfileAttendee() {
         Intent intent = new Intent(AdminProfileActivity.this, EditProfileActivity.class);
         startActivity(intent);
     }
-
 }
