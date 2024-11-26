@@ -44,7 +44,7 @@ public class BrowseUsersActivity extends BaseActivity { // Changed to extend Bas
         userList = new ArrayList<>();
 
         // Retrieve the current user's UID from BaseActivity
-        currentUserId = getUserId();
+        currentUserId = retrieveDeviceId();
         if (currentUserId == null) {
             Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
             finish(); // Close the activity if user is not authenticated
