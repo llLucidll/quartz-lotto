@@ -39,7 +39,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
  * Activity for editing user profile information, including name, email, date of birth,
  * phone number, country, profile image, and notification preferences.
  */
-public class EditProfileActivity extends AppCompatActivity {
+public class EditProfileActivity extends BaseActivity {
 
     private static final int MIN_AGE = 1;
     private static final int MAX_AGE = 100;
@@ -56,7 +56,7 @@ public class EditProfileActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
-    private String userId = "userProfile";
+    private String userId;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -83,6 +83,15 @@ public class EditProfileActivity extends AppCompatActivity {
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
+
+
+        // Initialize userId using BaseActivity
+        userId = getUserId();
+        if (userId == null) {
+            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
 
         // Initialize UI elements
         profileImageView = findViewById(R.id.profile_image);

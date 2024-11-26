@@ -3,7 +3,7 @@ package com.example.myapplication;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import androidx.appcompat.app.AppCompatActivity;
+import androidx.annotation.Nullable;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -18,12 +18,13 @@ import java.util.List;
  * Activity for browsing a list of users.
  * This activity fetches user data from Firestore and displays it in a RecyclerView.
  */
-public class BrowseUsersActivity extends AppCompatActivity {
+public class BrowseUsersActivity extends BaseActivity { // Changed to extend BaseActivity
 
     private RecyclerView userRecyclerView;
     private FirebaseFirestore db;
     private UserAdapter userAdapter;
     private List<User> userList;
+    private String currentUserId; // To store the current user's UID
 
     /**
      * Initializes the activity, sets up the RecyclerView, and fetches user profiles from Firestore.
@@ -41,7 +42,17 @@ public class BrowseUsersActivity extends AppCompatActivity {
         userRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         userList = new ArrayList<>();
-        userAdapter = new UserAdapter(this, userList);
+
+        // Retrieve the current user's UID from BaseActivity
+        currentUserId = getUserId();
+        if (currentUserId == null) {
+            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+            finish(); // Close the activity if user is not authenticated
+            return;
+        }
+
+        // Initialize UserAdapter with the currentUserId
+        userAdapter = new UserAdapter(this, userList, currentUserId);
         userRecyclerView.setAdapter(userAdapter);
 
         // Fetch user profiles
@@ -66,10 +77,10 @@ public class BrowseUsersActivity extends AppCompatActivity {
                         String dob = document.getString("dob");
                         String phone = document.getString("phone");
                         String country = document.getString("country");
-                        boolean isAdmin = document.getBoolean("isAdmin") != null && document.getBoolean("isAdmin");
+                        Boolean isAdmin = document.getBoolean("isAdmin");
 
                         // Create User object
-                        User user = new User(userID, name, profileImageUrl, email, dob, phone, country, isAdmin);
+                        User user = new User(userID, name, profileImageUrl, email, dob, phone, country, isAdmin != null && isAdmin);
                         userList.add(user);
                     }
                     userAdapter.notifyDataSetChanged();
