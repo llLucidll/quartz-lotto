@@ -1,9 +1,11 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -35,6 +37,13 @@ public class BrowseFacilitiesActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_facilities);
 
+        // Set up toolbar with back button
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         // Initialize Firestore and RecyclerView
         db = FirebaseFirestore.getInstance();
         facilityRecyclerView = findViewById(R.id.facility_recycler_view);
@@ -46,6 +55,21 @@ public class BrowseFacilitiesActivity extends AppCompatActivity {
 
         // Fetch facilities
         fetchFacilities();
+    }
+
+    /**
+     * Handles back button press in the toolbar.
+     *
+     * @param item The menu item selected.
+     * @return True if the action was handled, false otherwise.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed(); // Navigate back
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**

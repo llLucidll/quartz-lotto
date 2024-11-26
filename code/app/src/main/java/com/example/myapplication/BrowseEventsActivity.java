@@ -1,9 +1,11 @@
 package com.example.myapplication;
 
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -33,6 +35,13 @@ public class BrowseEventsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_browse_events);
 
+        // Set up toolbar with back button
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
         // Initialize RecyclerView and Firestore
         db = FirebaseFirestore.getInstance();
         eventRecyclerView = findViewById(R.id.event_recycler_view);
@@ -43,6 +52,15 @@ public class BrowseEventsActivity extends AppCompatActivity {
         eventRecyclerView.setAdapter(eventAdapterAdmin);
 
         fetchEvents();
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            onBackPressed(); // Handle the back button
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /**
