@@ -21,7 +21,7 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-public class CreateEventActivity extends AppCompatActivity {
+public class CreateEventActivity extends BaseActivity {
     private EditText eventNameEditText, dateEditText, timeEditText, descriptionEditText, maxAttendeesEditText, maxWaitlistEditText;
     private CheckBox geolocationCheckBox;
     private ImageView qrCodeImageView;

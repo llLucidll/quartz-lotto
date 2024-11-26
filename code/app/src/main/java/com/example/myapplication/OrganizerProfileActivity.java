@@ -27,7 +27,7 @@ import de.hdodenhof.circleimageview.CircleImageView;
 import java.text.*;
 import java.util.*;
 
-public class OrganizerProfileActivity extends AppCompatActivity {
+public class OrganizerProfileActivity extends BaseActivity {
 
     private static final int MIN_AGE = 1;
     private static final int MAX_AGE = 100;
@@ -41,7 +41,7 @@ public class OrganizerProfileActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
-    private String userId = "Org1";
+    private String userId;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -57,14 +57,22 @@ public class OrganizerProfileActivity extends AppCompatActivity {
             });
 
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_profile);
-
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
+        // Initialize userId using BaseActivity's method
+        userId = getUserId();
+        if (userId == null) {
+            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        // Initialize UI elements
         profileImageView = findViewById(R.id.profile_image);
         ImageButton editProfileImageButton = findViewById(R.id.edit_profile_image_button);
         ImageButton backButton = findViewById(R.id.back_button);
@@ -75,30 +83,34 @@ public class OrganizerProfileActivity extends AppCompatActivity {
         countrySpinner = findViewById(R.id.country_spinner);
         Button saveChangesButton = findViewById(R.id.save_changes_button);
         removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
-        Button buttonNotificationGroups = findViewById(R.id.buttonManageNotifications);
-        Button buttonManageFacilities = findViewById(R.id.buttonManageFacilities);
         Button buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
+        Button browseUserProfilesButton = findViewById(R.id.button_browse_user_profiles);
+        Button browseFacilitiesButton = findViewById(R.id.button_browse_facilities);
 
-
+        // Set listeners
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
         saveChangesButton.setOnClickListener(v -> saveProfileData());
         backButton.setOnClickListener(v -> onBackPressed());
         removeProfileImageButton.setOnClickListener(v -> removeProfileImage());
-        buttonNotificationGroups.setOnClickListener(v -> openManageNotifications());
-        buttonManageFacilities.setOnClickListener(v -> openManageFacilities());
-        buttonManageFacilities.setOnClickListener(v -> openManageFacilities());
         buttonSwitchAttendee.setOnClickListener(v -> switchProfileAttendee());
+        browseUserProfilesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(OrganizerProfileActivity.this, BrowseUsersActivity.class);
+            startActivity(intent);
+        });
 
+        browseFacilitiesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(OrganizerProfileActivity.this, BrowseFacilitiesActivity.class);
+            startActivity(intent);
+        });
 
         setupDOBInputRestrictions();
         setupDateOfBirthField();
 
-
         setupNameFieldTextWatcher();
-
 
         loadUserProfile();
     }
+
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
