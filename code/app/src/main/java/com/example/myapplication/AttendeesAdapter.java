@@ -125,9 +125,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.Atte
 
         DocumentReference eventRef = db.collection("Events").document(eventId);
         DocumentReference attendeeRef = eventRef.collection("Attendees").document(attendeeId);
-        DocumentReference userRef = db.collection("Users").document(attendeeId); // Assuming userId == attendeeId
 
-        // Start Firestore transaction
         db.runTransaction((Transaction.Function<Void>) transaction -> {
             // Get currentAttendees
             DocumentSnapshot eventSnapshot = transaction.get(eventRef);
@@ -142,11 +140,8 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.Atte
                         FirebaseFirestoreException.Code.DATA_LOSS);
             }
 
-            // Delete attendee's document from Attendees collection
+            // Delete the specific attendee document
             transaction.delete(attendeeRef);
-
-            // Update user's status to "canceled" in Users collection
-            transaction.update(userRef, "status", "canceled");
 
             // Decrement currentAttendees
             transaction.update(eventRef, "currentAttendees", currentAttendeesLong - 1);
