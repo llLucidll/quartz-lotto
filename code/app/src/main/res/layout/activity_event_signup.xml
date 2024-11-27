@@ -1,6 +1,103 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-             android:layout_width="match_parent"
-             android:layout_height="match_parent">
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:padding="16dp"
+    android:background="@drawable/gradient_background">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <!-- Event Poster -->
+        <ImageView
+            android:id="@+id/signupPosterImageView"
+            android:layout_width="match_parent"
+            android:layout_height="200dp"
+            android:scaleType="centerCrop"
+            android:layout_marginBottom="16dp"
+            android:src="@drawable/ic_event" />
+
+        <!-- Event Name -->
+        <TextView
+            android:id="@+id/signupEventNameTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Name"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Event Date -->
+        <TextView
+            android:id="@+id/signupDateTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Date: MM/DD/YYYY"
+            android:textSize="16sp"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Event Time -->
+        <TextView
+            android:id="@+id/signupTimeTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Time: HH:MM"
+            android:textSize="16sp"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Event Description -->
+        <TextView
+            android:id="@+id/signupDescriptionTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Event Description"
+            android:textSize="14sp"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Max Attendees -->
+        <TextView
+            android:id="@+id/signupMaxAttendeesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Max Attendees: 100"
+            android:textSize="14sp"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_marginBottom="8dp" />
+
+        <!-- Current Attendees -->
+        <TextView
+            android:id="@+id/signupCurrentAttendeesTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Current Attendees: 50"
+            android:textSize="14sp"
+            android:textColor="@color/cardview_dark_background"
+            android:layout_marginBottom="16dp" />
+
+        <!-- Sign-Up Button -->
+        <Button
+            android:id="@+id/signupButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Sign Up for Event"
+            android:textSize="16sp"
+            android:textColor="@color/nav_text_color"
+            android:backgroundTint="@color/avatar_color_6"
+            android:layout_marginTop="16dp" />
+
+        <!-- Progress Bar -->
+        <ProgressBar
+            android:id="@+id/signupProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:visibility="gone" />
+    </LinearLayout>
+</ScrollView>
