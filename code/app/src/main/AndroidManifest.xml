@@ -20,7 +20,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MyApplication"
-        tools:targetApi="31">
+        tools:targetApi="31"
+        android:enableOnBackInvokedCallback="true">
 
         <meta-data
             android:name="com.google.android.geo.API_KEY"
@@ -45,7 +46,7 @@
         <activity android:name=".CreateEventActivity" />
         <activity android:name=".WaitinglistActivity" />
         <activity android:name=".AttendingActivity" />
-        <activity android:name=".Views.OrganizerProfileView" />
+        <activity android:name=".OrganizerProfileActivity" />
         <activity android:name=".ManageNotificationGroupsActivity" />
         <activity android:name=".GroupEntrantsActivity" />
         <activity android:name=".Views.ManageFacilityView" />
@@ -55,7 +56,11 @@
         <activity android:name=".AdminProfileActivity" />
         <activity android:name=".BrowseUsersActivity" />
         <activity android:name=".BrowseFacilitiesActivity" />
-        <activity android:name=".BrowseEventsActivity" />
+        <activity android:name=".EventSignupActivity" />
+
+
+
+
     </application>
 
 </manifest>
