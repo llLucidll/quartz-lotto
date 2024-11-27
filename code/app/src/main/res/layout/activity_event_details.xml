@@ -1,59 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background">
 
-    <LinearLayout
-        android:orientation="vertical"
-        android:padding="16dp"
+    <!-- Toolbar -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/detailsToolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/avatar_color_6"
+        android:elevation="4dp"
+        android:title="Event Details"
+        android:titleTextColor="#FFFFFF" />
 
-        <!-- Event Name -->
-        <TextView
-            android:id="@+id/eventNameTextView"
-            android:textSize="24sp"
-            android:textStyle="bold"
-            android:layout_width="match_parent"
+    <!-- Menu Panel with Four Buttons -->
+    <LinearLayout
+        android:id="@+id/menuPanel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="#FFFFFF"
+        android:padding="8dp"
+        android:gravity="center">
+
+        <Button
+            android:id="@+id/buttonDetails"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Event Name" />
+            android:text="Details"
+            android:backgroundTint="@color/avatar_color_1"
+            android:textColor="#FFFFFF"
+            android:layout_margin="4dp" />
 
-        <!-- Poster Image -->
-        <ImageView
-            android:id="@+id/posterImageView"
-            android:layout_width="match_parent"
-            android:layout_height="200dp"
-            android:scaleType="centerCrop"
-            android:layout_marginTop="16dp"
-            android:contentDescription="Event Poster" />
-
-        <!-- Date -->
-        <TextView
-            android:id="@+id/dateTextView"
-            android:layout_marginTop="16dp"
-            android:textSize="18sp"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/buttonWaitlist"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Date: " />
+            android:text="Waitlist"
+            android:backgroundTint="@color/avatar_color_1"
+            android:textColor="#FFFFFF"
+            android:layout_margin="4dp" />
 
-        <!-- Time -->
-        <TextView
-            android:id="@+id/timeTextView"
-            android:layout_marginTop="8dp"
-            android:textSize="18sp"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/buttonAttendees"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Time: " />
+            android:text="Attendees"
+            android:backgroundTint="@color/avatar_color_1"
+            android:textColor="#FFFFFF"
+            android:layout_margin="4dp" />
 
-        <!-- Description -->
-        <TextView
-            android:id="@+id/descriptionTextView"
-            android:layout_marginTop="16dp"
-            android:textSize="16sp"
-            android:layout_width="match_parent"
+        <Button
+            android:id="@+id/buttonLocations"
+            android:layout_width="0dp"
+            android:layout_weight="1"
             android:layout_height="wrap_content"
-            android:text="Description" />
-
+            android:text="Locations"
+            android:backgroundTint="@color/avatar_color_1"
+            android:textColor="#FFFFFF"
+            android:layout_margin="4dp" />
     </LinearLayout>
-</ScrollView>
+
+    <!-- Fragment Container -->
+    <FrameLayout
+        android:id="@+id/fragmentContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:id="@+id/detailsProgressBar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_margin="16dp"
+        android:visibility="gone" />
+
+</LinearLayout>

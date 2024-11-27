@@ -4,10 +4,22 @@
     android:layout_height="match_parent"
     android:background="@drawable/gradient_background">
 
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="16dp">
+
+
+        <Button
+            android:id="@+id/backButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Back"
+            android:backgroundTint="#4D6E87"
+            android:textColor="#FFFFFF"
+            android:layout_marginTop="16dp"
+            android:layout_gravity="start" />
 
         <!-- Event Name EditText -->
         <EditText
@@ -15,6 +27,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Event Name"
+            android:layout_marginTop="80dp"
             android:padding="8dp" />
 
         <!-- Date EditText -->
@@ -90,7 +103,8 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Upload Poster" />
+            android:text="Upload Poster"
+            android:backgroundTint="@color/avatar_color_6"/>
 
         <!-- Generate QR Code Button -->
         <Button
@@ -99,7 +113,8 @@
             android:layout_marginTop="10dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Generate QR Code" />
+            android:text="Generate QR Code"
+            android:backgroundTint="@color/avatar_color_4"/>/>
 
         <!-- QR Code ImageView -->
         <ImageView

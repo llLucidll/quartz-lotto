@@ -1,34 +1,45 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="10dp">
+    android:padding="16dp"
+    android:background="?attr/selectableItemBackground">
 
+    <!-- Attendee Name -->
     <TextView
         android:id="@+id/attendeeName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="3"
+        android:layout_weight="2"
         android:text="Attendee Name"
-        android:textSize="16sp" />
+        android:textSize="16sp"
+        android:textColor="#000000"
+        android:ellipsize="end"
+        android:singleLine="true" />
 
+    <!-- Attendee Status -->
     <TextView
         android:id="@+id/attendeeStatus"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_weight="1"
         android:text="Confirmed"
-        android:textSize="14sp" />
+        android:textSize="14sp"
+        android:textColor="#757575"
+        android:gravity="center_vertical"
+        android:ellipsize="end"
+        android:singleLine="true" />
 
+    <!-- Delete Button -->
     <Button
         android:id="@+id/cancelButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:padding="8dp"
-        android:text="Delete"
-        android:visibility="gone"
-        app:iconPadding="8dp" />
-</LinearLayout>
+        android:text="Cancel"
+        android:layout_marginStart="8dp"
+        android:backgroundTint="@color/nav_text_color"
+        android:textColor="#FFFFFF" />
 
+</LinearLayout>
