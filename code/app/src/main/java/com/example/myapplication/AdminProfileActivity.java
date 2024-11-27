@@ -91,7 +91,7 @@ public class AdminProfileActivity extends BaseActivity {
         storage = FirebaseStorage.getInstance();
 
         // Initialize userId
-        userId = retrieveDeviceId();
+        userId = getUserId();
         if (userId == null) {
             Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
             finish();
