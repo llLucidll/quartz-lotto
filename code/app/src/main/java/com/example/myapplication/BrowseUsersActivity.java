@@ -50,9 +50,7 @@ public class BrowseUsersActivity extends BaseActivity {
         userRecyclerView.setLayoutManager(new LinearLayoutManager(this));
 
         userList = new ArrayList<>();
-
-        // Retrieve the current user's UID from BaseActivity
-        currentUserId = retrieveDeviceId();
+        currentUserId = getUserId();
 
         if (currentUserId == null) {
             Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
