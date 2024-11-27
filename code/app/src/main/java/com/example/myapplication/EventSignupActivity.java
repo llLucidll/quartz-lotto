@@ -1,3 +1,4 @@
+// File: app/src/main/java/com/example/myapplication/EventSignupActivity.java
 package com.example.myapplication;
 
 import android.Manifest;
@@ -18,7 +19,9 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.bumptech.glide.Glide;
+import com.example.myapplication.Models.Attendee;
 import com.google.android.gms.location.*;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.*;
 
 import java.util.HashMap;
@@ -67,9 +70,12 @@ public class EventSignupActivity extends BaseActivity {
         eventId = getIntent().getStringExtra("eventId");
         if (eventId == null) {
             Toast.makeText(this, "Event ID missing.", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Event ID is missing from the intent.");
             finish();
             return;
         }
+
+        Log.d(TAG, "Event ID retrieved: " + eventId);
 
         // Fetch and display event details
         fetchEventDetails();
@@ -80,6 +86,7 @@ public class EventSignupActivity extends BaseActivity {
                 registerForEvent();
             } else {
                 Toast.makeText(this, "Obtaining your location. Please wait.", Toast.LENGTH_SHORT).show();
+                Log.d(TAG, "Location not yet obtained. Attempting to get location.");
                 getCurrentLocation();
             }
         });
@@ -93,12 +100,16 @@ public class EventSignupActivity extends BaseActivity {
      */
     private void checkLocationPermission() {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION)
+                == PackageManager.PERMISSION_GRANTED
+                && ContextCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
+            Log.d(TAG, "Location permissions already granted.");
             getCurrentLocation();
         } else {
-            // Request location permission
+            Log.d(TAG, "Requesting location permissions.");
+            // Request both ACCESS_FINE_LOCATION and ACCESS_COARSE_LOCATION
             ActivityCompat.requestPermissions(this,
-                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
+                    new String[]{Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION},
                     LOCATION_PERMISSION_REQUEST_CODE);
         }
     }
@@ -109,12 +120,27 @@ public class EventSignupActivity extends BaseActivity {
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions,
                                            @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == LOCATION_PERMISSION_REQUEST_CODE) {
-            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            boolean fineLocationGranted = false;
+            boolean coarseLocationGranted = false;
 
+            if (grantResults.length > 0) {
+                for (int i = 0; i < permissions.length; i++) {
+                    if (Manifest.permission.ACCESS_FINE_LOCATION.equals(permissions[i])) {
+                        fineLocationGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+                    } else if (Manifest.permission.ACCESS_COARSE_LOCATION.equals(permissions[i])) {
+                        coarseLocationGranted = grantResults[i] == PackageManager.PERMISSION_GRANTED;
+                    }
+                }
+            }
+
+            if (fineLocationGranted || coarseLocationGranted) {
+                Log.d(TAG, "Location permissions granted.");
                 getCurrentLocation();
             } else {
                 // Permission denied
+                Log.d(TAG, "Location permissions denied.");
                 new AlertDialog.Builder(this)
                         .setTitle("Location Permission Required")
                         .setMessage("Location access is needed to sign up for events. Please grant location permission.")
@@ -148,6 +174,7 @@ public class EventSignupActivity extends BaseActivity {
                             Log.d(TAG, "Location obtained: " + userLatitude + ", " + userLongitude);
                         } else {
                             // If last location is null, request a new location
+                            Log.d(TAG, "Last location is null, requesting new location.");
                             requestNewLocationData();
                         }
                     })
@@ -165,12 +192,13 @@ public class EventSignupActivity extends BaseActivity {
      */
     private void requestNewLocationData() {
         LocationRequest locationRequest = LocationRequest.create()
-                .setPriority(Priority.PRIORITY_HIGH_ACCURACY)
+                .setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY)
                 .setInterval(5000) // 5 seconds
                 .setFastestInterval(2000) // 2 seconds
                 .setNumUpdates(1);
 
         try {
+            Log.d(TAG, "Requesting new location data.");
             fusedLocationClient.requestLocationUpdates(locationRequest, locationCallback, null);
         } catch (SecurityException e) {
             Log.e(TAG, "Location permission not granted.", e);
@@ -191,6 +219,7 @@ public class EventSignupActivity extends BaseActivity {
                 Log.d(TAG, "New location obtained: " + userLatitude + ", " + userLongitude);
             } else {
                 Toast.makeText(EventSignupActivity.this, "Unable to get current location.", Toast.LENGTH_SHORT).show();
+                Log.w(TAG, "Location callback received null location.");
             }
         }
     };
@@ -200,6 +229,7 @@ public class EventSignupActivity extends BaseActivity {
      */
     private void fetchEventDetails() {
         progressBar.setVisibility(View.VISIBLE);
+        Log.d(TAG, "Fetching event details from Firestore.");
 
         db.collection("Events").document(eventId).get()
                 .addOnSuccessListener(documentSnapshot -> {
@@ -214,6 +244,10 @@ public class EventSignupActivity extends BaseActivity {
 
                         int maxAttendees = maxAttendeesLong != null ? maxAttendeesLong.intValue() : 0;
                         int currentAttendees = currentAttendeesLong != null ? currentAttendeesLong.intValue() : 0;
+
+                        Log.d(TAG, "Event Details - Name: " + eventName + ", Draw Date: " + drawDate +
+                                ", Event Time: " + eventDateTime + ", Max Attendees: " + maxAttendees +
+                                ", Current Attendees: " + currentAttendees);
 
                         // Update UI
                         eventNameTextView.setText(eventName);
@@ -234,14 +268,18 @@ public class EventSignupActivity extends BaseActivity {
 
                     } else {
                         Toast.makeText(this, "Event not found.", Toast.LENGTH_SHORT).show();
+                        Log.e(TAG, "Event document does not exist.");
                         finish();
                     }
                 })
                 .addOnFailureListener(e -> {
                     Toast.makeText(this, "Error fetching event details.", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error fetching event", e);
+                    Log.e(TAG, "Error fetching event details: ", e);
                 })
-                .addOnCompleteListener(task -> progressBar.setVisibility(View.GONE));
+                .addOnCompleteListener(task -> {
+                    progressBar.setVisibility(View.GONE);
+                    Log.d(TAG, "Finished fetching event details.");
+                });
     }
 
     /**
@@ -251,31 +289,39 @@ public class EventSignupActivity extends BaseActivity {
     private void registerForEvent() {
         progressBar.setVisibility(View.VISIBLE);
         signupButton.setEnabled(false); // Disable button to prevent multiple clicks
+        Log.d(TAG, "Initiating sign-up process.");
 
         String deviceId = retrieveDeviceId();
         if (deviceId == null) {
             Toast.makeText(this, "Unable to retrieve device ID.", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Device ID is null.");
             resetSignupButton();
             return;
         }
+
+        Log.d(TAG, "Device ID retrieved: " + deviceId);
 
         // Fetch user's profile details before proceeding
         DocumentReference userProfileRef = db.collection("users").document(deviceId);
         userProfileRef.get().addOnSuccessListener(userSnapshot -> {
             if (!userSnapshot.exists() || userSnapshot.getString("name") == null) {
                 Toast.makeText(this, "Please complete your profile before signing up.", Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "User profile does not exist or is incomplete.");
                 resetSignupButton();
                 return;
             }
 
             String userName = userSnapshot.getString("name");
-            String userEmail = userSnapshot.getString("email");
+            String userEmail = userSnapshot.getString("email"); // Ensure your Firestore has an 'email' field
+
+            Log.d(TAG, "User Profile - Name: " + userName + ", Email: " + userEmail);
 
             // Proceed with event signup
             performEventSignup(deviceId, userName, userEmail);
 
         }).addOnFailureListener(e -> {
             Toast.makeText(this, "Error retrieving profile. Please try again.", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Error retrieving user profile: ", e);
             resetSignupButton();
         });
     }
@@ -283,31 +329,53 @@ public class EventSignupActivity extends BaseActivity {
     /**
      * Performs the event sign-up operation, storing user location in Firestore.
      */
-    private void performEventSignup(String deviceId, String userName, String userEmail) {
+    private void performEventSignup(String userId, String userName, String userEmail) {
         // Ensure location is available
         if (!locationObtained) {
             Toast.makeText(this, "Location not available. Please try again.", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Location not obtained before sign-up.");
             resetSignupButton();
             return;
         }
 
+        Log.d(TAG, "Attempting to sign up user with ID: " + userId + " at location: " + userLatitude + ", " + userLongitude);
+
         DocumentReference eventRef = db.collection("Events").document(eventId);
-        DocumentReference attendeeRef = eventRef.collection("Attendees").document(deviceId);
+        DocumentReference attendeeRef = eventRef.collection("Attendees").document(userId);
+        DocumentReference waitlistRef = eventRef.collection("Waitlist").document(userId);
 
         db.runTransaction(transaction -> {
             DocumentSnapshot eventSnapshot = transaction.get(eventRef);
             if (!eventSnapshot.exists()) {
+                Log.e(TAG, "Event does not exist.");
                 throw new FirebaseFirestoreException("Event does not exist.",
                         FirebaseFirestoreException.Code.NOT_FOUND);
             }
 
+            // Check if user is already in Attendees
+            DocumentSnapshot attendeeSnapshot = transaction.get(attendeeRef);
+            if (attendeeSnapshot.exists()) {
+                Log.e(TAG, "User already signed up in Attendees.");
+                throw new FirebaseFirestoreException("User already signed up for the event.",
+                        FirebaseFirestoreException.Code.ALREADY_EXISTS);
+            }
+
+            // Check if user is already in Waitlist
+            DocumentSnapshot waitlistSnapshot = transaction.get(waitlistRef);
+            if (waitlistSnapshot.exists()) {
+                Log.e(TAG, "User already on the Waitlist.");
+                throw new FirebaseFirestoreException("User already on the waitlist.",
+                        FirebaseFirestoreException.Code.ALREADY_EXISTS);
+            }
+
             // Check event capacity
-            long maxAttendees = eventSnapshot.getLong("maxAttendees") != null
-                    ? eventSnapshot.getLong("maxAttendees")
-                    : 0;
-            long currentAttendees = eventSnapshot.getLong("currentAttendees") != null
-                    ? eventSnapshot.getLong("currentAttendees")
-                    : 0;
+            Long maxAttendeesLong = eventSnapshot.getLong("maxAttendees");
+            Long currentAttendeesLong = eventSnapshot.getLong("currentAttendees");
+
+            int maxAttendees = maxAttendeesLong != null ? maxAttendeesLong.intValue() : 0;
+            int currentAttendees = currentAttendeesLong != null ? currentAttendeesLong.intValue() : 0;
+
+            Log.d(TAG, "Event Capacity - Current Attendees: " + currentAttendees + ", Max Attendees: " + maxAttendees);
 
             if (currentAttendees < maxAttendees) {
                 // Add attendee and store location
@@ -315,32 +383,52 @@ public class EventSignupActivity extends BaseActivity {
                 attendeeData.put("userName", userName);
                 attendeeData.put("userEmail", userEmail);
                 attendeeData.put("status", "Attending");
-                attendeeData.put("latitude", userLatitude);
-                attendeeData.put("longitude", userLongitude);
+                attendeeData.put("latitude", userLatitude);      // Dynamic latitude
+                attendeeData.put("longitude", userLongitude);    // Dynamic longitude
                 transaction.set(attendeeRef, attendeeData);
 
                 // Update current attendees
                 transaction.update(eventRef, "currentAttendees", FieldValue.increment(1));
+
+                Log.d(TAG, "User added to Attendees.");
+
             } else {
                 // Add to waitlist and store location
-                DocumentReference waitlistRef = eventRef.collection("Waitlist").document(deviceId);
                 Map<String, Object> waitlistData = new HashMap<>();
                 waitlistData.put("userName", userName);
                 waitlistData.put("userEmail", userEmail);
                 waitlistData.put("status", "Waitlisted");
-                waitlistData.put("latitude", userLatitude);
-                waitlistData.put("longitude", userLongitude);
+                waitlistData.put("latitude", userLatitude);      // Dynamic latitude
+                waitlistData.put("longitude", userLongitude);    // Dynamic longitude
                 transaction.set(waitlistRef, waitlistData);
+
+                Log.d(TAG, "User added to Waitlist.");
             }
 
             return null;
         }).addOnSuccessListener(aVoid -> {
             Toast.makeText(this, "You have successfully signed up!", Toast.LENGTH_SHORT).show();
+            Log.d(TAG, "Sign-up transaction successful.");
             finish(); // Close the activity or update UI as needed
         }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Signup failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+            if (e instanceof FirebaseFirestoreException) {
+                FirebaseFirestoreException ffe = (FirebaseFirestoreException) e;
+                if (ffe.getCode() == FirebaseFirestoreException.Code.ALREADY_EXISTS) {
+                    Toast.makeText(this, ffe.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Sign-up failed: " + ffe.getMessage());
+                } else {
+                    Toast.makeText(this, "Signup failed: " + ffe.getMessage(), Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Sign-up failed with Firestore error: ", e);
+                }
+            } else {
+                Toast.makeText(this, "Signup failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                Log.e(TAG, "Sign-up failed with unknown error: ", e);
+            }
             resetSignupButton();
-        }).addOnCompleteListener(task -> progressBar.setVisibility(View.GONE));
+        }).addOnCompleteListener(task -> {
+            progressBar.setVisibility(View.GONE);
+            Log.d(TAG, "Sign-up transaction completed.");
+        });
     }
 
     /**
@@ -349,5 +437,6 @@ public class EventSignupActivity extends BaseActivity {
     private void resetSignupButton() {
         signupButton.setEnabled(true);
         progressBar.setVisibility(View.GONE);
+        Log.d(TAG, "Sign-up button reset.");
     }
 }

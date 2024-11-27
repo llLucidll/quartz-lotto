@@ -10,7 +10,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-/** Ayesha --
+/**
  * BaseActivity allows a method to get the current user's UID
  * and other activities should extend this class to access user identification
  */
@@ -39,7 +39,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
 
-        DocumentReference userRef = db.collection("Users").document(deviceId);
+        DocumentReference userRef = db.collection("users").document(deviceId);
         userRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 String userName = documentSnapshot.getString("userName");
@@ -72,7 +72,7 @@ public abstract class BaseActivity extends AppCompatActivity {
             return;
         }
 
-        DocumentReference userRef = db.collection("Users").document(deviceId);
+        DocumentReference userRef = db.collection("users").document(deviceId);
         userRef.get().addOnSuccessListener(documentSnapshot -> {
             if (documentSnapshot.exists()) {
                 String userType = documentSnapshot.getString("userType");

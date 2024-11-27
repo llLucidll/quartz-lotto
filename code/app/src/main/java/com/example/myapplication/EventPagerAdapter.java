@@ -1,3 +1,4 @@
+// File: com/example/myapplication/EventPagerAdapter.java
 package com.example.myapplication;
 
 import androidx.annotation.NonNull;

@@ -31,7 +31,7 @@ public class NotificationService {
     private String channelId;
 
     public static void sendNotification(User user) {
-        if (user.getNotificationsPerm()) {
+        if (user.isNotificationsPerm()) {
 
         }
     }

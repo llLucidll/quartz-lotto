@@ -1,45 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<!-- File: res/layout/item_attendee.xml -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/item_attendee_layout"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="horizontal"
-    android:padding="16dp"
-    android:background="?attr/selectableItemBackground">
+    android:padding="12dp"
+    android:background="?attr/selectableItemBackground"
+    android:gravity="center_vertical"
+    android:clickable="true"
+    android:focusable="true">
 
-    <!-- Attendee Name -->
-    <TextView
-        android:id="@+id/attendeeName"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_weight="2"
-        android:text="Attendee Name"
-        android:textSize="16sp"
-        android:textColor="#000000"
-        android:ellipsize="end"
-        android:singleLine="true" />
+    <!-- Profile Image -->
+    <ImageView
+        android:id="@+id/image_attendee_profile"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_marginEnd="16dp"
+        android:scaleType="centerCrop"
+        android:src="@drawable/ic_profile" />
 
-    <!-- Attendee Status -->
-    <TextView
-        android:id="@+id/attendeeStatus"
+    <!-- Attendee Details -->
+    <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1"
-        android:text="Confirmed"
-        android:textSize="14sp"
-        android:textColor="#757575"
-        android:gravity="center_vertical"
-        android:ellipsize="end"
-        android:singleLine="true" />
+        android:orientation="vertical">
 
-    <!-- Delete Button -->
+        <!-- Attendee Name -->
+        <TextView
+            android:id="@+id/text_attendee_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Attendee Name"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <!-- Attendee Email -->
+        <TextView
+            android:id="@+id/text_attendee_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="email@example.com"
+            android:textSize="14sp"
+            android:layout_marginTop="4dp"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <!-- Attendee Phone -->
+
+        <TextView
+            android:id="@+id/text_attendee_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="+1 (234) 567-8901"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+        <!-- Attendee Status -->
+        <TextView
+            android:id="@+id/text_attendee_status"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Status"
+            android:textSize="14sp"
+            android:layout_marginTop="2dp"
+            android:ellipsize="end"
+            android:maxLines="1" />
+
+    </LinearLayout>
+
     <Button
-        android:id="@+id/cancelButton"
+        android:id="@+id/button_cancel_attendee"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Cancel"
-        android:layout_marginStart="8dp"
-        android:backgroundTint="@color/nav_text_color"
-        android:textColor="#FFFFFF" />
+        android:backgroundTint="@color/cardview_dark_background"
+        android:text="Cancel"/>
 
 </LinearLayout>

@@ -1,46 +1,41 @@
 package com.example.myapplication.Models;
 
-import com.google.firebase.firestore.PropertyName;
-
 public class Attendee {
-    private String id;
-    private String name;
+    private String userId;
+    private String userName;
+    private String userEmail;
     private String status;
+    private Double latitude;
+    private Double longitude;
 
     public Attendee() {
     }
 
-    public Attendee(String id, String name, String status) {
-        this.id = id;
-        this.name = name;
+    public Attendee(String userId, String userName, String userEmail, String status, Double latitude, Double longitude) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userEmail = userEmail;
         this.status = status;
+        this.latitude = latitude;
+        this.longitude = longitude;
     }
 
-    public String getId() {
-        return id;
-    }
+    // Getters and Setters
+    public String getUserId() { return userId; }
+    public void setUserId(String userId) { this.userId = userId; }
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    public String getUserName() { return userName; }
+    public void setUserName(String userName) { this.userName = userName; }
 
-    @PropertyName("userName")
-    public String getName() {
-        return name;
-    }
+    public String getUserEmail() { return userEmail; }
+    public void setUserEmail(String userEmail) { this.userEmail = userEmail; }
 
-    @PropertyName("userName")
-    public void setName(String name) {
-        this.name = name;
-    }
+    public String getStatus() { return status; }
+    public void setStatus(String status) { this.status = status; }
 
-    @PropertyName("status")
-    public String getStatus() {
-        return status;
-    }
+    public Double getLatitude() { return latitude; }
+    public void setLatitude(Double latitude) { this.latitude = latitude; }
 
-    @PropertyName("status")
-    public void setStatus(String status) {
-        this.status = status;
-    }
+    public Double getLongitude() { return longitude; }
+    public void setLongitude(Double longitude) { this.longitude = longitude; }
 }

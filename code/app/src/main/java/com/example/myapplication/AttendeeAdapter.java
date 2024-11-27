@@ -76,9 +76,9 @@ public class AttendeeAdapter extends RecyclerView.Adapter<AttendeeAdapter.ViewHo
 
         public ViewHolder(View itemView) {
             super(itemView);
-            name = itemView.findViewById(R.id.attendeeName);
-            status = itemView.findViewById(R.id.attendeeStatus);
-            cancelButton = itemView.findViewById(R.id.cancelButton);
+            name = itemView.findViewById(R.id.text_attendee_name);
+            status = itemView.findViewById(com.google.zxing.client.android.R.id.zxing_status_view);
+            cancelButton = itemView.findViewById(R.id.buttonCancelledEntrants);
         }
     }
 }
