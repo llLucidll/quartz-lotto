@@ -18,7 +18,6 @@ public class LocationsFragment extends Fragment {
     private String eventId;
 
     public LocationsFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -52,7 +51,6 @@ public class LocationsFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_locations, container, false);
 
-        // TODO: Implement locations functionality
 
         Toast.makeText(getContext(), "Locations feature not implemented yet.", Toast.LENGTH_SHORT).show();
 
