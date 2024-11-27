@@ -21,10 +21,6 @@ import com.example.myapplication.Controllers.AddFacilityController;
 import com.example.myapplication.Models.Facility;
 import com.example.myapplication.R;
 
-
-/*
-Add Facility Screen
- */
 public class AddFacilityView extends AppCompatActivity {
 
     private static final String TAG = "AddFacilityActivity";

@@ -36,7 +36,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
- * Profile Editing Screen for editing user profile information, including name, email, date of birth,
+ * Activity for editing user profile information, including name, email, date of birth,
  * phone number, country, profile image, and notification preferences.
  */
 public class EntrantProfileView extends AppCompatActivity {
@@ -77,7 +77,7 @@ public class EntrantProfileView extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_entrant_profile);
+        setContentView(R.layout.activity_edit_profile);
 
         controller = new EditProfileController();
 
@@ -100,8 +100,6 @@ public class EntrantProfileView extends AppCompatActivity {
         saveChangesButton.setOnClickListener(v -> saveProfileData());
         backButton.setOnClickListener(v -> finish());
         removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
-
-        //Transitions to Add Facility Screen
         addFacilityButton.setOnClickListener(v -> startActivity(new Intent(this, AddFacilityView.class)));
 
         setupDateOfBirthField();
