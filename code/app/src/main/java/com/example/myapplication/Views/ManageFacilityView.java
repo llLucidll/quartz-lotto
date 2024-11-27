@@ -24,6 +24,10 @@ import com.example.myapplication.R;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 
+
+/*
+Manage Facility Screen (for Organizers)
+ */
 public class ManageFacilityView extends AppCompatActivity {
 
     private static final String TAG = "ManageFacilitiesActivity";
