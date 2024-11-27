@@ -121,7 +121,7 @@ public class EventSignupActivity extends BaseActivity { // Now extends BaseActiv
         }
 
         // Fetch user's profile details before proceeding
-        DocumentReference userProfileRef = db.collection("Users").document(deviceId);
+        DocumentReference userProfileRef = db.collection("users").document(deviceId);
         userProfileRef.get().addOnSuccessListener(userSnapshot -> {
             if (!userSnapshot.exists() || userSnapshot.getString("name") == null) {
                 Toast.makeText(this, "Please complete your profile before signing up.", Toast.LENGTH_SHORT).show();
