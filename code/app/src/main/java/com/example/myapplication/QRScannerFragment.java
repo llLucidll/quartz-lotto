@@ -8,7 +8,9 @@ import android.view.*;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
-import androidx.annotation.*;
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.OptIn;
 import androidx.camera.core.*;
 import androidx.camera.lifecycle.ProcessCameraProvider;
 import androidx.camera.view.PreviewView;
@@ -24,6 +26,9 @@ import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/**
+ * Fragment responsible for scanning QR codes to navigate entrants to the Event Signup page.
+ */
 public class QRScannerFragment extends Fragment {
 
     private static final String TAG = "QRScannerFragment";
@@ -39,18 +44,19 @@ public class QRScannerFragment extends Fragment {
 
     private Camera camera;
 
+    @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_qr_scanner, container, false);
 
-        // UI initialization
+        // Initialize UI components
         previewView = view.findViewById(R.id.previewView);
         flashToggleButton = view.findViewById(R.id.flash_toggle_button);
 
         cameraExecutor = Executors.newSingleThreadExecutor();
 
-        // ML Kit's Barcode Scanner
+        // Configure ML Kit's Barcode Scanner for QR codes
         BarcodeScannerOptions options =
                 new BarcodeScannerOptions.Builder()
                         .setBarcodeFormats(
@@ -60,16 +66,18 @@ public class QRScannerFragment extends Fragment {
 
         cameraProviderFuture = ProcessCameraProvider.getInstance(requireContext());
 
-        // Request camera permission if not granted (Assuming permissions are handled elsewhere)
-
+        // Start the camera
         startCamera();
 
-        // Set up flash toggle button
+        // Set up flash toggle button listener
         flashToggleButton.setOnClickListener(v -> toggleFlash());
 
         return view;
     }
 
+    /**
+     * Initializes and binds the camera use cases.
+     */
     private void startCamera() {
         cameraProviderFuture.addListener(() -> {
             try {
@@ -77,17 +85,25 @@ public class QRScannerFragment extends Fragment {
                 bindCameraUseCases(cameraProvider);
             } catch (ExecutionException | InterruptedException e) {
                 Log.e(TAG, "Error starting camera", e);
+                Toast.makeText(getContext(), "Error starting camera.", Toast.LENGTH_SHORT).show();
             }
         }, ContextCompat.getMainExecutor(requireContext()));
     }
 
+    /**
+     * Binds the camera use cases: Preview and ImageAnalysis.
+     *
+     * @param cameraProvider The camera provider.
+     */
     private void bindCameraUseCases(ProcessCameraProvider cameraProvider) {
 
+        // Preview Use Case
         Preview preview = new Preview.Builder()
                 .build();
 
         preview.setSurfaceProvider(previewView.getSurfaceProvider());
 
+        // Image Analysis Use Case
         ImageAnalysis imageAnalysis =
                 new ImageAnalysis.Builder()
                         .setBackpressureStrategy(ImageAnalysis.STRATEGY_KEEP_ONLY_LATEST)
@@ -97,11 +113,14 @@ public class QRScannerFragment extends Fragment {
             processImageProxy(imageProxy);
         });
 
+        // Select back camera as default
         CameraSelector cameraSelector = CameraSelector.DEFAULT_BACK_CAMERA;
 
+        // Unbind all use cases before rebinding
         cameraProvider.unbindAll();
 
         try {
+            // Bind use cases to camera lifecycle
             camera = cameraProvider.bindToLifecycle(
                     this, cameraSelector, preview, imageAnalysis);
         } catch (Exception e) {
@@ -117,6 +136,11 @@ public class QRScannerFragment extends Fragment {
         }
     }
 
+    /**
+     * Processes each frame from the camera to detect QR codes.
+     *
+     * @param imageProxy The image proxy containing the frame.
+     */
     @OptIn(markerClass = ExperimentalGetImage.class)
     private void processImageProxy(ImageProxy imageProxy) {
         if (!isScanning) {
@@ -148,23 +172,30 @@ public class QRScannerFragment extends Fragment {
         }
     }
 
-
+    /**
+     * Handles the scanned QR code data by parsing the eventId and navigating to EventSignupActivity.
+     *
+     * @param data The raw data from the scanned QR code.
+     */
     private void handleScannedData(String data) {
-        // Assuming the data is in the format: eventapp://event/<eventId>
+        Log.d(TAG, "Scanned Data: " + data);
         if (data.startsWith("eventapp://event/")) {
             String eventId = data.substring(data.lastIndexOf('/') + 1);
+            Log.d(TAG, "Parsed Event ID: " + eventId);
 
-            // Start EventDetailsActivity with the eventId
-            Intent intent = new Intent(getActivity(), EventDetailsActivity.class);
+            // Open EventSignupActivity with the parsed eventId
+            Intent intent = new Intent(getActivity(), EventSignupActivity.class);
             intent.putExtra("eventId", eventId);
             startActivity(intent);
-
-
         } else {
+            Log.e(TAG, "Invalid QR code format.");
             Toast.makeText(getContext(), "Invalid QR code", Toast.LENGTH_SHORT).show();
         }
     }
 
+    /**
+     * Toggles the camera flash on or off.
+     */
     private void toggleFlash() {
         if (camera == null) {
             Toast.makeText(getContext(), "Camera not initialized", Toast.LENGTH_SHORT).show();
