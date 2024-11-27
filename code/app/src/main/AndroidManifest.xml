@@ -23,10 +23,20 @@
         tools:targetApi="31"
         android:enableOnBackInvokedCallback="true">
 
+        <!-- Google Maps API Key -->
         <meta-data
             android:name="com.google.android.geo.API_KEY"
             android:value="YOUR_GOOGLE_MAPS_API_KEY"/>
 
+        <!-- Osmdroid Configuration -->
+        <meta-data
+            android:name="osmdroid.basePath"
+            android:value="osmdroid" />
+        <meta-data
+            android:name="osmdroid.cachePath"
+            android:value="osmdroid/cache" />
+
+        <!-- Firebase Messaging Service -->
         <service
             android:name=".MyFirebaseMessagingService"
             android:exported="false">
@@ -35,6 +45,7 @@
             </intent-filter>
         </service>
 
+        <!-- Activities -->
         <activity
             android:name=".MainActivity"
             android:exported="true">
@@ -59,9 +70,5 @@
         <activity android:name=".EventSignupActivity" />
         <activity android:name=".BrowseImagesActivity"/>
 
-
-
-
     </application>
-
 </manifest>
