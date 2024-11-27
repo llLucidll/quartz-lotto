@@ -12,6 +12,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.AuthResult;
+import org.osmdroid.config.Configuration;
+
 
 /**
  * MainActivity initializes anonymous authentication and handles navigation.
@@ -25,6 +27,9 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // Initialize Osmdroid configuration
+        Configuration.getInstance().setUserAgentValue(getPackageName());
 
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();

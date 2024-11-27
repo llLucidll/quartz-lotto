@@ -19,11 +19,11 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     /**
-     * Retrieves the device ID.
+     * Retrieves the unique device ID.
      *
-     * @return The device ID as a String.
+     * @return Device ID as a String.
      */
-    public String retrieveDeviceId() {
+    protected String retrieveDeviceId() {
         return Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
