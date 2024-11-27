@@ -65,7 +65,7 @@ public class OrganizerProfileActivity extends BaseActivity {
         storage = FirebaseStorage.getInstance();
 
         // Initialize userId using BaseActivity's method
-        userId = getUserId();
+        userId = retrieveDeviceId();
         if (userId == null) {
             Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
             finish();
