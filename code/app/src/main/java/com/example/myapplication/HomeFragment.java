@@ -1,3 +1,4 @@
+// File: com/example/myapplication/HomeFragment.java
 package com.example.myapplication;
 
 import android.app.Activity;
@@ -113,15 +114,21 @@ public class HomeFragment extends Fragment {
                             Integer maxWaitlist = document.getLong("maxWaitlist") != null ?
                                     document.getLong("maxWaitlist").intValue() : null;
                             Boolean geolocationEnabled = document.getBoolean("geolocationEnabled");
+                            String qrCodeLink = document.getString("qrCodeLink");
+                            String eventOrganizerId = document.getString("organizerId");
 
+                            // Handle potential null values
                             int maxAttendees = maxAttendeesLong != null ? maxAttendeesLong.intValue() : 0;
                             int currentAttendees = currentAttendeesLong != null ? currentAttendeesLong.intValue() : 0;
+                            boolean geoEnabled = geolocationEnabled != null && geolocationEnabled;
 
+                            // Create Event object using the overloaded constructor
                             Event event = new Event(eventId, eventName, drawDate, eventDateTime, description,
-                                    maxAttendees, maxWaitlist, geolocationEnabled != null && geolocationEnabled,
-                                    document.getString("qrCodeLink"), posterUrl, currentAttendees);
+                                    maxAttendees, maxWaitlist, geoEnabled, qrCodeLink, posterUrl, currentAttendees, eventOrganizerId);
+
                             eventList.add(event);
                         }
+
 
                         adapter.notifyDataSetChanged(); // Update the RecyclerView with new data
                         Log.d("HomeFragment", "Events updated. Total events: " + eventList.size());

@@ -1,3 +1,4 @@
+// File: com/example/myapplication/LocationsFragment.java
 package com.example.myapplication;
 
 import android.os.Bundle;
@@ -8,40 +9,32 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
-import com.google.firebase.firestore.*;
-
-import org.osmdroid.config.Configuration;
 import org.osmdroid.util.BoundingBox;
 import org.osmdroid.util.GeoPoint;
 import org.osmdroid.views.MapView;
 import org.osmdroid.views.overlay.Marker;
 
-import java.util.ArrayList;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QuerySnapshot;
+
 import java.util.List;
 
 /**
- * Fragment displaying the locations of event attendees.
+ * Fragment to display attendee locations on a map.
  */
 public class LocationsFragment extends Fragment {
-    private static final String ARG_EVENT_ID = "eventId";
+
     private static final String TAG = "LocationsFragment";
+    private static final String ARG_EVENT_ID = "eventId";
 
     private String eventId;
     private MapView mapView;
-    private FirebaseFirestore db;
-    private List<GeoPoint> attendeeLocations = new ArrayList<>();
+    private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
-    public LocationsFragment() {
-    }
-
-    /**
-     * Factory method to create a new instance of this fragment using the provided parameters.
-     *
-     * @param eventId The unique ID of the event.
-     * @return A new instance of fragment LocationsFragment.
-     */
     public static LocationsFragment newInstance(String eventId) {
         LocationsFragment fragment = new LocationsFragment();
         Bundle args = new Bundle();
@@ -50,122 +43,123 @@ public class LocationsFragment extends Fragment {
         return fragment;
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-        // Retrieve eventId from arguments
-        if (getArguments() != null) {
-            eventId = getArguments().getString(ARG_EVENT_ID);
-            Log.d(TAG, "Received eventId in LocationsFragment: " + eventId);
-        } else {
-            Toast.makeText(getContext(), "Event ID missing.", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "getArguments() returned null in LocationsFragment");
-            // Optionally, handle the error
-        }
-
-        // Initialize Firestore
-        db = FirebaseFirestore.getInstance();
-
-        // Configure Osmdroid
-        Configuration.getInstance().setUserAgentValue(requireContext().getPackageName());
+    public LocationsFragment() {
+        // Required empty public constructor
     }
 
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        // Retrieve eventId from arguments
+        if (getArguments() != null) {
+            eventId = getArguments().getString(ARG_EVENT_ID);
+            Log.d(TAG, "LocationsFragment created with eventId: " + eventId);
+        } else {
+            Toast.makeText(getContext(), "Event ID missing.", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Event ID is missing from arguments.");
+        }
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_locations, container, false);
-
-        // Configure the MapView
         mapView = view.findViewById(R.id.map);
-        mapView.setTileSource(org.osmdroid.tileprovider.tilesource.TileSourceFactory.MAPNIK);
-        mapView.setMultiTouchControls(true);
 
-        // Fetch attendee locations
-        fetchAttendeeLocations();
+        // Initialize the map (assuming you're using OsmDroid or similar)
+        mapView.setMultiTouchControls(true);
+        mapView.getController().setZoom(15.0);
+        // Set a default center point (e.g., Edmonton coordinates)
+        GeoPoint startPoint = new GeoPoint(53.5461, -113.4938);
+        mapView.getController().setCenter(startPoint);
+
+        // Fetch and display attendee locations
+        updateMapMarkers();
 
         return view;
     }
 
     /**
-     * Fetches attendee locations from Firestore and adds markers to the map.
+     * Public method to update map markers. Can be called from other components like Activity or Adapter.
      */
-    private void fetchAttendeeLocations() {
+    public void updateMapMarkers() {
         if (eventId == null) {
-            Toast.makeText(getContext(), "Event ID is missing.", Toast.LENGTH_SHORT).show();
+            Log.e(TAG, "Cannot update map markers. eventId is null.");
             return;
         }
 
-        CollectionReference attendeesRef = db.collection("Events")
-                .document(eventId)
-                .collection("Attendees");
+        db.collection("Events").document(eventId)
+                .collection("Attendees")
+                .whereEqualTo("status", "Attending") // Ensure only active attendees are fetched
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    mapView.getOverlays().clear(); // Clear existing markers
 
-        attendeesRef.get().addOnSuccessListener(querySnapshot -> {
-            if (!querySnapshot.isEmpty()) {
-                mapView.getOverlays().clear(); // Clear existing markers
-                attendeeLocations.clear();
-
-                for (QueryDocumentSnapshot document : querySnapshot) {
-                    Double latitude = document.getDouble("latitude");
-                    Double longitude = document.getDouble("longitude");
-                    String userName = document.getString("userName");
-
-                    if (latitude != null && longitude != null) {
-                        addAttendeeMarker(latitude, longitude, userName);
-                    } else {
-                        Log.w(TAG, "Attendee " + userName + " has no location data.");
+                    List<DocumentSnapshot> documents = queryDocumentSnapshots.getDocuments();
+                    if (documents.isEmpty()) {
+                        Toast.makeText(getContext(), "No attendees to display.", Toast.LENGTH_SHORT).show();
+                        Log.d(TAG, "No attendees found for eventId: " + eventId);
+                        mapView.invalidate(); // Refresh the map
+                        return;
                     }
-                }
-                // Adjust the map view to include all markers
-                centerMap();
-                mapView.invalidate(); // Refresh the map
-            } else {
-                Toast.makeText(getContext(), "No attendees with location data.", Toast.LENGTH_SHORT).show();
-            }
-        }).addOnFailureListener(e -> {
-            Toast.makeText(getContext(), "Failed to fetch attendee locations.", Toast.LENGTH_SHORT).show();
-            Log.e(TAG, "Error fetching attendees", e);
-        });
+
+                    for (DocumentSnapshot doc : documents) {
+                        Double latitude = doc.getDouble("latitude");
+                        Double longitude = doc.getDouble("longitude");
+                        String userName = doc.getString("userName");
+
+                        if (latitude != null && longitude != null && userName != null) {
+                            GeoPoint point = new GeoPoint(latitude, longitude);
+                            Marker marker = new Marker(mapView);
+                            marker.setPosition(point);
+                            marker.setTitle(userName);
+                            marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
+                            mapView.getOverlays().add(marker);
+                            Log.d(TAG, "Added marker for user: " + userName + " at (" + latitude + ", " + longitude + ")");
+                        }
+                    }
+
+                    // Optionally, adjust the map view to encompass all markers
+                    adjustMapView(documents);
+
+                    mapView.invalidate(); // Refresh the map
+                })
+                .addOnFailureListener(e -> {
+                    Toast.makeText(getContext(), "Error fetching locations.", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error fetching attendee locations: ", e);
+                });
     }
 
     /**
-     * Adds a marker for an attendee on the map.
+     * Adjusts the map view to encompass all attendee markers.
      *
-     * @param latitude  Latitude of the attendee.
-     * @param longitude Longitude of the attendee.
-     * @param userName  Name of the attendee.
+     * @param documents The list of attendee documents.
      */
-    private void addAttendeeMarker(double latitude, double longitude, String userName) {
-        GeoPoint point = new GeoPoint(latitude, longitude);
-        attendeeLocations.add(point);
+    private void adjustMapView(List<DocumentSnapshot> documents) {
+        if (documents.isEmpty()) return;
 
-        Marker marker = new Marker(mapView);
-        marker.setPosition(point);
-        marker.setTitle(userName); // Display user's name when marker is tapped
-        marker.setAnchor(Marker.ANCHOR_CENTER, Marker.ANCHOR_BOTTOM);
-        mapView.getOverlays().add(marker);
-    }
+        double minLat = Double.MAX_VALUE;
+        double maxLat = Double.MIN_VALUE;
+        double minLon = Double.MAX_VALUE;
+        double maxLon = Double.MIN_VALUE;
 
-    /**
-     * Centers the map to include all attendee markers.
-     */
-    private void centerMap() {
-        if (attendeeLocations.isEmpty()) return;
+        for (DocumentSnapshot doc : documents) {
+            Double latitude = doc.getDouble("latitude");
+            Double longitude = doc.getDouble("longitude");
+            if (latitude != null && longitude != null) {
+                if (latitude < minLat) minLat = latitude;
+                if (latitude > maxLat) maxLat = latitude;
+                if (longitude < minLon) minLon = longitude;
+                if (longitude > maxLon) maxLon = longitude;
+            }
+        }
 
-        // Create a bounding box around the attendee locations
-        BoundingBox boundingBox = BoundingBox.fromGeoPoints(attendeeLocations);
-        mapView.zoomToBoundingBox(boundingBox, true);
-    }
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume(); // This is required to resume map rendering
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause(); // This is required to pause map rendering
+        // Set the map view to the bounding box
+        if (minLat < maxLat && minLon < maxLon) {
+            BoundingBox boundingBox = new BoundingBox(maxLat, maxLon, minLat, minLon);
+            mapView.zoomToBoundingBox(boundingBox, true);
+            Log.d(TAG, "Map view adjusted to bounding box.");
+        }
     }
 }
