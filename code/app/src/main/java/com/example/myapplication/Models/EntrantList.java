@@ -4,7 +4,10 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.example.myapplication.Repositories.EntrantListRepository;
+import com.example.myapplication.Models.User;
 public class EntrantList {
+    private String listId;
     private List<User> users;
     private int capacity;
     private int sampleSize;
@@ -15,6 +18,12 @@ public class EntrantList {
         this.sampleSize = sampleSize;
     }
 
+    public void setListId() {
+        listId = EntrantListRepository.createListId();
+    }
+    public String getListId() {
+        return listId;
+    }
     public List<User> getUsers() {
         return users;
     }
