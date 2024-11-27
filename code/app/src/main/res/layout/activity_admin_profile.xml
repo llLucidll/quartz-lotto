@@ -195,46 +195,62 @@
 
 
         <!-- Browse Buttons in Horizontal Layout -->
-        <LinearLayout
+        <GridLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
+            android:columnCount="2"
+            android:rowCount="2"
+            android:padding="8dp"
             android:layout_marginTop="8dp">
 
             <Button
                 android:id="@+id/button_browse_user_profiles"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
                 android:backgroundTint="#B76E79"
                 android:text="Browse Users"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:layout_marginEnd="4dp" />
+                android:layout_margin="8dp" />
 
             <Button
                 android:id="@+id/button_browse_facilities"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
                 android:backgroundTint="#B76E79"
                 android:text="Browse Facilities"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:layout_marginStart="4dp"
-                android:layout_marginEnd="4dp" />
+                android:layout_margin="8dp" />
 
             <Button
                 android:id="@+id/button_browse_images"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
                 android:backgroundTint="#B76E79"
                 android:text="Browse Images"
                 android:textColor="@android:color/white"
                 android:textStyle="bold"
-                android:layout_marginStart="4dp" />
-        </LinearLayout>
+                android:layout_margin="8dp" />
+
+            <Button
+                android:id="@+id/button_browse_events"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_columnWeight="1"
+                android:layout_rowWeight="1"
+                android:backgroundTint="#B76E79"
+                android:text="Browse Events"
+                android:textColor="@android:color/white"
+                android:textStyle="bold"
+                android:layout_margin="8dp" />
+        </GridLayout>
 
         <Button
             android:id="@+id/buttonSwitchAttendee"

@@ -31,6 +31,11 @@ public class Event {
         this.posterUrl = posterUrl;
         this.currentAttendees = currentAttendees;
     }
+    // Simplified constructor
+    public Event(String eventId, String eventName) {
+        this.eventId = eventId;
+        this.eventName = eventName;
+    }
 
     // Getters and Setters
 

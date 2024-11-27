@@ -13,12 +13,12 @@
         android:layout_height="?attr/actionBarSize"
         android:background="#36013F"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:title="Browse Users"
+        app:title="Browse Events"
         app:titleTextColor="@android:color/white" />
 
-    <!-- RecyclerView for Users -->
+    <!-- RecyclerView for Events -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/user_recycler_view"
+        android:id="@+id/event_recycler_view"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:padding="8dp" />
