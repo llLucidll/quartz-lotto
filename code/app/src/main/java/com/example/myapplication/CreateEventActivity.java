@@ -1,21 +1,17 @@
 package com.example.myapplication;
 
 import android.app.DatePickerDialog;
-import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MenuItem;
-import android.view.View;
 import android.widget.*;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.Nullable;
-import androidx.appcompat.app.ActionBar;
-import com.google.firebase.firestore.FieldValue;
+import androidx.appcompat.app.AppCompatActivity;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.*;
 import com.google.zxing.BarcodeFormat;
@@ -25,25 +21,22 @@ import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Activity allowing organizers to create events and generate QR codes.
- */
-public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
-
+public class CreateEventActivity extends BaseActivity {
     private EditText eventNameEditText, dateEditText, timeEditText, descriptionEditText, maxAttendeesEditText, maxWaitlistEditText;
     private CheckBox geolocationCheckBox;
     private ImageView qrCodeImageView;
     private Button uploadPosterButton, saveButton, generateQRButton;
     private Uri posterUri;
+    private FirebaseFirestore db;
     private ActivityResultLauncher<Intent> posterPickerLauncher;
     private String qrCodeLink; // Class-level variable to hold the QR code link
-    private ProgressDialog progressDialog;
-    private boolean isSaving = false; // Flag to track if save is in progress
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.create_event);
+        setContentView(R.layout.create_event); // Ensure this is the correct layout file
+
+        db = FirebaseFirestore.getInstance();
 
         // Initialize views
         eventNameEditText = findViewById(R.id.eventNameEditText);
@@ -68,24 +61,15 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
                     if (result.getResultCode() == RESULT_OK && result.getData() != null) {
                         posterUri = result.getData().getData();
                         Toast.makeText(this, "Poster selected", Toast.LENGTH_SHORT).show();
-                        // Optionally, display the selected poster
-                        qrCodeImageView.setImageURI(posterUri);
                     }
                 }
         );
 
         uploadPosterButton.setOnClickListener(v -> openPosterPicker());
 
-        // Initialize ProgressDialog
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Saving event...");
-        progressDialog.setCancelable(false);
-
         // Set up listeners
         saveButton.setOnClickListener(view -> {
-            if (!isSaving) { // Prevent multiple saves
-                saveEvent();
-            }
+            saveEvent();
         });
 
         generateQRButton.setOnClickListener(view -> {
@@ -95,45 +79,14 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
                 Toast.makeText(this, "Please save the event first", Toast.LENGTH_SHORT).show();
             }
         });
-
-        Button backButton = findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> {
-            finish(); // Close the activity and go back
-        });
-
-        // Optionally, set up action bar back button
-        ActionBar actionBar = getSupportActionBar();
-        if (actionBar != null) {
-            actionBar.setDisplayHomeAsUpEnabled(true);
-        }
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        // Handle back button in the action bar
-        if (item.getItemId() == android.R.id.home) {
-            if (!isSaving) { // Prevent closing during save
-                finish(); // Close the activity and go back
-            } else {
-                Toast.makeText(this, "Please wait until the event is saved.", Toast.LENGTH_SHORT).show();
-            }
-            return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Opens the poster picker to allow the organizer to select an image.
-     */
     private void openPosterPicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         posterPickerLauncher.launch(intent);
     }
 
-    /**
-     * Shows a DatePickerDialog for selecting the event date.
-     */
     private void showDatePicker() {
         final Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -150,9 +103,6 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
         datePickerDialog.show();
     }
 
-    /**
-     * Shows a TimePickerDialog for selecting the event time.
-     */
     private void showTimePicker() {
         final Calendar calendar = Calendar.getInstance();
         int hour = calendar.get(Calendar.HOUR_OF_DAY);
@@ -170,15 +120,12 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
 
     /**
      * Generates a QR code for the event and displays it in the ImageView.
-     *
-     * @param qrCodeLink The data to encode in the QR code.
      */
     private void generateQRCode(String qrCodeLink) {
         try {
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.encodeBitmap(qrCodeLink, BarcodeFormat.QR_CODE, 300, 300);
             qrCodeImageView.setImageBitmap(bitmap);
-            qrCodeImageView.setVisibility(View.VISIBLE); // Make the QR code visible
         } catch (WriterException e) {
             e.printStackTrace();
             Toast.makeText(this, "Error generating QR code", Toast.LENGTH_SHORT).show();
@@ -189,147 +136,64 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
      * Saves the event details to Firestore.
      */
     private void saveEvent() {
-        isSaving = true; // Set the flag to indicate saving is in progress
-        saveButton.setEnabled(false); // Disable the save button
-        generateQRButton.setEnabled(false); // Optionally disable the QR button
+        String eventName = eventNameEditText.getText().toString();
+        String date = dateEditText.getText().toString();
+        String time = timeEditText.getText().toString();
+        String description = descriptionEditText.getText().toString();
+        String maxAttendeesStr = maxAttendeesEditText.getText().toString();
+        String maxWaitlistStr = maxWaitlistEditText.getText().toString();
 
-        String eventName = eventNameEditText.getText().toString().trim();
-        String date = dateEditText.getText().toString().trim();
-        String time = timeEditText.getText().toString().trim();
-        String description = descriptionEditText.getText().toString().trim();
-        String maxAttendeesStr = maxAttendeesEditText.getText().toString().trim();
-        String maxWaitlistStr = maxWaitlistEditText.getText().toString().trim();
-
-        // Validate required fields
         if (eventName.isEmpty() || date.isEmpty() || time.isEmpty() || description.isEmpty() || maxAttendeesStr.isEmpty()) {
             Toast.makeText(this, "Please fill out all required fields", Toast.LENGTH_SHORT).show();
-            resetSaveButton();
             return;
         }
 
-        // Parse and validate maxAttendees
-        int maxAttendees;
-        try {
-            maxAttendees = Integer.parseInt(maxAttendeesStr);
-            if (maxAttendees <= 0) {
-                Toast.makeText(this, "Max attendees must be a positive number.", Toast.LENGTH_SHORT).show();
-                resetSaveButton();
-                return;
-            }
-        } catch (NumberFormatException e) {
-            Toast.makeText(this, "Invalid number for max attendees.", Toast.LENGTH_SHORT).show();
-            resetSaveButton();
-            return;
-        }
-
-        // Parse and validate maxWaitlist if provided
-        Integer maxWaitlist = null;
-        if (!maxWaitlistStr.isEmpty()) {
-            try {
-                maxWaitlist = Integer.parseInt(maxWaitlistStr);
-                if (maxWaitlist <= 0) {
-                    Toast.makeText(this, "Max waitlist must be a positive number.", Toast.LENGTH_SHORT).show();
-                    resetSaveButton();
-                    return;
-                }
-            } catch (NumberFormatException e) {
-                Toast.makeText(this, "Invalid number for max waitlist.", Toast.LENGTH_SHORT).show();
-                resetSaveButton();
-                return;
-            }
-        }
-
+        int maxAttendees = Integer.parseInt(maxAttendeesStr);
+        Integer maxWaitlist = !maxWaitlistStr.isEmpty() ? Integer.parseInt(maxWaitlistStr) : null;
         boolean geolocationEnabled = geolocationCheckBox.isChecked();
 
-        // Retrieve the current user's device ID
-        String organizerId = retrieveDeviceId(); // Changed from getUserId() to retrieveDeviceId()
-        if (organizerId == null) {
-            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
-            resetSaveButton();
-            return;
-        }
-
-        // Show ProgressDialog
-        progressDialog.show();
-
-        // Generate a unique event ID
-        String eventId = db.collection("Events").document().getId();
+        CollectionReference eventsRef = db.collection("Events");
+        String eventId = eventsRef.document().getId(); // Generate event ID
 
         // Generate QR code link using eventId
         qrCodeLink = "eventapp://event/" + eventId;
 
-        // Create event data
-        Map<String, Object> eventData = new HashMap<>();
-        eventData.put("eventName", eventName);
-        eventData.put("drawDate", date);
-        eventData.put("eventDateTime", time);
-        eventData.put("description", description);
-        eventData.put("maxAttendees", maxAttendees);
-        eventData.put("currentAttendees", 0); // Initialize to 0
-        eventData.put("maxWaitlist", maxWaitlist); // Nullable
-        eventData.put("geolocationEnabled", geolocationEnabled);
-        eventData.put("qrCodeLink", qrCodeLink);
-        eventData.put("posterUrl", ""); // Placeholder, will update after uploading
-        eventData.put("organizerId", organizerId); // Add organizerId
+        Map<String, Object> event = new HashMap<>();
+        event.put("eventName", eventName);
+        event.put("description", description);
+        event.put("drawDate", date);
+        event.put("eventDateTime", time);
+        event.put("maxAttendees", maxAttendees);
+        event.put("maxOnWaitList", maxWaitlist);
+        event.put("geolocationEnabled", geolocationEnabled);
+        event.put("qrCodeLink", qrCodeLink); // Save the QR code link
+        event.put("eventId", eventId); // Save the eventId for future reference
 
-        // Save event to Firestore
-        db.collection("Events").document(eventId).set(eventData)
+        eventsRef.document(eventId).set(event)
                 .addOnSuccessListener(aVoid -> {
                     Log.d("Firestore", "Event saved successfully.");
-                    Toast.makeText(this, "Event saved successfully", Toast.LENGTH_SHORT).show();
-                    // Upload poster if selected
                     if (posterUri != null) {
                         uploadPoster(eventId);
                     }
-                    // Generate the QR code after saving
+                    Toast.makeText(this, "Event saved successfully", Toast.LENGTH_SHORT).show();
+                    // Optionally, generate the QR code immediately after saving
                     generateQRCode(qrCodeLink);
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Firestore", "Error saving event", e);
                     Toast.makeText(this, "Error saving event", Toast.LENGTH_SHORT).show();
-                })
-                .addOnCompleteListener(task -> {
-                    // Reset the save button and flag
-                    resetSaveButton();
                 });
     }
 
-    /**
-     * Resets the save button and related UI elements after the save operation.
-     */
-    private void resetSaveButton() {
-        isSaving = false;
-        saveButton.setEnabled(true);
-        generateQRButton.setEnabled(true);
-        progressDialog.dismiss();
-    }
-
-    /**
-     * Uploads the poster image to Firebase Storage and updates the event document with the poster URL.
-     *
-     * @param eventId The unique ID of the event.
-     */
     private void uploadPoster(String eventId) {
-        if (posterUri == null) {
-            return; // No poster to upload
-        }
-
         FirebaseStorage storage = FirebaseStorage.getInstance();
         StorageReference storageRef = storage.getReference().child("posters/" + eventId + ".jpg");
-
         storageRef.putFile(posterUri)
                 .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
                     db.collection("Events").document(eventId).update("posterUrl", uri.toString())
                             .addOnSuccessListener(aVoid -> Log.d("Firestore", "Poster URL updated successfully"))
                             .addOnFailureListener(e -> Log.e("Firestore", "Error updating poster URL", e));
                 }))
-                .addOnFailureListener(e -> Log.e("Storage", "Error uploading poster", e))
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful()) {
-                        Toast.makeText(this, "Poster uploaded successfully.", Toast.LENGTH_SHORT).show();
-                    } else {
-                        Toast.makeText(this, "Failed to upload poster.", Toast.LENGTH_SHORT).show();
-                    }
-                });
+                .addOnFailureListener(e -> Log.e("Storage", "Error uploading poster", e));
     }
 }

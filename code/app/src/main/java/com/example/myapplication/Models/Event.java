@@ -1,35 +1,45 @@
 package com.example.myapplication.Models;
+import java.util.List;
+import java.util.Map;
+
+import android.content.Context;
+import android.graphics.Bitmap;
+import android.widget.Toast;
+
+import com.example.myapplication.NotificationService;
+import com.example.myapplication.UserProfile;
+import com.example.myapplication.WaitingList;
+import com.google.zxing.BarcodeFormat;
+import com.google.zxing.WriterException;
+import com.journeyapps.barcodescanner.BarcodeEncoder;
+
+
 
 public class Event {
-    private String eventId;
     private String eventName;
-    private String drawDate;
-    private String eventDateTime;
+    private String eventId;
+    private String date;
+    private String time;
     private String description;
     private int maxAttendees;
     private Integer maxWaitlist; // Nullable
-    private boolean geolocationEnabled;
+    private boolean geolocationPerm;
     private String qrCodeLink;
     private String posterUrl;
-    private int currentAttendees;
+    private EntrantList waitingList;
+    private boolean geolocationEnabled;
 
-    // Default constructor required for Firestore
-    public Event() {}
-
-    // Parameterized constructor
-    public Event(String eventId, String eventName, String drawDate, String eventDateTime, String description,
-                 int maxAttendees, Integer maxWaitlist, boolean geolocationEnabled, String qrCodeLink, String posterUrl, int currentAttendees) {
+    public Event(String eventId, String eventName, String date, String time, String description, int maxAttendees, Integer maxWaitlist, boolean geolocationEnabled, String qrCodeLink) {
         this.eventId = eventId;
         this.eventName = eventName;
-        this.drawDate = drawDate;
-        this.eventDateTime = eventDateTime;
+        this.date = date;
+        this.time = time;
         this.description = description;
         this.maxAttendees = maxAttendees;
         this.maxWaitlist = maxWaitlist;
-        this.geolocationEnabled = geolocationEnabled;
+        this.geolocationPerm = geolocationEnabled;
         this.qrCodeLink = qrCodeLink;
-        this.posterUrl = posterUrl;
-        this.currentAttendees = currentAttendees;
+        this.waitingList = new EntrantList(this.maxWaitlist, this.maxAttendees);
     }
     // Simplified constructor
     public Event(String eventId, String eventName) {
@@ -37,52 +47,49 @@ public class Event {
         this.eventName = eventName;
     }
 
-    // Getters and Setters
-
     public String getEventId() {
         return eventId;
     }
-
     public void setEventId(String eventId) {
         this.eventId = eventId;
     }
 
+
     public String getEventName() {
         return eventName;
     }
-
     public void setEventName(String eventName) {
         this.eventName = eventName;
     }
 
-    public String getDrawDate() {
-        return drawDate;
+
+    public String getDate() {
+        return date;
+    }
+    public void setDate(String date) {
+        this.date = date;
     }
 
-    public void setDrawDate(String drawDate) {
-        this.drawDate = drawDate;
+
+    public String getTime() {
+        return time;
+    }
+    public void setTime(String time) {
+        this.time = time;
     }
 
-    public String getEventDateTime() {
-        return eventDateTime;
-    }
-
-    public void setEventDateTime(String eventDateTime) {
-        this.eventDateTime = eventDateTime;
-    }
 
     public String getDescription() {
         return description;
     }
-
     public void setDescription(String description) {
         this.description = description;
     }
 
+
     public int getMaxAttendees() {
         return maxAttendees;
     }
-
     public void setMaxAttendees(int maxAttendees) {
         this.maxAttendees = maxAttendees;
     }
@@ -90,7 +97,6 @@ public class Event {
     public Integer getMaxWaitlist() {
         return maxWaitlist;
     }
-
     public void setMaxWaitlist(Integer maxWaitlist) {
         this.maxWaitlist = maxWaitlist;
     }
@@ -98,7 +104,6 @@ public class Event {
     public boolean isGeolocationEnabled() {
         return geolocationEnabled;
     }
-
     public void setGeolocationEnabled(boolean geolocationEnabled) {
         this.geolocationEnabled = geolocationEnabled;
     }
@@ -106,24 +111,37 @@ public class Event {
     public String getQrCodeLink() {
         return qrCodeLink;
     }
-
-    public void setQrCodeLink(String qrCodeLink) {
-        this.qrCodeLink = qrCodeLink;
+    public void generateQrCodeLink(String qrCodeLink) {
+        try {
+            BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
+            Bitmap bitmap = barcodeEncoder.encodeBitmap(qrCodeLink, BarcodeFormat.QR_CODE, 300, 300);
+        } catch (WriterException e) {
+            e.printStackTrace();
+        }
     }
 
-    public String getPosterUrl() {
+
+    private String getPosterUrl() {
         return posterUrl;
     }
-
-    public void setPosterUrl(String posterUrl) {
+    private void setPosterUrl(String posterUrl) {
         this.posterUrl = posterUrl;
     }
 
-    public int getCurrentAttendees() {
-        return currentAttendees;
-    }
+//    /*
+//    Samples a specified number of users from the waiting list
+//     */
+//    public List<UserProfile> sampleAttendees(int selectedCapacity) {
+//        return waitingList.sampleAttendees(selectedCapacity);
+//    }
 
-    public void setCurrentAttendees(int currentAttendees) {
-        this.currentAttendees = currentAttendees;
-    }
+//    public void notifySampledAttendees(List<Map<String, Object>> sampledAttendees, Context context, NotificationService notificationService) {
+//        for (Map<String, Object> user: sampledAttendees) {
+//            String title = "Congratulations!";
+//            String description = "You have been selected from the waiting list";
+//            NotificationService.sendNotification(user, context, title, description);
+//
+//        }
+//    }
 }
+
