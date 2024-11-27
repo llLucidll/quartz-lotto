@@ -34,7 +34,6 @@ public class LocationsFragment extends Fragment {
     private List<GeoPoint> attendeeLocations = new ArrayList<>();
 
     public LocationsFragment() {
-        // Required empty public constructor
     }
 
     /**

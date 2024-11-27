@@ -112,6 +112,7 @@ public class AdminProfileActivity extends BaseActivity {
         Button buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
         Button browseUserProfilesButton = findViewById(R.id.button_browse_user_profiles);
         Button browseFacilitiesButton = findViewById(R.id.button_browse_facilities);
+        Button browseImagesButton = findViewById(R.id.button_browse_images);
         Button browseEventsButton = findViewById(R.id.button_browse_events);
         Button saveChangesButton = findViewById(R.id.save_changes_button);
 
@@ -135,6 +136,12 @@ public class AdminProfileActivity extends BaseActivity {
 
         browseEventsButton.setOnClickListener(v -> {
             Intent intent = new Intent(AdminProfileActivity.this, BrowseEventsActivity.class);
+            startActivity(intent);
+        });
+
+
+        browseImagesButton.setOnClickListener(v -> {
+            Intent intent = new Intent(AdminProfileActivity.this, BrowseImagesActivity.class);
             startActivity(intent);
         });
 
