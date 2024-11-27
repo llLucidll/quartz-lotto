@@ -45,7 +45,7 @@
         <activity android:name=".CreateEventActivity" />
         <activity android:name=".WaitinglistActivity" />
         <activity android:name=".AttendingActivity" />
-        <activity android:name=".OrganizerProfileActivity" />
+        <activity android:name=".Views.OrganizerProfileView" />
         <activity android:name=".ManageNotificationGroupsActivity" />
         <activity android:name=".GroupEntrantsActivity" />
         <activity android:name=".Views.ManageFacilityView" />
@@ -56,10 +56,6 @@
         <activity android:name=".BrowseUsersActivity" />
         <activity android:name=".BrowseFacilitiesActivity" />
         <activity android:name=".BrowseEventsActivity" />
-
-
-
-
     </application>
 
 </manifest>
