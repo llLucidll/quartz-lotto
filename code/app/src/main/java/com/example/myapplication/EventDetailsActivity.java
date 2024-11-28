@@ -48,19 +48,11 @@ public class EventDetailsActivity extends AppCompatActivity {
         buttonAttendees = findViewById(R.id.buttonAttendees);
         buttonLocations = findViewById(R.id.buttonLocations);
 
-<<<<<<< HEAD
-        // Set up button click listeners
-        buttonDetails.setOnClickListener(v -> loadFragment(DetailsFragment.newInstance(eventId)));
-        buttonWaitlist.setOnClickListener(v -> loadFragment(com.example.myapplication.Views.WaitingListView.newInstance(eventId)));
-        buttonAttendees.setOnClickListener(v -> loadFragment(AttendeesFragment.newInstance(eventId)));
-        buttonLocations.setOnClickListener(v -> loadFragment(LocationsFragment.newInstance(eventId)));
-=======
         // Set up button click listeners with tags
         buttonDetails.setOnClickListener(v -> loadFragment(DetailsFragment.newInstance(eventId), "DetailsFragmentTag"));
         buttonWaitlist.setOnClickListener(v -> loadFragment(WaitlistFragment.newInstance(eventId), "WaitlistFragmentTag"));
         buttonAttendees.setOnClickListener(v -> loadFragment(AttendeesFragment.newInstance(eventId), "AttendeesFragmentTag"));
         buttonLocations.setOnClickListener(v -> loadFragment(LocationsFragment.newInstance(eventId), "LocationsFragmentTag"));
->>>>>>> 57fdcd469e803140d9d05008b45cd63bf26c0b01
 
         // Load the default fragment (DetailsFragment)
         loadFragment(DetailsFragment.newInstance(eventId), "DetailsFragmentTag");
