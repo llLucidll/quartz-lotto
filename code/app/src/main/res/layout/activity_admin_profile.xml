@@ -75,6 +75,7 @@
                 android:contentDescription="delete profile pic"
                 android:src="@drawable/ic_delete"
                 android:visibility="visible" />
+
         </FrameLayout>
 
         <!-- Name Input -->
