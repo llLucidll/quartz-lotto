@@ -7,6 +7,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.example.myapplication.BaseActivity;
 import com.example.myapplication.Controllers.HomePageController;
 import com.example.myapplication.EventAdapter;
 import com.example.myapplication.Models.Event;
@@ -16,7 +17,7 @@ import com.example.myapplication.R;
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeView extends AppCompatActivity {
+public class HomeView extends BaseActivity {
     // Aditi
     private ListView selectedEventsListView;
     private ListView waitlistEventsListView;

@@ -73,17 +73,5 @@
 
     </LinearLayout>
 
-    <!-- Bottom Navigation -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="375dp"
-        android:layout_height="65dp"
-        android:layout_alignParentBottom="true"
-        android:layout_marginBottom="0dp"
-        android:backgroundTint="#FFFFFF"
-        app:itemIconTint="#F497B7"
-        app:itemTextColor="#4A4A4A"
-        app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/bottom_nav_menu" />
 
 </RelativeLayout>
