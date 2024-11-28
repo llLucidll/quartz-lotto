@@ -92,5 +92,6 @@ dependencies {
     implementation(libs.play.services.location)
     implementation("org.osmdroid:osmdroid-android:6.1.14")
 
+
 }
 

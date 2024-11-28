@@ -5,6 +5,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 
+import com.example.myapplication.Views.WaitingListView;
+
 /**
  * Adapter for managing event detail fragments.
  */
@@ -23,7 +25,7 @@ public class EventPagerAdapter extends FragmentStateAdapter {
             case 0:
                 return DetailsFragment.newInstance(eventId);
             case 1:
-                return WaitlistFragment.newInstance(eventId);
+                return WaitingListView.newInstance(eventId);
             case 2:
                 return AttendeesFragment.newInstance(eventId);
             case 3:

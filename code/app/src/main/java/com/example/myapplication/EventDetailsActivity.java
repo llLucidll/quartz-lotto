@@ -2,7 +2,6 @@ package com.example.myapplication;
 
 import android.os.Bundle;
 import android.util.Log;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.Toast;
@@ -32,7 +31,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_details); // Your XML layout file
 
         // Retrieve eventId from intent
-        eventId = getIntent().getStringExtra("eventId");
+        eventId = "H8CEhmiH2BfiUXXDvcJa";//getIntent().getStringExtra("eventId");
         if (eventId == null) {
             Toast.makeText(this, "Event ID missing.", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "eventId is null in onCreate");
@@ -50,7 +49,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         // Set up button click listeners
         buttonDetails.setOnClickListener(v -> loadFragment(DetailsFragment.newInstance(eventId)));
-        buttonWaitlist.setOnClickListener(v -> loadFragment(WaitlistFragment.newInstance(eventId)));
+        buttonWaitlist.setOnClickListener(v -> loadFragment(com.example.myapplication.Views.WaitingListView.newInstance(eventId)));
         buttonAttendees.setOnClickListener(v -> loadFragment(AttendeesFragment.newInstance(eventId)));
         buttonLocations.setOnClickListener(v -> loadFragment(LocationsFragment.newInstance(eventId)));
 
