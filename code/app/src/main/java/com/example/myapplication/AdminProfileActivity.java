@@ -505,7 +505,7 @@ public class AdminProfileActivity extends BaseActivity {
      * Switches the profile to attendee mode.
      */
     private void switchProfileAttendee() {
-        Intent intent = new Intent(AdminProfileActivity.this, EditProfileActivity.class);
+        Intent intent = new Intent(AdminProfileActivity.this, OrganizerProfileActivity.class);
         startActivity(intent);
     }
 }
