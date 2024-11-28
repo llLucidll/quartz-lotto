@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 /**
@@ -27,8 +26,8 @@ public class WaitlistFragment extends Fragment {
      * @param eventId The unique ID of the event.
      * @return A new instance of fragment WaitlistFragment.
      */
-    public static WaitlistFragment newInstance(String eventId) {
-        WaitlistFragment fragment = new WaitlistFragment();
+    public static com.example.myapplication.WaitlistFragment newInstance(String eventId) {
+        com.example.myapplication.WaitlistFragment fragment = new com.example.myapplication.WaitlistFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EVENT_ID, eventId);
         fragment.setArguments(args);
@@ -51,8 +50,7 @@ public class WaitlistFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_waitlist, container, false);
-
-        // TODO: Implement waitlist functionality
+        //
 
         Toast.makeText(getContext(), "Waitlist feature not implemented yet.", Toast.LENGTH_SHORT).show();
 
