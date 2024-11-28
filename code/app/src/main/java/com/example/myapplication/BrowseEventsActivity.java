@@ -4,32 +4,29 @@ import android.os.Bundle;
 import android.view.MenuItem;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.myapplication.Models.Event;
-import com.google.firebase.firestore.CollectionReference;
-import com.google.firebase.firestore.DocumentReference;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.WriteBatch;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.example.myapplication.Controllers.BrowseEventsController;
+import com.example.myapplication.Views.BrowseEventsView;
 
 /**
- * Activity for browsing and deleting events.
+ * Activity for browsing and managing events.
+ * This activity fetches event data from Firestore and displays it in a RecyclerView.
+ * Implements back navigation using toolbar and system back button.
  */
 public class BrowseEventsActivity extends AppCompatActivity {
 
-    private RecyclerView eventRecyclerView;
-    private FirebaseFirestore db;
-    private EventAdapterAdmin eventAdapterAdmin;
-    private List<Event> eventList;
+    private BrowseEventsView view;
 
+    /**
+     * Called when the activity is created.
+     * Sets up the toolbar, RecyclerView, and initializes the view and controller.
+     *
+     * @param savedInstanceState The saved instance state from a previous activity instance, if any.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,81 +39,40 @@ public class BrowseEventsActivity extends AppCompatActivity {
             getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         }
 
-        // Initialize RecyclerView and Firestore
-        db = FirebaseFirestore.getInstance();
-        eventRecyclerView = findViewById(R.id.event_recycler_view);
-        eventRecyclerView.setLayoutManager(new LinearLayoutManager(this));
+        // Handle system back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish(); // Close the activity
+            }
+        });
 
-        eventList = new ArrayList<>();
-        eventAdapterAdmin = new EventAdapterAdmin(this, eventList, this::deleteEvent);
-        eventRecyclerView.setAdapter(eventAdapterAdmin);
+        // Initialize the RecyclerView
+        RecyclerView recyclerView = findViewById(R.id.event_recycler_view);
 
-        fetchEvents();
+        // Create the controller and view
+        BrowseEventsController controller = new BrowseEventsController();
+        view = new BrowseEventsView(this, recyclerView, controller);
+
+        // Set up toolbar with navigation callback
+        view.setToolbar(toolbar, this::finish);
+
+        // Load events from the database
+        view.loadEvents();
     }
 
+    /**
+     * Handles toolbar back button presses.
+     *
+     * @param item The selected menu item.
+     * @return True if the action was handled, false otherwise.
+     */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if (item.getItemId() == android.R.id.home) {
-            onBackPressed(); // Handle the back button
+            finish(); // Close the activity when the toolbar back button is pressed
             return true;
         }
         return super.onOptionsItemSelected(item);
-    }
-
-    /**
-     * Fetches events from the 'Events' collection in Firestore.
-     */
-    private void fetchEvents() {
-        db.collection("Events")
-                .get()
-                .addOnSuccessListener(queryDocumentSnapshots -> {
-                    eventList.clear();
-                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
-                        String id = document.getId();
-                        String eventName = document.getString("eventName");
-
-                        // Use the simplified constructor
-                        Event event = new Event(id, eventName);
-                        eventList.add(event);
-                    }
-                    eventAdapterAdmin.notifyDataSetChanged();
-                })
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to fetch events.", Toast.LENGTH_SHORT).show());
-    }
-
-    /**
-     * Deletes an event and its 'Waitlist' subcollection from Firestore.
-     *
-     * @param event The event to delete.
-     */
-    private void deleteEvent(Event event) {
-        // Get reference to the event document
-        DocumentReference eventRef = db.collection("Events").document(event.getEventId());
-
-        // Get reference to the 'Waitlist' subcollection
-        CollectionReference waitlistRef = eventRef.collection("Waitlist");
-
-        // Delete all documents in the 'Waitlist' subcollection
-        waitlistRef.get().addOnSuccessListener(querySnapshot -> {
-            WriteBatch batch = db.batch();
-            for (DocumentSnapshot doc : querySnapshot) {
-                batch.delete(doc.getReference());
-            }
-            // Commit the batch deletion
-            batch.commit().addOnSuccessListener(aVoid -> {
-                // After deleting the subcollection, delete the event document
-                eventRef.delete().addOnSuccessListener(aVoid2 -> {
-                    eventList.remove(event);
-                    eventAdapterAdmin.notifyDataSetChanged();
-                    Toast.makeText(this, "Event and waitlist deleted.", Toast.LENGTH_SHORT).show();
-                }).addOnFailureListener(e -> {
-                    Toast.makeText(this, "Failed to delete event.", Toast.LENGTH_SHORT).show();
-                });
-            }).addOnFailureListener(e -> {
-                Toast.makeText(this, "Failed to delete waitlist.", Toast.LENGTH_SHORT).show();
-            });
-        }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Failed to get waitlist.", Toast.LENGTH_SHORT).show();
-        });
     }
 }

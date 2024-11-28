@@ -20,12 +20,21 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.List;
 
+/**
+ * Adapter for displaying and managing a list of images in a RecyclerView.
+ */
 public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHolder> {
 
-    private Context context;
-    private List<StorageImage> imageList;
-    private FirebaseStorage storage;
+    private final Context context;
+    private final List<StorageImage> imageList;
+    private final FirebaseStorage storage;
 
+    /**
+     * Constructs an ImageAdapter.
+     *
+     * @param context   The context of the calling activity or fragment.
+     * @param imageList The list of images to display.
+     */
     public ImageAdapter(Context context, List<StorageImage> imageList) {
         this.context = context;
         this.imageList = imageList;
@@ -61,6 +70,12 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         });
     }
 
+    /**
+     * Deletes an image from Firebase Storage and updates the RecyclerView.
+     *
+     * @param image    The image to delete.
+     * @param position The position of the image in the list.
+     */
     private void deleteImage(StorageImage image, int position) {
         StorageReference imageRef = storage.getReferenceFromUrl(image.getUrl());
 
@@ -78,12 +93,28 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         return imageList.size();
     }
 
-    // ViewHolder class
+    /**
+     * Returns the list of images managed by the adapter.
+     *
+     * @return The list of images.
+     */
+    public List<StorageImage> getImageList() {
+        return imageList;
+    }
+
+    /**
+     * ViewHolder class for managing the views of a single image item.
+     */
     public static class ImageViewHolder extends RecyclerView.ViewHolder {
         ImageView imageView;
         TextView imageName;
         ImageButton deleteButton;
 
+        /**
+         * Constructs an ImageViewHolder.
+         *
+         * @param itemView The view of the image item.
+         */
         public ImageViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image_view);

@@ -67,6 +67,7 @@
         <activity android:name=".AdminProfileActivity" />
         <activity android:name=".BrowseUsersActivity" />
         <activity android:name=".BrowseFacilitiesActivity" />
+        <activity android:name=".BrowseEventsActivity" />
         <activity android:name=".EventSignupActivity" />
         <activity android:name=".BrowseImagesActivity"/>
 

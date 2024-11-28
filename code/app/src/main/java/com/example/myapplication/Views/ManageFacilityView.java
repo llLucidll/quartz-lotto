@@ -1,5 +1,3 @@
-// com/example/myapplication/ManageFacilitiesActivity.java
-
 package com.example.myapplication.Views;
 
 import android.content.Intent;

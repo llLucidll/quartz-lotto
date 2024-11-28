@@ -378,7 +378,7 @@ public class EntrantProfileView extends AppCompatActivity {
         user.setEmail(email);
         user.setDob(dob);
         user.setCountry(country);
-        user.setNotificationPerm(notificationsEnabled);
+        user.setNotificationsPerm(notificationsEnabled);
         if (!phone.isEmpty()) user.setPhone(phone);
 
         controller.saveUserProfile(user, imageUri, new EditProfileController.EditProfileListener() {
@@ -445,7 +445,7 @@ public class EntrantProfileView extends AppCompatActivity {
                     emailField.setText(user.getEmail());
                     dobField.setText(user.getDob());
                     phoneField.setText(user.getPhone());
-                    notificationsSwitch.setChecked(user.getNotificationsPerm());
+                    notificationsSwitch.setChecked(user.isNotificationsPerm());
 
                     // Set the country spinner
                     ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(

@@ -90,7 +90,8 @@ dependencies {
     implementation(libs.okhttp.logging.interceptor)
     implementation(libs.google.maps)
     implementation(libs.play.services.location)
-    implementation("org.osmdroid:osmdroid-android:6.1.14")
+    implementation("org.osmdroid:osmdroid-android:6.1.15")
+    implementation("com.squareup.picasso:picasso:2.71828")
 
 
 }

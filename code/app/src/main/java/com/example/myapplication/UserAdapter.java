@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * UserAdapter handles displaying user profiles and managing user-related actions.
+ * UserAdapter handles displaying user profiles and managing user-related actions. (ADMIN USE)
  */
 public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
@@ -38,7 +38,7 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
         this.context = context;
         this.userList = userList != null ? userList : new ArrayList<>();
         this.db = FirebaseFirestore.getInstance();
-        this.currentUserId = currentUserId; // Initialize the currentUserId
+        this.currentUserId = currentUserId;
     }
 
     @NonNull
@@ -57,20 +57,20 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
 
         // Handle delete button click
         holder.deleteUserButton.setOnClickListener(v -> {
-            int adapterPosition = holder.getAdapterPosition(); // Get the correct position
-            if (adapterPosition != RecyclerView.NO_POSITION) { // Ensure position is valid
-                String userIdToDelete = userList.get(adapterPosition).getUserID(); // Dynamic UID
+            int adapterPosition = holder.getAdapterPosition();
+            if (adapterPosition != RecyclerView.NO_POSITION) {
+                String userIdToDelete = userList.get(adapterPosition).getUserID();
                 if (userIdToDelete.equals(currentUserId)) {
                     Toast.makeText(context, "You cannot delete your own profile.", Toast.LENGTH_SHORT).show();
                     return;
                 }
 
-                db.collection("users").document(userIdToDelete) // Use dynamic userId
+                db.collection("users").document(userIdToDelete)
                         .delete()
                         .addOnSuccessListener(aVoid -> {
                             Toast.makeText(context, "User deleted successfully.", Toast.LENGTH_SHORT).show();
-                            userList.remove(adapterPosition); // Remove user from the list
-                            notifyItemRemoved(adapterPosition); // Notify RecyclerView to update
+                            userList.remove(adapterPosition);
+                            notifyItemRemoved(adapterPosition);
                         })
                         .addOnFailureListener(e -> {
                             Toast.makeText(context, "Failed to delete user. Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
@@ -82,6 +82,15 @@ public class UserAdapter extends RecyclerView.Adapter<UserAdapter.ViewHolder> {
     @Override
     public int getItemCount() {
         return userList.size();
+    }
+
+    /**
+     * Returns the list of users managed by the adapter.
+     *
+     * @return The list of users.
+     */
+    public List<User> getUserList() {
+        return userList;
     }
 
     /**

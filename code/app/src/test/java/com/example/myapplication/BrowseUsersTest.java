@@ -35,7 +35,7 @@ public class BrowseUsersTest {
         assertEquals("01/01/1990", user1.getDob());
         assertEquals("1234567890", user1.getPhone());
         assertEquals("USA", user1.getCountry());
-        assertTrue(user1.getIsAdmin());
+        assertTrue(user1.isAdmin());
 
         // Validate the second user
         User user2 = users.get(1);
@@ -46,7 +46,7 @@ public class BrowseUsersTest {
         assertEquals("02/02/1985", user2.getDob());
         assertEquals("0987654321", user2.getPhone());
         assertEquals("Canada", user2.getCountry());
-        assertFalse(user2.getIsAdmin());
+        assertFalse(user2.isAdmin());
 
         // Validate the third user
         User user3 = users.get(2);
@@ -57,6 +57,6 @@ public class BrowseUsersTest {
         assertEquals("03/03/1995", user3.getDob());
         assertEquals("5678901234", user3.getPhone());
         assertEquals("UK", user3.getCountry());
-        assertFalse(user3.getIsAdmin());
+        assertFalse(user3.isAdmin());
     }
 }
