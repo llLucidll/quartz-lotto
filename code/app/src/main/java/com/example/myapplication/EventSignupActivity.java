@@ -84,6 +84,7 @@ public class EventSignupActivity extends BaseActivity {
         signupButton.setOnClickListener(v -> {
             if (locationObtained) {
                 registerForEvent();
+                addToHomepageWaitlist();
             } else {
                 Toast.makeText(this, "Obtaining your location. Please wait.", Toast.LENGTH_SHORT).show();
                 Log.d(TAG, "Location not yet obtained. Attempting to get location.");
@@ -324,6 +325,35 @@ public class EventSignupActivity extends BaseActivity {
             Log.e(TAG, "Error retrieving user profile: ", e);
             resetSignupButton();
         });
+    }
+
+    private void addToHomepageWaitlist() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+        String userDeviceId = retrieveDeviceId();
+        String eventName = eventNameTextView.getText().toString();
+        String drawDate = dateTextView.getText().toString();
+        String eventDateTime = timeTextView.getText().toString();
+
+        // Prepare waitlist data
+        Map<String, Object> waitlistEntry = new HashMap<>();
+        waitlistEntry.put("userId", userDeviceId);
+        waitlistEntry.put("userStatus", "not chosen");
+
+        // Navigate to events -> eventId -> waitlist and add the user
+        firestore.collection("Events")
+                .document(eventId) // Navigate to the specific event
+                .collection("waitlist")
+                .document(userDeviceId) // Use user ID as the document ID for uniqueness
+                .set(waitlistEntry)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "User added to event waitlist with status 'not chosen'.");
+                    Toast.makeText(this, "Successfully added to the waitlist!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Failed to add user to event waitlist: " + e.getMessage());
+                    Toast.makeText(this, "Failed to add to the waitlist.", Toast.LENGTH_SHORT).show();
+                });
     }
 
     /**

@@ -13,6 +13,8 @@ import com.example.myapplication.EventAdapter;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.Facility;
 import com.example.myapplication.R;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -45,6 +47,8 @@ public class HomeView extends BaseActivity {
 
         selectedEventsListView.setAdapter(selectedEventsAdapter);
 
+        fetchWaitlistEvents();
+
     }
 
     // Confirm an event from the waitlist to the selected list
@@ -59,5 +63,27 @@ public class HomeView extends BaseActivity {
     public void deleteEvent(Event event) {
 
         Toast.makeText(this, "Event Deleted", Toast.LENGTH_SHORT).show();
+    }
+
+    private void fetchWaitlistEvents() {
+        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+        // String eventId = eventDoc.getId(); //GET EVENT ID
+//        db.collection("Events")
+//                .document(eventId)
+//                .collection("waitlist")
+//                .whereEqualTo("status", "not chosen")
+//                .get()
+//                .addOnSuccessListener(querySnapshot -> {
+//                    waitlistEvents.clear(); // Clear the current list to avoid duplicates
+//                    for (QueryDocumentSnapshot document : querySnapshot) {
+//                        Event event = document.toObject(Event.class);
+//                        waitlistEvents.add(event);
+//                    }
+//                    waitlistEventsAdapter.notifyDataSetChanged(); // Update the ListView
+//                })
+//                .addOnFailureListener(e -> {
+//                    Log.e("HomeView", "Error fetching waitlist events: ", e);
+//                    Toast.makeText(this, "Failed to load waitlist events.", Toast.LENGTH_SHORT).show();
+//                });
     }
 }
