@@ -47,7 +47,7 @@
 
         <!-- Activities -->
         <activity
-            android:name=".Views.HomeView"
+            android:name=".MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -70,6 +70,7 @@
         <activity android:name=".BrowseEventsActivity" />
         <activity android:name=".EventSignupActivity" />
         <activity android:name=".BrowseImagesActivity"/>
+        <activity android:name=".Views.HomeView"/>
 
     </application>
 </manifest>

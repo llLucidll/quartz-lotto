@@ -1,4 +1,5 @@
 package com.example.myapplication;
+import com.example.myapplication.Views.HomeView;
 
 import android.app.DatePickerDialog;
 import android.content.Intent;
@@ -16,9 +17,11 @@ import androidx.annotation.*;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.myapplication.Views.HomeView;
 import com.example.myapplication.Views.ManageFacilityView;
 import com.google.firebase.firestore.*;
 import com.google.firebase.storage.*;
+
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -57,7 +60,7 @@ public class OrganizerProfileActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_edit_organizer_profile);
+        setContentView(R.layout.activity_organizer_profile);
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -82,6 +85,7 @@ public class OrganizerProfileActivity extends BaseActivity {
         Button saveChangesButton = findViewById(R.id.save_changes_button);
         removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
         Button buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
+        Button buttonEvents = findViewById(R.id.my_events_button);
 
         // Set listeners
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
@@ -89,6 +93,7 @@ public class OrganizerProfileActivity extends BaseActivity {
         backButton.setOnClickListener(v -> onBackPressed());
         removeProfileImageButton.setOnClickListener(v -> removeProfileImage());
         buttonSwitchAttendee.setOnClickListener(v -> switchProfileAttendee());
+        buttonEvents.setOnClickListener(v -> myEvents());
 
         setupDOBInputRestrictions();
         setupDateOfBirthField();
@@ -417,6 +422,11 @@ public class OrganizerProfileActivity extends BaseActivity {
 
     private void switchProfileAttendee() {
         Intent intent = new Intent(OrganizerProfileActivity.this, EditProfileActivity.class);
+        startActivity(intent);
+    }
+
+    private void myEvents() {
+        Intent intent = new Intent(OrganizerProfileActivity.this, HomeView.class);
         startActivity(intent);
     }
 
