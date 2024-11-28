@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import com.example.myapplication.Models.User;
+
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -66,8 +68,7 @@ public class AdminProfileActivity extends BaseActivity {
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
-    // Define userId as a class member
-    private String userId;
+    private String deviceId;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -78,7 +79,9 @@ public class AdminProfileActivity extends BaseActivity {
                             .load(imageUri)
                             .apply(RequestOptions.circleCropTransform())
                             .into(profileImageView);
+
                     removeProfileImageButton.setVisibility(View.VISIBLE);
+
                 }
             });
 
@@ -90,10 +93,10 @@ public class AdminProfileActivity extends BaseActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        // Initialize userId
-        userId = retrieveDeviceId();
-        if (userId == null) {
-            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+        // Retrieve deviceId from the parent activity
+        deviceId = retrieveDeviceId();
+        if (deviceId == null) {
+            Toast.makeText(this, "Device ID not found. Please log in again.", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
@@ -166,19 +169,17 @@ public class AdminProfileActivity extends BaseActivity {
      * Sets up input restrictions for the Date of Birth field.
      */
     private void setupDOBInputRestrictions() {
-        InputFilter[] filters = new InputFilter[]{
-                new InputFilter.LengthFilter(10),
-                (source, start, end, dest, dstart, dend) -> {
-                    for (int i = start; i < end; i++) {
-                        char c = source.charAt(i);
-                        if (!Character.isDigit(c) && c != '/') {
-                            return "";
-                        }
-                    }
-                    return null;
+        dobField.setInputType(InputType.TYPE_CLASS_DATETIME);
+        dobField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_calendar, 0);
+        dobField.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                if (event.getRawX() >= (dobField.getRight() - dobField.getCompoundDrawables()[2].getBounds().width())) {
+                    showDatePicker();
+                    return true;
                 }
-        };
-        dobField.setFilters(filters);
+            }
+            return false;
+        });
     }
 
     /**
@@ -341,47 +342,41 @@ public class AdminProfileActivity extends BaseActivity {
     }
 
     /**
-     * Loads the user profile data from Firestore using the dynamic userId.
+     * Loads the admin profile using the `deviceId`.
      */
     private void loadUserProfile() {
-        DocumentReference userProfileRef = db.collection("Admin").document(userId);
-        userProfileRef.get()
+        DocumentReference userRef = db.collection("users").document(deviceId);
+        userRef.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        String name = documentSnapshot.getString("name");
-                        String email = documentSnapshot.getString("email");
-                        String dob = documentSnapshot.getString("dob");
-                        String country = documentSnapshot.getString("country");
-                        Boolean notificationsEnabled = documentSnapshot.getBoolean("notificationsEnabled");
-                        String phone = documentSnapshot.getString("phone");
-                        String profileImageUrl = documentSnapshot.getString("profileImageUrl");
+                        User user = documentSnapshot.toObject(User.class);
+                        if (user != null) {
+                            nameField.setText(user.getName());
+                            emailField.setText(user.getEmail());
+                            dobField.setText(user.getDob());
+                            phoneField.setText(user.getPhone());
 
-                        if (name != null) nameField.setText(name);
-                        if (email != null) emailField.setText(email);
-                        if (dob != null) dobField.setText(dob);
-                        if (country != null) {
-                            ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                                    this, R.array.country_array, android.R.layout.simple_spinner_item);
-                            adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                            countrySpinner.setAdapter(adapter);
-                            int spinnerPosition = adapter.getPosition(country);
-                            countrySpinner.setSelection(spinnerPosition);
-                        }
-                        if (phone != null) phoneField.setText(phone);
+                            if (user.getCountry() != null) {
+                                ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                                        this, R.array.country_array, android.R.layout.simple_spinner_item);
+                                adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                                countrySpinner.setAdapter(adapter);
+                                int position = adapter.getPosition(user.getCountry());
+                                countrySpinner.setSelection(position);
+                            }
 
-                        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-                            Glide.with(this)
-                                    .load(profileImageUrl)
-                                    .apply(RequestOptions.circleCropTransform())
-                                    .placeholder(R.drawable.ic_profile)
-                                    .into(profileImageView);
-                            removeProfileImageButton.setVisibility(View.VISIBLE);
-                        } else {
-                            generateDefaultAvatar(name);
+                            if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
+                                Glide.with(this)
+                                        .load(user.getProfileImageUrl())
+                                        .apply(RequestOptions.circleCropTransform())
+                                        .into(profileImageView);
+                            }
                         }
+                    } else {
+                        Toast.makeText(this, "No profile found. Please create your profile.", Toast.LENGTH_SHORT).show();
                     }
                 })
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load profile: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
 
     /**
@@ -404,65 +399,53 @@ public class AdminProfileActivity extends BaseActivity {
      * Removes the profile image from Firebase Storage and updates Firestore.
      */
     private void removeProfileImage() {
-        StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
+        StorageReference storageRef = storage.getReference("profile_images/" + deviceId + ".jpg");
         storageRef.delete().addOnSuccessListener(aVoid -> {
             Toast.makeText(this, "Profile image removed", Toast.LENGTH_SHORT).show();
-            DocumentReference userProfileRef = db.collection("Admin").document(userId);
+            DocumentReference userProfileRef = db.collection("Admin").document(deviceId);
             userProfileRef.update("profileImageUrl", FieldValue.delete())
                     .addOnSuccessListener(aVoid1 -> loadUserProfile())
                     .addOnFailureListener(e -> Toast.makeText(this, "Failed to update Firestore", Toast.LENGTH_SHORT).show());
         }).addOnFailureListener(e -> Toast.makeText(this, "Failed to delete profile image", Toast.LENGTH_SHORT).show());
     }
 
+
     /**
-     * Saves the updated profile data to Firestore and uploads the profile image to Firebase Storage.
+     * Saves the admin profile data to Firestore.
      */
     private void saveProfileData() {
         String name = nameField.getText().toString().trim();
         String email = emailField.getText().toString().trim();
         String dob = dobField.getText().toString().trim();
-        String country = countrySpinner.getSelectedItem().toString();
         String phone = phoneField.getText().toString().trim();
+        String country = countrySpinner.getSelectedItem().toString();
 
         if (name.isEmpty() || email.isEmpty() || dob.isEmpty() || country.isEmpty()) {
-            Toast.makeText(this, "Please fill out all required fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "All fields are required.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Invalid email format.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid email address.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        if (!isDOBValid(dob)) {
-            dobField.setError("Invalid date or age not between " + MIN_AGE + " and " + MAX_AGE);
-            return;
-        }
+        User user = new User(deviceId, name, null, email, dob, phone, country, true);
 
-        Map<String, Object> userProfile = new HashMap<>();
-        userProfile.put("name", name);
-        userProfile.put("email", email);
-        userProfile.put("dob", dob);
-        userProfile.put("country", country);
-        if (!phone.isEmpty()) userProfile.put("phone", phone);
-
-        DocumentReference userProfileRef = db.collection("Admin").document(userId);
-        userProfileRef.set(userProfile)
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Error updating profile", Toast.LENGTH_SHORT).show());
+        DocumentReference userRef = db.collection("users").document(deviceId);
+        userRef.set(user)
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Profile updated successfully.", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Toast.makeText(this, "Failed to update profile: " + e.getMessage(), Toast.LENGTH_SHORT).show());
 
         if (imageUri != null) {
-            StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
-            storageRef.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        userProfileRef.update("profileImageUrl", uri.toString())
-                                .addOnSuccessListener(aVoid1 -> {
-                                    Toast.makeText(this, "Profile image uploaded", Toast.LENGTH_SHORT).show();
-                                    loadUserProfile();
-                                })
-                                .addOnFailureListener(e -> Toast.makeText(this, "Failed to update Firestore with image URL", Toast.LENGTH_SHORT).show());
+            StorageReference imageRef = storage.getReference("profile_images/" + deviceId + ".jpg");
+            imageRef.putFile(imageUri)
+                    .addOnSuccessListener(taskSnapshot -> imageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                        userRef.update("profileImageUrl", uri.toString())
+                                .addOnSuccessListener(aVoid -> loadUserProfile())
+                                .addOnFailureListener(e -> Toast.makeText(this, "Failed to update profile image URL.", Toast.LENGTH_SHORT).show());
                     }))
-                    .addOnFailureListener(e -> Toast.makeText(this, "Failed to upload profile image", Toast.LENGTH_SHORT).show());
+                    .addOnFailureListener(e -> Toast.makeText(this, "Failed to upload profile image.", Toast.LENGTH_SHORT).show());
         }
     }
 
