@@ -8,6 +8,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+import com.example.myapplication.Views.OrganizerProfileView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -57,7 +58,7 @@ public class MainActivity extends BaseActivity {
                     break;
                 case R.id.nav_profile:
                     // Start AdminProfileActivity instead of navigating to a Fragment
-                    Intent intent = new Intent(this, OrganizerProfileActivity.class);
+                    Intent intent = new Intent(this, OrganizerProfileView.class);
                     startActivity(intent);
                     return true;
             }
