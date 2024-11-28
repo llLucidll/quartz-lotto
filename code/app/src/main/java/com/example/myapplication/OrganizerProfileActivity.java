@@ -84,8 +84,6 @@ public class OrganizerProfileActivity extends BaseActivity {
         Button saveChangesButton = findViewById(R.id.save_changes_button);
         removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
         Button buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
-        Button browseUserProfilesButton = findViewById(R.id.button_browse_user_profiles);
-        Button browseFacilitiesButton = findViewById(R.id.button_browse_facilities);
 
         // Set listeners
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
@@ -93,15 +91,6 @@ public class OrganizerProfileActivity extends BaseActivity {
         backButton.setOnClickListener(v -> onBackPressed());
         removeProfileImageButton.setOnClickListener(v -> removeProfileImage());
         buttonSwitchAttendee.setOnClickListener(v -> switchProfileAttendee());
-        browseUserProfilesButton.setOnClickListener(v -> {
-            Intent intent = new Intent(OrganizerProfileActivity.this, BrowseUsersActivity.class);
-            startActivity(intent);
-        });
-
-        browseFacilitiesButton.setOnClickListener(v -> {
-            Intent intent = new Intent(OrganizerProfileActivity.this, BrowseFacilitiesActivity.class);
-            startActivity(intent);
-        });
 
         setupDOBInputRestrictions();
         setupDateOfBirthField();
