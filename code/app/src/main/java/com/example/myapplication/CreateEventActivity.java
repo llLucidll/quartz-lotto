@@ -1,5 +1,7 @@
 package com.example.myapplication;
 
+import static android.app.PendingIntent.getActivity;
+
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
@@ -240,6 +242,10 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
         }
 
         boolean geolocationEnabled = geolocationCheckBox.isChecked();
+
+        if (geolocationEnabled) {
+            Toast.makeText(this, "WARNING: You are joining an event that requires geolocation.", Toast.LENGTH_SHORT).show();
+        }
 
         // Retrieve the current user's device ID
         String organizerId = retrieveDeviceId(); // Changed from getUserId() to retrieveDeviceId()
