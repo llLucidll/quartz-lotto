@@ -47,7 +47,7 @@
 
         <!-- Activities -->
         <activity
-            android:name=".MainActivity"
+            android:name=".Views.HomeView"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

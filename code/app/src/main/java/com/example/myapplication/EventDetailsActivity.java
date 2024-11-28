@@ -48,7 +48,6 @@ public class EventDetailsActivity extends AppCompatActivity {
         buttonAttendees = findViewById(R.id.buttonAttendees);
         buttonLocations = findViewById(R.id.buttonLocations);
 
-
         // Set up button click listeners with tags
         buttonDetails.setOnClickListener(v -> loadFragment(DetailsFragment.newInstance(eventId), "DetailsFragmentTag"));
         buttonWaitlist.setOnClickListener(v -> loadFragment(WaitlistFragment.newInstance(eventId), "WaitlistFragmentTag"));
