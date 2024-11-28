@@ -1,4 +1,9 @@
 package com.example.myapplication;
+
+import com.example.myapplication.AvatarUtil;
+import com.example.myapplication.BaseActivity;
+import com.example.myapplication.EditProfileActivity;
+import com.example.myapplication.ManageNotificationGroupsActivity;
 import com.example.myapplication.Views.HomeView;
 
 import android.app.DatePickerDialog;
@@ -109,7 +114,6 @@ public class OrganizerProfileActivity extends BaseActivity {
         imagePickerLauncher.launch(intent);
     }
 
-
     private void setupDOBInputRestrictions() {
 
         InputFilter[] filters = new InputFilter[]{
@@ -167,7 +171,6 @@ public class OrganizerProfileActivity extends BaseActivity {
                 year, month, day);
         datePickerDialog.show();
     }
-
 
     private int calculateAge(Calendar selectedDate) {
         Calendar today = Calendar.getInstance();
@@ -234,7 +237,6 @@ public class OrganizerProfileActivity extends BaseActivity {
             return sb.toString();
         }
     }
-
 
     private void setupNameFieldTextWatcher() {
         nameField.addTextChangedListener(new TextWatcher() {
@@ -319,6 +321,7 @@ public class OrganizerProfileActivity extends BaseActivity {
         }
         removeProfileImageButton.setVisibility(View.GONE);
     }
+
     private void removeProfileImage() {
         StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
         storageRef.delete().addOnSuccessListener(aVoid -> {

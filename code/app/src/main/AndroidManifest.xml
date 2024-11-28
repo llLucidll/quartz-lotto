@@ -71,6 +71,7 @@
         <activity android:name=".EventSignupActivity" />
         <activity android:name=".BrowseImagesActivity"/>
         <activity android:name=".Views.HomeView"/>
+        <activity android:name=".Views.OrganizerProfileView"/>
 
     </application>
 </manifest>
