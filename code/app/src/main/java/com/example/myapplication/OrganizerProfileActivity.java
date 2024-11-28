@@ -13,14 +13,12 @@ import android.widget.*;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.*;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.Views.ManageFacilityView;
 import com.google.firebase.firestore.*;
 import com.google.firebase.storage.*;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
@@ -59,7 +57,7 @@ public class OrganizerProfileActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_organizer_profile);
+        setContentView(R.layout.activity_edit_organizer_profile);
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();

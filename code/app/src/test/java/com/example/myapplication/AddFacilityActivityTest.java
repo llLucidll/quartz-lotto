@@ -5,6 +5,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.example.myapplication.Views.AddFacilityView;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
@@ -40,7 +41,7 @@ import java.util.Map;
 @Config(sdk = 32) // Align with your targetSdkVersion
 public class AddFacilityActivityTest {
 
-    private AddFacilityActivity activity;
+    private AddFacilityView activity;
     private EditText nameField;
     private EditText locationField;
     private Button saveButton;
@@ -54,7 +55,7 @@ public class AddFacilityActivityTest {
     private Task mockAddTask;
     @Before
     public void setUp() {
-        Context context = Robolectric.buildActivity(AddFacilityActivity.class).get().getApplicationContext();
+        Context context = Robolectric.buildActivity(AddFacilityView.class).get().getApplicationContext();
 
         // Initialize FirebaseApp if not already initialized
         if (FirebaseApp.getApps(context).isEmpty()) {
@@ -105,7 +106,7 @@ public class AddFacilityActivityTest {
         }).when(mockAddTask).addOnFailureListener(ArgumentMatchers.any(OnFailureListener.class));
 
         // Initialize the Activity after setting up mocks
-        ActivityController<AddFacilityActivity> controller = Robolectric.buildActivity(AddFacilityActivity.class)
+        ActivityController<AddFacilityView> controller = Robolectric.buildActivity(AddFacilityView.class)
                 .create()
                 .start()
                 .resume()
