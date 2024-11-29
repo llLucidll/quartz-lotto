@@ -254,12 +254,12 @@
         </GridLayout>
 
         <Button
-            android:id="@+id/buttonSwitchAttendee"
+            android:id="@+id/button_browse_qrhashdata"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@id/buttonManageFacilities"
             android:backgroundTint="#B76E79"
-            android:text="Switch to Entrant Mode" />
+            android:text="Browse QR Hashdata" />
 
     </LinearLayout>
 </ScrollView>
