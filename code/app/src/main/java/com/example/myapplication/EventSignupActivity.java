@@ -337,12 +337,12 @@ public class EventSignupActivity extends BaseActivity {
         // Prepare waitlist data
         Map<String, Object> waitlistEntry = new HashMap<>();
         waitlistEntry.put("userId", userDeviceId);
-        waitlistEntry.put("userStatus", "not chosen");
+        waitlistEntry.put("userStatus", "waiting");
 
         // Navigate to events -> eventId -> waitlist and add the user
         firestore.collection("Events")
                 .document(eventId) // Navigate to the specific event
-                .collection("waitlist")
+                .collection("waitlist") // automatically creates waitlist collection if it doesn't exist
                 .document(userDeviceId) // Use user ID as the document ID for uniqueness
                 .set(waitlistEntry)
                 .addOnSuccessListener(aVoid -> {
@@ -395,7 +395,7 @@ public class EventSignupActivity extends BaseActivity {
             int maxWaitlist = maxWaitlistLong != null ? maxWaitlistLong.intValue() : 0;
             int currentWaitlist = currentWaitlistLong != null ? currentWaitlistLong.intValue() : 0;
 
-            if (currentWaitlist < maxWaitlist) {
+            if ((currentWaitlist < maxWaitlist) | (maxWaitlist == 0)){ // maxWaitlist is an optional input
                 // Add to waitlist and store location
                 Map<String, Object> waitlistData = new HashMap<>();
                 waitlistData.put("userName", userName);
