@@ -5,12 +5,15 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
+import androidx.appcompat.widget.Toolbar;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,14 +41,32 @@ public class OrganizerNotificationActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_organizer_notification);
 
+        // Initialize toolbar with back button
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        if (getSupportActionBar() != null) {
+            getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        }
+
+        // Handle system back button press
+        getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
+            @Override
+            public void handleOnBackPressed() {
+                finish(); // Close the activity
+            }
+        });
+
         recyclerView = findViewById(R.id.recycler_view_events);
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
 
         db = FirebaseFirestore.getInstance();
         deviceId = retrieveDeviceId(); // Retrieve the organizer's deviceId
 
         eventAdapter = new OrganizerEventAdapter(new ArrayList<>(), this);
         recyclerView.setAdapter(eventAdapter);
+        // Set toolbar navigation
+        setToolbar(toolbar, this::finish);
 
         fetchOrganizedEvents();
     }
@@ -72,6 +93,16 @@ public class OrganizerNotificationActivity extends BaseActivity {
                     Log.e(TAG, "Failed to fetch events", e);
                     Toast.makeText(this, "Failed to load events", Toast.LENGTH_SHORT).show();
                 });
+    }
+
+    /**
+     * Configures the toolbar for back navigation.
+     *
+     * @param toolbar The toolbar to set up.
+     * @param onBackPressed The action to perform when the back button is pressed.
+     */
+    public void setToolbar(Toolbar toolbar, Runnable onBackPressed) {
+        toolbar.setNavigationOnClickListener(v -> onBackPressed.run());
     }
 
     /**
@@ -137,4 +168,21 @@ public class OrganizerNotificationActivity extends BaseActivity {
             }
         }
     }
+
+    /**
+     * Handles toolbar back button presses.
+     *
+     * @param item The selected menu item.
+     * @return True if the action was handled, false otherwise.
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if (item.getItemId() == android.R.id.home) {
+            finish(); // Close the activity when the toolbar back button is pressed
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+
 }
