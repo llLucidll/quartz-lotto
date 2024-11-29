@@ -21,7 +21,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.AvatarUtil;
 import com.example.myapplication.BaseActivity;
 import com.example.myapplication.Controllers.EditProfileController;
+import com.example.myapplication.GroupEntrantsActivity;
 import com.example.myapplication.Models.User;
+import com.example.myapplication.OrganizerNotificationActivity;
 import com.example.myapplication.R;
 
 import java.text.SimpleDateFormat;
@@ -42,7 +44,7 @@ public class OrganizerProfileView extends BaseActivity {
     private ImageButton editProfileImageButton, backButton, removeProfileImageButton;
     private EditText nameField, emailField, dobField, phoneField;
     private Spinner countrySpinner;
-    private Button saveChangesButton, manageFacilityButton, myEvents;
+    private Button saveChangesButton, manageFacilityButton, myEvents, notifGroups;
 
     private Uri imageUri;
     private EditProfileController controller;
@@ -88,6 +90,7 @@ public class OrganizerProfileView extends BaseActivity {
         removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
         manageFacilityButton = findViewById(R.id.manage_facility_button);
         myEvents = findViewById(R.id.my_events_button);
+        notifGroups =findViewById(R.id.notif_groups);
 
         setupDateOfBirthField();
     }
@@ -98,6 +101,9 @@ public class OrganizerProfileView extends BaseActivity {
         backButton.setOnClickListener(v -> finish());
         removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
         manageFacilityButton.setOnClickListener(v -> startActivity(new Intent(this, AddFacilityView.class)));
+        myEvents.setOnClickListener(v -> startActivity(new Intent(this, HomeView.class)));
+        notifGroups.setOnClickListener(v -> startActivity(new Intent(this, OrganizerNotificationActivity.class)));
+
     }
 
     private void openFileChooser() {
