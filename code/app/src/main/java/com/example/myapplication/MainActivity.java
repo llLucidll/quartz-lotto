@@ -13,6 +13,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.AuthResult;
+import com.google.firebase.firestore.FirebaseFirestore;
+
 import org.osmdroid.config.Configuration;
 
 
@@ -22,7 +24,9 @@ import org.osmdroid.config.Configuration;
 public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
+    private FirebaseFirestore db;
     private BottomNavigationView bottomNavigationView;
+    private UserManager userManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,8 +36,11 @@ public class MainActivity extends BaseActivity {
         // Initialize Osmdroid configuration
         Configuration.getInstance().setUserAgentValue(getPackageName());
 
-        // Initialize Firebase Auth
+        // Initialize Firebase Auth and firestore
         mAuth = FirebaseAuth.getInstance();
+        db = FirebaseFirestore.getInstance();
+
+        userManager = new UserManager(); //initializing usermanager
 
         // Sign in anonymously
         signInAnonymously();
@@ -57,9 +64,10 @@ public class MainActivity extends BaseActivity {
                     selectedFragment = new QRScannerFragment(); // Navigate to QRScannerFragment
                     break;
                 case R.id.nav_profile:
-                    // Start AdminProfileActivity instead of navigating to a Fragment
-                    Intent intent = new Intent(this, OrganizerProfileView.class);
-                    startActivity(intent);
+                    // Handle profile navigation through UserManager
+                    userManager.fetchUserRole(this, role -> {
+                        userManager.navigateToProfile(this, role);
+                    });
                     return true;
             }
 
