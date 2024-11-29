@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,11 +32,14 @@ public class AttendeesFragment extends Fragment {
 
     private RecyclerView recyclerViewSelected, recyclerViewConfirmed, recyclerViewCancelled;
     private AttendeesAdapter selectedAdapter, confirmedAdapter, cancelledAdapter;
+    private TextView noneConfirmed, noneWaiting, noneCancelled;
     private List<Attendee> selectedList = new ArrayList<>();
+    private String selected = "selected";
     private List<Attendee> confirmedList = new ArrayList<>();
+    private String confirmed = "confirmed";
     private List<Attendee> cancelledList = new ArrayList<>();
+    private String cancelled = "cancelled";
     private String eventId;
-    private String userType = "entrant"; // default
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
@@ -80,37 +84,41 @@ public class AttendeesFragment extends Fragment {
         recyclerViewSelected = view.findViewById(R.id.recyclerViewSelected);
         recyclerViewConfirmed = view.findViewById(R.id.recyclerViewConfirmed);
         recyclerViewCancelled = view.findViewById(R.id.recyclerViewCancelled);
+        noneConfirmed = view.findViewById(R.id.noneConfirmed);
+        noneWaiting = view.findViewById(R.id.noneWaiting);
+        noneCancelled = view.findViewById(R.id.noneCancelled);
 
         recyclerViewSelected.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewConfirmed.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewCancelled.setLayoutManager(new LinearLayoutManager(getContext()));
 
-        selectedAdapter = new AttendeesAdapter(selectedList, getContext(), userType, eventId);
-        confirmedAdapter = new AttendeesAdapter(confirmedList, getContext(), userType, eventId);
-        cancelledAdapter = new AttendeesAdapter(cancelledList, getContext(), userType, eventId);
+        selectedAdapter = new AttendeesAdapter(selectedList, getContext(), selected, eventId);
+        confirmedAdapter = new AttendeesAdapter(confirmedList, getContext(), confirmed, eventId);
+        cancelledAdapter = new AttendeesAdapter(cancelledList, getContext(), cancelled, eventId);
 
         recyclerViewSelected.setAdapter(selectedAdapter);
         recyclerViewConfirmed.setAdapter(confirmedAdapter);
         recyclerViewCancelled.setAdapter(cancelledAdapter);
 
-        // Fetch userType and then attendees
-        if (getActivity() instanceof BaseActivity) {
-            ((BaseActivity) getActivity()).getUserType(new BaseActivity.UserTypeCallback() {
-                @Override
-                public void onCallback(String type) {
-                    userType = type;
-                    selectedAdapter.setUserType(userType);
-                    confirmedAdapter.setUserType(userType);
-                    cancelledAdapter.setUserType(userType);
-                    selectedAdapter.notifyDataSetChanged();
-                    confirmedAdapter.notifyDataSetChanged();
-                    cancelledAdapter.notifyDataSetChanged();
-                    fetchAttendees();
-                }
-            });
-        } else {
+
+
+//        // Fetch userType and then attendees
+//        if (getActivity() instanceof BaseActivity) {
+//            ((BaseActivity) getActivity()).getUserType(new BaseActivity.UserTypeCallback() {
+//                @Override
+//                public void onCallback(String status) {
+//                    selectedAdapter.setStatus(status);
+//                    confirmedAdapter.setStatus(status);
+//                    cancelledAdapter.setStatus(status);
+//                    selectedAdapter.notifyDataSetChanged();
+//                    confirmedAdapter.notifyDataSetChanged();
+//                    cancelledAdapter.notifyDataSetChanged();
+//                    fetchAttendees();
+//                }
+//            });
+//        } else {
             fetchAttendees();
-        }
+
 
         return view;
     }
@@ -151,6 +159,7 @@ public class AttendeesFragment extends Fragment {
                         selectedAdapter.notifyDataSetChanged();
                         confirmedAdapter.notifyDataSetChanged();
                         cancelledAdapter.notifyDataSetChanged();
+                        updateEmptyListMessages();
                         Log.d(TAG, "Number of attendees fetched: " + selectedList.size());
                     }
                 })
@@ -159,4 +168,35 @@ public class AttendeesFragment extends Fragment {
                     Log.e(TAG, "Error fetching attendees: ", e);
                 });
     }
+    private void updateEmptyListMessages() {
+
+
+        // Confirmed List
+        if (confirmedList.isEmpty()) {
+            noneConfirmed.setVisibility(View.VISIBLE);
+            recyclerViewConfirmed.setVisibility(View.GONE);
+        } else {
+            noneConfirmed.setVisibility(View.GONE);
+            recyclerViewConfirmed.setVisibility(View.VISIBLE);
+        }
+
+        // Waiting List
+        if (selectedList.isEmpty()) {
+            noneWaiting.setVisibility(View.VISIBLE);
+            recyclerViewSelected.setVisibility(View.GONE);
+        } else {
+            noneWaiting.setVisibility(View.GONE);
+            recyclerViewSelected.setVisibility(View.VISIBLE);
+        }
+
+        // Cancelled List
+        if (cancelledList.isEmpty()) {
+            noneCancelled.setVisibility(View.VISIBLE);
+            recyclerViewCancelled.setVisibility(View.GONE);
+        } else {
+            noneCancelled.setVisibility(View.GONE);
+            recyclerViewCancelled.setVisibility(View.VISIBLE);
+        }
+    }
+
 }

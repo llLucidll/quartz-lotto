@@ -24,6 +24,15 @@
         android:text="@string/confirmed"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/noneConfirmed"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:text="There are no confirmed entrants for this event"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <!-- Confirmed RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewConfirmed"
@@ -40,6 +49,15 @@
         android:text="Selected"
         android:textSize="18sp" />
 
+    <TextView
+        android:id="@+id/noneWaiting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:text="There are no selected entrants who haven't made a decision yet"
+        android:textSize="12sp"
+        android:visibility="gone" />
+
     <!-- Waitlist RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerViewSelected"
@@ -55,6 +73,14 @@
         android:layout_marginTop="24dp"
         android:text="@string/cancelled"
         android:textSize="18sp" />
+    <TextView
+        android:id="@+id/noneCancelled"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="1dp"
+        android:text="There are no cancelled entrants for this event"
+        android:textSize="12sp"
+        android:visibility="gone" />
 
     <!-- Cancelled RecyclerView -->
     <androidx.recyclerview.widget.RecyclerView
