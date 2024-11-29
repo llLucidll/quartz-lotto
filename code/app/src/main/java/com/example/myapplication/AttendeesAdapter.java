@@ -62,6 +62,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.Atte
 
         // Handle Cancel button visibility and functionality
         if ("entrant".equalsIgnoreCase(userType)) {
+            // TODO: change this to be with status
             holder.cancelButton.setVisibility(View.VISIBLE);
             holder.cancelButton.setOnClickListener(v -> {
                 // Confirm cancellation with the admin
@@ -124,7 +125,7 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.Atte
         }
 
         DocumentReference eventRef = db.collection("Events").document(eventId);
-        DocumentReference attendeeRef = eventRef.collection("Attendees").document(attendeeId);
+        DocumentReference attendeeRef = eventRef.collection("Waitlist").document(attendeeId);
 
         db.runTransaction((Transaction.Function<Void>) transaction -> {
             // Get currentAttendees
@@ -141,21 +142,21 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.Atte
             }
 
             // Delete the specific attendee document
-            transaction.delete(attendeeRef);
+            transaction.update(attendeeRef, "status", "cancelled");
 
             // Decrement currentAttendees
             transaction.update(eventRef, "currentAttendees", currentAttendeesLong - 1);
+
 
             return null;
         }).addOnSuccessListener(aVoid -> {
             Toast.makeText(context, "Attendee canceled successfully.", Toast.LENGTH_SHORT).show();
             Log.d("AttendeesAdapter", "Attendee " + attendeeId + " canceled successfully.");
+            attendee.setStatus("cancelled");
 
-            // Remove attendee from the list and notify the adapter
             attendeeList.remove(position);
             notifyItemRemoved(position);
 
-            // Optionally, notify other parts of the app (e.g., update maps)
             if (context instanceof EventDetailsActivity) {
                 ((EventDetailsActivity) context).refreshAttendees();
             }
