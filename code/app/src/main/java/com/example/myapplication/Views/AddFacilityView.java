@@ -185,6 +185,6 @@ public class AddFacilityView extends AppCompatActivity {
                     Log.e(TAG, "Error uploading image: ", e);
                 });
             }
-        });
+        }, AddFacilityView.this);
     }
 }

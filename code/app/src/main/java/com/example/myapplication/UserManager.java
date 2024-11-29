@@ -14,6 +14,7 @@ public class UserManager {
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
 
+
     public UserManager() {
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
@@ -77,10 +78,25 @@ public class UserManager {
                 intent = new Intent(context, EditProfileActivity.class);
                 break;
         }
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
         context.startActivity(intent);
-        if (context instanceof MainActivity) {
-            ((MainActivity) context).finish();
+    }
+
+
+    public void promoteToOrganizer(Context context) {
+        String uid = mAuth.getCurrentUser().getUid();
+        if (uid == null) {
+            Toast.makeText(context, "User not authenticated.", Toast.LENGTH_SHORT).show();
+            return;
         }
+
+        DocumentReference userRef = db.collection("users").document(uid);
+        userRef.update("isOrganizer", true)
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "User promoted to organizer.");
+                    Toast.makeText(context, "You are now an organizer!", Toast.LENGTH_SHORT).show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e(TAG, "Error promoting user to organizer", e);
+                });
     }
 }

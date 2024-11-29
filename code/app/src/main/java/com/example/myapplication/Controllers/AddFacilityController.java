@@ -1,18 +1,20 @@
-// com/example/myapplication/controllers/AddFacilityController.java
-
 package com.example.myapplication.Controllers;
 
+import android.content.Context;
 import android.net.Uri;
 
 import com.example.myapplication.Models.Facility;
+import com.example.myapplication.UserManager;
 import com.example.myapplication.Repositories.FacilityRepository;
 
 public class AddFacilityController {
 
     private FacilityRepository repository;
+    private UserManager userManager;
 
     public AddFacilityController() {
         repository = new FacilityRepository();
+        userManager = new UserManager();
     }
 
     // Listener Interface to communicate with the View
@@ -33,14 +35,14 @@ public class AddFacilityController {
      * @param imageUri  The URI of the facility image. Can be null if no image is provided.
      * @param listener  The listener to handle callbacks.
      */
-    public void saveFacility(String name, String location, Uri imageUri, final AddFacilityListener listener) {
+    public void saveFacility(String name, String location, Uri imageUri, final AddFacilityListener listener, Context context) {
         if (imageUri != null) {
             // Upload the image first
             repository.uploadImage(imageUri, new FacilityRepository.UploadImageCallback() {
                 @Override
                 public void onSuccess(String imageUrl) {
                     // Proceed to save the facility with the uploaded image URL
-                    proceedToSave(name, location, imageUrl, listener);
+                    proceedToSave(name, location, imageUrl, listener, context);
                 }
 
                 @Override
@@ -51,7 +53,7 @@ public class AddFacilityController {
             });
         } else {
             // No image to upload, proceed to save the facility without an image URL
-            proceedToSave(name, location, null, listener);
+            proceedToSave(name, location, null, listener, context);
         }
     }
 
@@ -63,7 +65,7 @@ public class AddFacilityController {
      * @param imageUrl   The URL of the uploaded image. Can be null if no image is provided.
      * @param listener   The listener to handle callbacks.
      */
-    private void proceedToSave(String name, String location, String imageUrl, AddFacilityListener listener) {
+    private void proceedToSave(String name, String location, String imageUrl, AddFacilityListener listener, Context context) {
         String userId = repository.getCurrentUserId();
         if (userId == null) {
             // User is not authenticated
@@ -78,6 +80,7 @@ public class AddFacilityController {
         repository.saveFacility(facility, new FacilityRepository.FirestoreCallback() {
             @Override
             public void onSuccess() {
+                userManager.promoteToOrganizer(context);
                 // Notify the listener about the successful save
                 listener.onFacilitySavedSuccessfully();
             }
