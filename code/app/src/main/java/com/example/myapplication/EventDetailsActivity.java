@@ -11,6 +11,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.myapplication.Views.WaitingListView;
+
 /**
  * Activity to display event details and handle fragment switching with buttons.
  */
@@ -50,7 +52,7 @@ public class EventDetailsActivity extends AppCompatActivity {
 
         // Set up button click listeners with tags
         buttonDetails.setOnClickListener(v -> loadFragment(DetailsFragment.newInstance(eventId), "DetailsFragmentTag"));
-        buttonWaitlist.setOnClickListener(v -> loadFragment(WaitlistFragment.newInstance(eventId), "WaitlistFragmentTag"));
+        buttonWaitlist.setOnClickListener(v -> loadFragment(WaitingListView.newInstance(eventId), "WaitlistFragmentTag"));
         buttonAttendees.setOnClickListener(v -> loadFragment(AttendeesFragment.newInstance(eventId), "AttendeesFragmentTag"));
         buttonLocations.setOnClickListener(v -> loadFragment(LocationsFragment.newInstance(eventId), "LocationsFragmentTag"));
 

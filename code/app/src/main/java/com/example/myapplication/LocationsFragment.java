@@ -90,8 +90,8 @@ public class LocationsFragment extends Fragment {
         }
 
         db.collection("Events").document(eventId)
-                .collection("Attendees")
-                .whereEqualTo("status", "Attending") // Ensure only active attendees are fetched
+                .collection("Waitlist")
+                .whereEqualTo("status", "not") // Ensure only active attendees are fetched
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     mapView.getOverlays().clear(); // Clear existing markers
