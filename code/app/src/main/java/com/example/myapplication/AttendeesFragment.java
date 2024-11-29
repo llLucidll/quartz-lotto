@@ -29,9 +29,11 @@ public class AttendeesFragment extends Fragment {
     private static final String TAG = "AttendeesFragment";
     private static final String ARG_EVENT_ID = "eventId";
 
-    private RecyclerView recyclerView;
-    private AttendeesAdapter attendeesAdapter;
-    private List<Attendee> attendeeList = new ArrayList<>();
+    private RecyclerView recyclerViewSelected, recyclerViewConfirmed, recyclerViewCancelled;
+    private AttendeesAdapter selectedAdapter, confirmedAdapter, cancelledAdapter;
+    private List<Attendee> selectedList = new ArrayList<>();
+    private List<Attendee> confirmedList = new ArrayList<>();
+    private List<Attendee> cancelledList = new ArrayList<>();
     private String eventId;
     private String userType = "entrant"; // default
 
@@ -75,10 +77,21 @@ public class AttendeesFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_attendees, container, false);
 
         // Initialize RecyclerView
-        recyclerView = view.findViewById(R.id.attendeesRecyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(getContext()));
-        attendeesAdapter = new AttendeesAdapter(attendeeList, getContext(), userType, eventId);
-        recyclerView.setAdapter(attendeesAdapter);
+        recyclerViewSelected = view.findViewById(R.id.recyclerViewSelected);
+        recyclerViewConfirmed = view.findViewById(R.id.recyclerViewConfirmed);
+        recyclerViewCancelled = view.findViewById(R.id.recyclerViewCancelled);
+
+        recyclerViewSelected.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewConfirmed.setLayoutManager(new LinearLayoutManager(getContext()));
+        recyclerViewCancelled.setLayoutManager(new LinearLayoutManager(getContext()));
+
+        selectedAdapter = new AttendeesAdapter(selectedList, getContext(), userType, eventId);
+        confirmedAdapter = new AttendeesAdapter(confirmedList, getContext(), userType, eventId);
+        cancelledAdapter = new AttendeesAdapter(cancelledList, getContext(), userType, eventId);
+
+        recyclerViewSelected.setAdapter(selectedAdapter);
+        recyclerViewConfirmed.setAdapter(confirmedAdapter);
+        recyclerViewCancelled.setAdapter(cancelledAdapter);
 
         // Fetch userType and then attendees
         if (getActivity() instanceof BaseActivity) {
@@ -86,8 +99,12 @@ public class AttendeesFragment extends Fragment {
                 @Override
                 public void onCallback(String type) {
                     userType = type;
-                    attendeesAdapter.setUserType(userType);
-                    attendeesAdapter.notifyDataSetChanged();
+                    selectedAdapter.setUserType(userType);
+                    confirmedAdapter.setUserType(userType);
+                    cancelledAdapter.setUserType(userType);
+                    selectedAdapter.notifyDataSetChanged();
+                    confirmedAdapter.notifyDataSetChanged();
+                    cancelledAdapter.notifyDataSetChanged();
                     fetchAttendees();
                 }
             });
@@ -108,23 +125,33 @@ public class AttendeesFragment extends Fragment {
         }
 
         db.collection("Events").document(eventId)
-                .collection("Attendees")
-                .whereEqualTo("status", "Attending")
+                .collection("Waitlist")
                 .get()
                 .addOnSuccessListener(new com.google.android.gms.tasks.OnSuccessListener<QuerySnapshot>() {
                     @Override
                     public void onSuccess(QuerySnapshot queryDocumentSnapshots) {
-                        attendeeList.clear();
+                        selectedList.clear();
+                        confirmedList.clear();
+                        cancelledList.clear();
                         for (DocumentSnapshot doc : queryDocumentSnapshots.getDocuments()) {
                             Attendee attendee = doc.toObject(Attendee.class);
                             if (attendee != null) {
                                 attendee.setUserId(doc.getId());
-                                attendeeList.add(attendee);
+                                String status = attendee.getStatus();
+                                if ("selected".equalsIgnoreCase(status)) {
+                                    selectedList.add(attendee);
+                                } else if ("confirmed".equalsIgnoreCase(status)) {
+                                    confirmedList.add(attendee);
+                                } else if ("cancelled".equalsIgnoreCase(status)) {
+                                    cancelledList.add(attendee);
+                                }
                                 Log.d(TAG, "Attendee fetched: " + attendee.getUserName());
                             }
                         }
-                        attendeesAdapter.notifyDataSetChanged();
-                        Log.d(TAG, "Number of attendees fetched: " + attendeeList.size());
+                        selectedAdapter.notifyDataSetChanged();
+                        confirmedAdapter.notifyDataSetChanged();
+                        cancelledAdapter.notifyDataSetChanged();
+                        Log.d(TAG, "Number of attendees fetched: " + selectedList.size());
                     }
                 })
                 .addOnFailureListener(e -> {
