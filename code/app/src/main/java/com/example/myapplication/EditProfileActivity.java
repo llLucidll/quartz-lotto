@@ -1,7 +1,7 @@
 package com.example.myapplication;
 
 import com.example.myapplication.Views.HomeView;
-
+import com.example.myapplication.Views.AddFacilityView;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -37,10 +37,16 @@ public class EditProfileActivity extends BaseActivity {
     private CircleImageView profileImageView;
     private EditText nameField, emailField, dobField, phoneField;
     private Spinner countrySpinner;
+    private Button addFacilityButton;
+
+
 
     private Uri imageUri;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
+
+    private boolean isAdmin = false;
+    private boolean isOrganizer = false;
 
     private String userId;
 
@@ -60,7 +66,7 @@ public class EditProfileActivity extends BaseActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_organizer_profile);
+        setContentView(R.layout.activity_edit_profile);
 
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
@@ -84,16 +90,18 @@ public class EditProfileActivity extends BaseActivity {
         countrySpinner = findViewById(R.id.country_spinner);
         Button saveChangesButton = findViewById(R.id.save_changes_button);
         removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
-        Button buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
-        Button buttonEvents = findViewById(R.id.my_events_button);
+        addFacilityButton = findViewById(R.id.add_facility_button);
+        //Button buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
+        //Button buttonEvents = findViewById(R.id.my_events_button);
 
         // Set listeners
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
         saveChangesButton.setOnClickListener(v -> saveProfileData());
         backButton.setOnClickListener(v -> onBackPressed());
         removeProfileImageButton.setOnClickListener(v -> removeProfileImage());
-        buttonSwitchAttendee.setOnClickListener(v -> switchProfileAttendee());
-        buttonEvents.setOnClickListener(v -> myEvents());
+        addFacilityButton.setOnClickListener(v -> addFacility());
+        //buttonSwitchAttendee.setOnClickListener(v -> switchProfileAttendee());
+        //buttonEvents.setOnClickListener(v -> myEvents());
 
         setupDOBInputRestrictions();
         setupDateOfBirthField();
@@ -101,6 +109,12 @@ public class EditProfileActivity extends BaseActivity {
         setupNameFieldTextWatcher();
 
         loadUserProfile();
+    }
+
+
+    private void addFacility() {
+        Intent intent = new Intent(EditProfileActivity.this, AddFacilityView.class);
+        startActivity(intent);
     }
 
     private void openFileChooser() {
@@ -265,7 +279,7 @@ public class EditProfileActivity extends BaseActivity {
     }
 
     private void loadUserProfile() {
-        DocumentReference userProfileRef = db.collection("Organizers").document(userId);
+        DocumentReference userProfileRef = db.collection("users").document(userId);
         userProfileRef.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -276,6 +290,13 @@ public class EditProfileActivity extends BaseActivity {
                         Boolean notificationsEnabled = documentSnapshot.getBoolean("notificationsEnabled");
                         String phone = documentSnapshot.getString("phone");
                         String profileImageUrl = documentSnapshot.getString("profileImageUrl");
+
+                        Boolean isAdminValue = documentSnapshot.getBoolean("isAdmin");
+                        Boolean isOrganizerValue = documentSnapshot.getBoolean("isOrganizer");
+
+                        isAdmin = isAdminValue != null && isAdminValue;
+                        isOrganizer = isOrganizerValue != null && isOrganizerValue;
+
 
                         if (name != null) nameField.setText(name);
                         if (email != null) emailField.setText(email);
@@ -321,7 +342,7 @@ public class EditProfileActivity extends BaseActivity {
         StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
         storageRef.delete().addOnSuccessListener(aVoid -> {
             Toast.makeText(this, "Profile image removed", Toast.LENGTH_SHORT).show();
-            DocumentReference userProfileRef = db.collection("Organizers").document(userId);
+            DocumentReference userProfileRef = db.collection("users").document(userId);
             userProfileRef.update("profileImageUrl", FieldValue.delete())
                     .addOnSuccessListener(aVoid1 -> loadUserProfile())
                     .addOnFailureListener(e -> Toast.makeText(this, "Failed to update Firestore", Toast.LENGTH_SHORT).show());
@@ -356,9 +377,11 @@ public class EditProfileActivity extends BaseActivity {
         userProfile.put("email", email);
         userProfile.put("dob", dob);
         userProfile.put("country", country);
+        userProfile.put("isAdmin", isAdmin);
+        userProfile.put("isOrganizer", isOrganizer);
         if (!phone.isEmpty()) userProfile.put("phone", phone);
 
-        DocumentReference userProfileRef = db.collection("Organizers").document(userId);
+        DocumentReference userProfileRef = db.collection("users").document(userId);
         userProfileRef.set(userProfile)
                 .addOnSuccessListener(aVoid -> Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show())
                 .addOnFailureListener(e -> Toast.makeText(this, "Error updating profile", Toast.LENGTH_SHORT).show());
