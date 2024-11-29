@@ -13,7 +13,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 //import com.example.myapplication.AttendeeAdapter;
+import com.example.myapplication.AttendeesAdapter;
 import com.example.myapplication.Controllers.EntrantListController;
+import com.example.myapplication.Models.Attendee;
 import com.example.myapplication.R;
 import com.example.myapplication.Repositories.EntrantListRepository;
 
@@ -26,7 +28,7 @@ public class WaitingListView extends Fragment {
     private static final String ARG_EVENT_ID = "eventId";
     private String eventId;
     private RecyclerView waitingView;
-    private WaitingListAdapter adapter;
+    private AttendeesAdapter adapter;
     private EntrantListController controller;
     private EntrantListRepository.FetchEntrantListCallback callback;
 
@@ -67,11 +69,13 @@ public class WaitingListView extends Fragment {
         waitingView = view.findViewById(R.id.recyclerViewAttendees);
         waitingView.setLayoutManager(new LinearLayoutManager(getContext()));
         controller = new EntrantListController();
-        controller.fetchEntrantList(eventId, "not", new EntrantListRepository.FetchEntrantListCallback() {
+
+        controller.fetchEntrantList(eventId, "waiting", new EntrantListRepository.FetchEntrantListCallback() {
             @Override
-            public void onFetchEntrantListSuccess(ArrayList<String> entrantList) {
+            public void onFetchEntrantListSuccess(ArrayList<Attendee> entrantList) {
+
                 // Handle the fetched entrant list (e.g., update UI or pass to adapter)
-                adapter = new WaitingListAdapter(entrantList);
+                adapter = new AttendeesAdapter(entrantList, getContext(), "organizer", ARG_EVENT_ID);
                 waitingView.setAdapter(adapter);
                 Log.d("EntrantListController", "Fetched Entrant List: " + entrantList);
             }

@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.example.myapplication.AttendeesFragment;
 import com.example.myapplication.Views.WaitingListView;
 
 /**
@@ -78,7 +79,7 @@ public class EventDetailsActivity extends AppCompatActivity {
      */
     public void refreshAttendees() {
         // Refresh the AttendeesFragment
-        AttendeesFragment attendeesFragment = (AttendeesFragment) getSupportFragmentManager()
+        com.example.myapplication.AttendeesFragment attendeesFragment = (com.example.myapplication.AttendeesFragment) getSupportFragmentManager()
                 .findFragmentByTag("AttendeesFragmentTag");
         if (attendeesFragment != null) {
             attendeesFragment.fetchAttendees();
