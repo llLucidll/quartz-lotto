@@ -1,4 +1,3 @@
-// File: app/src/main/java/com/example/myapplication/EventSignupActivity.java
 package com.example.myapplication;
 
 import android.Manifest;
