@@ -1,9 +1,5 @@
 package com.example.myapplication;
 
-import com.example.myapplication.AvatarUtil;
-import com.example.myapplication.BaseActivity;
-import com.example.myapplication.EditProfileActivity;
-import com.example.myapplication.ManageNotificationGroupsActivity;
 import com.example.myapplication.Views.HomeView;
 
 import android.app.DatePickerDialog;
@@ -22,7 +18,6 @@ import androidx.annotation.*;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.myapplication.Views.HomeView;
 import com.example.myapplication.Views.ManageFacilityView;
 import com.google.firebase.firestore.*;
 import com.google.firebase.storage.*;
@@ -413,15 +408,7 @@ public class EditProfileActivity extends BaseActivity {
         return age >= MIN_AGE && age <= MAX_AGE;
     }
 
-    private void openManageNotifications() {
-        Intent intent = new Intent(this, ManageNotificationGroupsActivity.class);
-        startActivity(intent);
-    }
 
-    private void openManageFacilities() {
-        Intent intent = new Intent(EditProfileActivity.this, ManageFacilityView.class);
-        startActivity(intent);
-    }
 
     private void switchProfileAttendee() {
         Intent intent = new Intent(EditProfileActivity.this, EditProfileActivity.class);

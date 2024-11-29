@@ -13,30 +13,52 @@
     android:clickable="true"
     android:focusable="true">
 
-    <LinearLayout
+    <!-- FrameLayout to Layer the Blur and Content -->
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
+        android:layout_height="wrap_content">
 
-        <!-- Event Title -->
-        <TextView
-            android:id="@+id/text_view_event_title"
-            android:layout_width="wrap_content"
+        <!-- Blurred Background -->
+        <ImageView
+            android:id="@+id/blurred_background"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:background="@drawable/gradient_background"
+            android:src="@drawable/blurred_background" />
+
+        <!-- Overlay for Frosted Effect -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="#80FFFFFF" />
+
+        <!-- Content (Event Details) -->
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Event Title"
-            android:textSize="18sp"
-            android:textStyle="bold"
-            android:textColor="@android:color/black" />
+            android:orientation="vertical"
+            android:padding="12dp">
 
-        <!-- Event Date -->
-        <TextView
-            android:id="@+id/text_view_event_date"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Event Date and Time"
-            android:textSize="14sp"
-            android:textColor="@android:color/darker_gray" />
+            <!-- Event Title -->
+            <TextView
+                android:id="@+id/text_view_event_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Title"
+                android:textSize="18sp"
+                android:textStyle="bold"
+                android:textColor="@android:color/black" />
 
-    </LinearLayout>
+            <!-- Event Date -->
+            <TextView
+                android:id="@+id/text_view_event_date"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Event Date and Time"
+                android:textSize="14sp"
+                android:textColor="@android:color/darker_gray" />
 
+        </LinearLayout>
+    </FrameLayout>
 </androidx.cardview.widget.CardView>
