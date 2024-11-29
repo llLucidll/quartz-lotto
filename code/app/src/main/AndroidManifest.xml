@@ -71,6 +71,7 @@
         <activity android:name=".BrowseImagesActivity"/>
         <activity android:name=".Views.HomeView"/>
         <activity android:name=".Views.OrganizerProfileView"/>
+        <activity android:name=".ManageQrLinksActivity"/>
 
     </application>
 </manifest>

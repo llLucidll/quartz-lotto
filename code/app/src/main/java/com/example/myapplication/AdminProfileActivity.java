@@ -87,12 +87,19 @@ public class AdminProfileActivity extends BaseActivity {
         Button buttonBrowseEvents = findViewById(R.id.button_browse_events);
         Button buttonBrowseFacilities = findViewById(R.id.button_browse_facilities);
         Button buttonBrowseImages = findViewById(R.id.button_browse_images);
+        Button buttonBrowseQrHashData = findViewById(R.id.button_browse_qrhashdata);
+
 
         // Set listeners
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
         saveChangesButton.setOnClickListener(v -> saveProfileData());
         backButton.setOnClickListener(v -> onBackPressed());
         removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
+
+        buttonBrowseQrHashData.setOnClickListener(v -> {
+            Intent intent = new Intent(this, ManageQrLinksActivity.class);
+            startActivity(intent);
+        });
 
         buttonBrowseUsers.setOnClickListener(v -> BrowseUsers());
         buttonBrowseEvents.setOnClickListener(v -> BrowseEvents());
