@@ -2,6 +2,7 @@ package com.example.myapplication;
 
 import static android.app.PendingIntent.getActivity;
 
+import android.app.AlertDialog;
 import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
@@ -73,11 +74,24 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
                         Toast.makeText(this, "Poster selected", Toast.LENGTH_SHORT).show();
                         // Optionally, display the selected poster
                         qrCodeImageView.setImageURI(posterUri);
+                        uploadPosterButton.setText("Update Poster");
                     }
                 }
         );
 
-        uploadPosterButton.setOnClickListener(v -> openPosterPicker());
+        // Allow updating the poster
+        uploadPosterButton.setOnClickListener(v -> {
+            if (posterUri != null) {
+                new AlertDialog.Builder(this)
+                        .setTitle("Update Poster")
+                        .setMessage("A poster is already selected. Do you want to replace it?")
+                        .setPositiveButton("Yes", (dialog, which) -> openPosterPicker())
+                        .setNegativeButton("No", null)
+                        .show();
+            } else {
+                openPosterPicker();
+            }
+        });
 
         // Initialize ProgressDialog
         progressDialog = new ProgressDialog(this);
@@ -131,6 +145,7 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
     private void openPosterPicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
         posterPickerLauncher.launch(intent);
     }
 
@@ -243,9 +258,6 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
 
         boolean geolocationEnabled = geolocationCheckBox.isChecked();
 
-        if (geolocationEnabled) {
-            Toast.makeText(this, "WARNING: You are joining an event that requires geolocation.", Toast.LENGTH_SHORT).show();
-        }
 
         // Retrieve the current user's device ID
         String organizerId = retrieveDeviceId(); // Changed from getUserId() to retrieveDeviceId()
