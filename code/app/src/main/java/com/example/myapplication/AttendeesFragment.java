@@ -32,7 +32,7 @@ public class AttendeesFragment extends Fragment {
 
     private RecyclerView recyclerViewSelected, recyclerViewConfirmed, recyclerViewCancelled;
     private AttendeesAdapter selectedAdapter, confirmedAdapter, cancelledAdapter;
-    private TextView noneConfirmed, noneWaiting, noneCancelled;
+    private TextView noneConfirmed, noneSelected, noneCancelled;
     private List<Attendee> selectedList = new ArrayList<>();
     private String selected = "selected";
     private List<Attendee> confirmedList = new ArrayList<>();
@@ -80,12 +80,12 @@ public class AttendeesFragment extends Fragment {
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendees, container, false);
 
-        // Initialize RecyclerView
         recyclerViewSelected = view.findViewById(R.id.recyclerViewSelected);
         recyclerViewConfirmed = view.findViewById(R.id.recyclerViewConfirmed);
         recyclerViewCancelled = view.findViewById(R.id.recyclerViewCancelled);
+
         noneConfirmed = view.findViewById(R.id.noneConfirmed);
-        noneWaiting = view.findViewById(R.id.noneWaiting);
+        noneSelected = view.findViewById(R.id.noneSelected);
         noneCancelled = view.findViewById(R.id.noneCancelled);
 
         recyclerViewSelected.setLayoutManager(new LinearLayoutManager(getContext()));
@@ -117,7 +117,7 @@ public class AttendeesFragment extends Fragment {
 //                }
 //            });
 //        } else {
-            fetchAttendees();
+        fetchAttendees();
 
 
         return view;
@@ -180,12 +180,12 @@ public class AttendeesFragment extends Fragment {
             recyclerViewConfirmed.setVisibility(View.VISIBLE);
         }
 
-        // Waiting List
+        // Selected List
         if (selectedList.isEmpty()) {
-            noneWaiting.setVisibility(View.VISIBLE);
+            noneSelected.setVisibility(View.VISIBLE);
             recyclerViewSelected.setVisibility(View.GONE);
         } else {
-            noneWaiting.setVisibility(View.GONE);
+            noneSelected.setVisibility(View.GONE);
             recyclerViewSelected.setVisibility(View.VISIBLE);
         }
 
