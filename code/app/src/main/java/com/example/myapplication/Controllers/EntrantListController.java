@@ -9,6 +9,8 @@ import com.example.myapplication.Views.AttendeeListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import com.example.myapplication.Models.Attendee;
+import com.example.myapplication.Models.EntrantList;
 
 /*
 Used to handle parsing of data before passing to View for EntrantList
@@ -18,21 +20,23 @@ public class EntrantListController {
     private HashMap<String, String> repoList;
     private WaitingListView waitlistFragment;
     private AttendeesFragment attendeeFragment;
+    private EntrantList entrantList;
 
     //Constructor
     public EntrantListController() {
         this.repository = new EntrantListRepository();
     }
+    public interface AttendeesCallback {
+        void onComplete(ArrayList<Attendee> attendees, Exception e);
+    }
 
     public void fetchEntrantList(String eventId, String status, EntrantListRepository.FetchEntrantListCallback callback) {
         // Directly retrieve the HashMap from the repository
-         repository.getEntrantlist(eventId, status, new EntrantListRepository.FirestoreCallback() {
+        repository.getEntrantlist(eventId, status, new EntrantListRepository.FirestoreCallback() {
             @Override
-            public void onSuccess(HashMap<String, String> data) {
+            public void onSuccess(ArrayList<Attendee> data) {
                 Log.d("EntrantListController", "Data received in Controller: " + data);
-                ArrayList<String> waitingList = new ArrayList<>(data.values());
-                Log.d("EntrantListController", "Fetched Entrant List in Controller: " + waitingList);
-                callback.onFetchEntrantListSuccess(waitingList);
+                callback.onFetchEntrantListSuccess(data);
             }
 
             @Override
@@ -41,6 +45,26 @@ public class EntrantListController {
                 System.err.println("Error fetching entrant list: " + e.getMessage());
             }
         });
+    }
+
+    /**
+     * Used to sample the entrants for the draw by using the method from the EntrantList model class
+     * @param entrants
+     * @return attendees
+     */
+    public void sampleEntrants(String eventId, ArrayList<Attendee> entrants, AttendeesCallback callback) {
+
+        repository.getAttendeeListSize(eventId, (result, e) -> {
+            if (e != null) {
+                Log.e("EntrantListController", "Error getting attendee list size", e);
+                callback.onComplete(null, e);
+            } else {
+                int sampleSize = result.intValue();;
+                ArrayList<Attendee> attendees = entrantList.sampleAttendees(sampleSize);
+                callback.onComplete(attendees, null);
+            }
+        });
+
     }
 
 }

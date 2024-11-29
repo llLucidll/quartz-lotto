@@ -6,23 +6,27 @@ import java.util.List;
 
 import com.example.myapplication.Repositories.EntrantListRepository;
 import com.example.myapplication.Models.User;
+
+/*
+Model class used by Entrant List for each event.
+ */
 public class EntrantList {
-    private List<User> users;
+    private List<Attendee> attendees;
     private int capacity;
     private int sampleSize;
 
     public EntrantList(int capacity, int sampleSize) {
-        this.users = new ArrayList<>();
+        this.attendees = new ArrayList<>();
         this.capacity = capacity;
         this.sampleSize = sampleSize;
     }
 
-    public List<User> getUsers() {
-        return users;
+    public List<Attendee> getUsers() {
+        return attendees;
     }
 
-    public void setUser(User user) {
-        users.add(user);
+    public void setUser(Attendee user) {
+        attendees.add(user);
     }
 
 
@@ -39,17 +43,22 @@ public class EntrantList {
         return sampleSize;
     }
 
+    /*
+    gets the maxAttendees from the database for the particular event.
+     */
     public void setSampleSize(int sampleSize) {
         this.sampleSize = sampleSize;
     }
 
-
-    public List<User> sampleAttendees(int size) {
-        if (users.size() <= size) {
-            return users;
+    /*
+    Samples a random subset of attendees
+     */
+    public ArrayList<Attendee> sampleAttendees(int size) {
+        if (attendees.size() <= size) {
+            return (ArrayList<Attendee>) attendees;
         } else {
-            Collections.shuffle(users);
-            return users.subList(0, size);
+            Collections.shuffle(attendees);
+            return (ArrayList<Attendee>) attendees.subList(0, size);
         }
     }
 }

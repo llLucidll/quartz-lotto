@@ -2,12 +2,15 @@ package com.example.myapplication.Repositories;
 
 import android.util.Log;
 
+import com.example.myapplication.Models.Attendee;
+import com.google.android.gms.common.util.ArrayUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -31,12 +34,17 @@ public class EntrantListRepository {
 
     // Callback interfaces
     public interface FirestoreCallback {
-        void onSuccess(HashMap<String, String> data); // Modified to accept data
+        void onSuccess(ArrayList<Attendee> data); // Modified to accept data
         void onFailure(Exception e);
     }
+
     public interface FetchEntrantListCallback {
-        void onFetchEntrantListSuccess(ArrayList<String> entrantList);
+        void onFetchEntrantListSuccess(ArrayList<Attendee> entrantList);
         void onFetchEntrantListFailure(Exception e);
+    }
+
+    public interface Callback <T> {
+        void onComplete(T result, Exception e);
     }
 
     /*
@@ -53,21 +61,88 @@ public class EntrantListRepository {
                 .whereEqualTo("status", status)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
-                    HashMap<String, String> waitlist = new HashMap<>();
+                    ArrayList<Attendee> userList = new ArrayList<>();
+                    //HashMap<String, String> waitlist = new HashMap<>();
+                    //HashMap<String, String> waitlist = new HashMap<>();
                     for (DocumentSnapshot doc : querySnapshot.getDocuments()) {
+                        Attendee user = new Attendee();
+                        user.setUserId(doc.getId());
+                        user.setUserName(doc.getString("userName"));
+                        user.setUserEmail(doc.getString("userEmail"));
+                        user.setStatus(doc.getString("status"));
+
+                        //waitlist.put(doc.getId(), doc.getString("userName"));
                         String userName = doc.getString("userName");
                         String userId = doc.getId();
+                        Log.d("EntrantListRepository", "User ID: " + userId + ", User Name: " + userName);
                         if (userName != null) { // Ensure userName is not null
-                            waitlist.put(userId, userName);
+                            userList.add(user);
+                            //waitlist.put(userId, userName);
                             Log.d("EntrantListRepository", "User ID: " + userId + ", User Name: " + userName);
-                            Log.d("EntrantListRepository", "Waitlist: " + waitlist);
                         }
                     }
-                    Log.d("EntrantListRepository", "Waitlist sent to controller: " + waitlist);
-                    callback.onSuccess(waitlist); // Pass the data back through the callback
+                    callback.onSuccess(userList); // Pass the data back through the callback
                 })
                 .addOnFailureListener(e -> {
                     callback.onFailure(e);
                 });
+    }
+
+    public void getAttendeeListSize(String eventId, Callback<Long> callback) {
+
+        db.collection(EVENT_COLLECTION_NAME)
+                .document(eventId)
+                .get()
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Long maxAttendees = document.getLong("maxAttendees");
+                            callback.onComplete(maxAttendees, null);
+                        } else {
+                            callback.onComplete(null, new Exception("Document does not exist"));
+                        }
+                    } else {
+                        callback.onComplete(null, task.getException());
+                    }
+                });
+    }
+
+    /**
+     * Used to update the status of the users who were selected in the draw to selected
+     * @param eventId
+     * @param users
+     */
+    public void updateAttendeeList(String eventId, ArrayList<Attendee> users) {
+
+        ArrayList<String> userIds = new ArrayList<>();
+        // Convert Attendee objects to String user Ids for easy db usage.
+        for (Attendee user : users) {
+            userIds.add(user.getUserId());
+        }
+
+        db.collection(EVENT_COLLECTION_NAME)
+                .document(eventId)
+                .collection(WAITLIST_COLLECTION_NAME)
+                .whereIn("userId", userIds)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        document.getReference().update("status", "selected")
+                                .addOnSuccessListener(aVoid -> {
+                                    Log.d("EntrantListRepository", "User status updated successfully" + document.getId());
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.w("EntrantListRepository", "Error updating user status" + document.getId(), e);
+                                });
+                    }
+
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("EntrantListRepository", "Error getting documents: ", e);
+
+                });
+
+
     }
 }

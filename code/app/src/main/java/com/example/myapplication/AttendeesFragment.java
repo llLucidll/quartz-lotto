@@ -49,8 +49,8 @@ public class AttendeesFragment extends Fragment {
      * @param eventId The ID of the event.
      * @return A new instance of fragment AttendeesFragment.
      */
-    public static AttendeesFragment newInstance(String eventId) {
-        AttendeesFragment fragment = new AttendeesFragment();
+    public static com.example.myapplication.AttendeesFragment newInstance(String eventId) {
+        com.example.myapplication.AttendeesFragment fragment = new com.example.myapplication.AttendeesFragment();
         Bundle args = new Bundle();
         args.putString(ARG_EVENT_ID, eventId);
         fragment.setArguments(args);
