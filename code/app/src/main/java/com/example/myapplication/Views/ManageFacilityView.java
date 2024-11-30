@@ -1,7 +1,6 @@
 package com.example.myapplication.Views;
 
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -11,27 +10,24 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.myapplication.Views.AddFacilityView;
+import com.example.myapplication.BaseActivity;
 import com.example.myapplication.Controllers.ManageFacilityController;
 import com.example.myapplication.Models.Facility;
 import com.example.myapplication.R;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.auth.FirebaseUser;
 
-public class ManageFacilityView extends AppCompatActivity {
+/**
+ * ManageFacilityView allows users to view, edit, or delete their facility details.
+ */
+public class ManageFacilityView extends BaseActivity {
 
     private static final String TAG = "ManageFacilitiesActivity";
 
     private ImageView facilityImageView;
     private TextView facilityNameTextView, facilityLocationTextView;
     private Button addEditFacilityButton, deleteFacilityButton;
-
-    private FirebaseAuth auth;
-    private String userId;
 
     private ManageFacilityController controller;
 
@@ -42,10 +38,8 @@ public class ManageFacilityView extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_manage_facilities);
 
-        controller = new ManageFacilityController();
-
-        auth = FirebaseAuth.getInstance();
-        performAnonymousSignIn();
+        // Initialize the controller with the context
+        controller = new ManageFacilityController(this);
 
         facilityImageView = findViewById(R.id.facilityImageView);
         facilityNameTextView = findViewById(R.id.facility_name_text_view);
@@ -71,51 +65,27 @@ public class ManageFacilityView extends AppCompatActivity {
                 confirmDeleteFacility(currentFacility);
             }
         });
-    }
 
-    /**
-     * Performs anonymous sign-in if the user is not already authenticated
-     */
-    private void performAnonymousSignIn() {
-        FirebaseUser currentUser = auth.getCurrentUser();
-        if (currentUser == null) {
-
-            auth.signInAnonymously()
-                    .addOnCompleteListener(this, task -> {
-                        if (task.isSuccessful()) {
-                            FirebaseUser user = auth.getCurrentUser();
-                            if (user != null) {
-                                userId = user.getUid();
-                                Log.d(TAG, "Anonymous sign-in successful. User ID: " + userId);
-                                loadFacility();
-                            }
-                        } else {
-                            Log.w(TAG, "Anonymous sign-in failed.", task.getException());
-                            Toast.makeText(ManageFacilityView.this, "Authentication failed.",
-                                    Toast.LENGTH_SHORT).show();
-                            finish();
-                        }
-                    });
-        } else {
-            userId = currentUser.getUid();
-            Log.d(TAG, "User already signed in. User ID: " + userId);
-            loadFacility();
-        }
+        // Load facility details
+        loadFacility();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-
-        if (userId != null) {
-            loadFacility();
-        }
+        loadFacility();
     }
 
     /**
-     * Loads facility using the Controller
+     * Loads facility using the Controller and device ID.
      */
     private void loadFacility() {
+        String deviceId = retrieveDeviceId();
+        if (deviceId == null || deviceId.isEmpty()) {
+            Toast.makeText(this, "Device ID not found. Please try again later.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         controller.loadFacility(new ManageFacilityController.ManageFacilitiesListener() {
             @Override
             public void onFacilityLoaded(Facility facility) {
@@ -129,8 +99,7 @@ public class ManageFacilityView extends AppCompatActivity {
             public void onFacilityLoadFailed(Exception e) {
                 runOnUiThread(() -> {
                     Toast.makeText(ManageFacilityView.this, "No facility found. Please add one.", Toast.LENGTH_SHORT).show();
-                    Intent intent = new Intent(ManageFacilityView.this, AddFacilityView.class);
-                    startActivity(intent);
+                    clearFacilityUI();
                 });
             }
 
@@ -162,7 +131,6 @@ public class ManageFacilityView extends AppCompatActivity {
 
             @Override
             public void onImageDeletedSuccessfully() {
-                // Optionally handle image deletion success
                 Log.d(TAG, "Image deleted successfully.");
             }
 
@@ -173,11 +141,11 @@ public class ManageFacilityView extends AppCompatActivity {
                     Log.e(TAG, "Error deleting image from Storage: ", e);
                 });
             }
-        });
+        }, deviceId); // Pass deviceId to the controller
     }
 
     /**
-     * Updates the UI with the facility details
+     * Updates the UI with the facility details.
      */
     private void updateUIWithFacility(Facility facility) {
         facilityNameTextView.setText(facility.getName());
@@ -198,7 +166,7 @@ public class ManageFacilityView extends AppCompatActivity {
     }
 
     /**
-     * Clears the UI when no facility is present
+     * Clears the UI when no facility is present.
      */
     private void clearFacilityUI() {
         currentFacility = null;
@@ -210,9 +178,27 @@ public class ManageFacilityView extends AppCompatActivity {
     }
 
     /**
-     * Deletes a facility using the Controller
+     * Confirms deletion of a facility with the user.
+     */
+    private void confirmDeleteFacility(Facility facility) {
+        new AlertDialog.Builder(this)
+                .setTitle("Delete Facility")
+                .setMessage("Are you sure you want to delete this facility and its image?")
+                .setPositiveButton("Yes", (dialog, which) -> deleteFacility(facility))
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    /**
+     * Deletes a facility using the Controller.
      */
     private void deleteFacility(Facility facility) {
+        String deviceId = retrieveDeviceId();
+        if (deviceId == null || deviceId.isEmpty()) {
+            Toast.makeText(this, "Device ID not found. Please try again later.", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         String imageUrl = facility.getImageUrl();
 
         controller.deleteFacility(imageUrl, new ManageFacilityController.ManageFacilitiesListener() {
@@ -254,7 +240,6 @@ public class ManageFacilityView extends AppCompatActivity {
 
             @Override
             public void onImageDeletedSuccessfully() {
-                // Optionally handle image deletion success
                 Log.d(TAG, "Image deleted successfully.");
             }
 
@@ -265,18 +250,7 @@ public class ManageFacilityView extends AppCompatActivity {
                     Log.e(TAG, "Error deleting image from Storage: ", e);
                 });
             }
-        });
-    }
+        }, deviceId); // Pass the deviceId to the controller
 
-    /**
-     * Confirms deletion of a facility with the user
-     */
-    private void confirmDeleteFacility(Facility facility) {
-        new AlertDialog.Builder(this)
-                .setTitle("Delete Facility")
-                .setMessage("Are you sure you want to delete this facility and its image?")
-                .setPositiveButton("Yes", (dialog, which) -> deleteFacility(facility))
-                .setNegativeButton("No", null)
-                .show();
     }
 }

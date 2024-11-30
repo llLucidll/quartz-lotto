@@ -1,16 +1,12 @@
 package com.example.myapplication;
 
-import com.example.myapplication.Models.User;
-import com.example.myapplication.Controllers.EditProfileController;
-
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,33 +17,31 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.myapplication.AvatarUtil;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * AdminProfileActivity allows admins to view and edit their profiles.
- * It extends BaseActivity to utilize dynamic user identification.
- */
 public class AdminProfileActivity extends BaseActivity {
 
-    private static final int MIN_AGE = 1;
-    private static final int MAX_AGE = 100;
+    private static final String TAG = "AdminProfileActivity";
 
-    private ImageButton removeProfileImageButton;
     private CircleImageView profileImageView;
+    private ImageButton editProfileImageButton, removeProfileImageButton, backButton;
     private EditText nameField, emailField, dobField, phoneField;
     private Spinner countrySpinner;
     private Button saveChangesButton;
 
     private Uri imageUri;
-    private EditProfileController controller;
+    private boolean isAdmin = true; // Default for admins
+    private boolean isOrganizer = true; // Default for admins
+    private boolean notificationsPerm = false;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -58,7 +52,6 @@ public class AdminProfileActivity extends BaseActivity {
                             .load(imageUri)
                             .apply(RequestOptions.circleCropTransform())
                             .into(profileImageView);
-
                     removeProfileImageButton.setVisibility(View.VISIBLE);
                 }
             });
@@ -68,70 +61,38 @@ public class AdminProfileActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_profile);
 
-        controller = new EditProfileController();
+        initializeUI();
+        setListeners();
+        loadUserProfile();
+    }
 
-        // Initialize UI elements
+    private void initializeUI() {
         profileImageView = findViewById(R.id.profile_image);
-        ImageButton editProfileImageButton = findViewById(R.id.edit_profile_image_button);
-        ImageButton backButton = findViewById(R.id.back_button);
+        editProfileImageButton = findViewById(R.id.edit_profile_image_button);
+        removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
+        backButton = findViewById(R.id.back_button);
         nameField = findViewById(R.id.name_field);
         emailField = findViewById(R.id.email_field);
         dobField = findViewById(R.id.dob_field);
         phoneField = findViewById(R.id.phone_field);
         countrySpinner = findViewById(R.id.country_spinner);
-        removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
         saveChangesButton = findViewById(R.id.save_changes_button);
 
-        // Buttons for admin-specific actions
-        Button buttonBrowseUsers = findViewById(R.id.button_browse_user_profiles);
-        Button buttonBrowseEvents = findViewById(R.id.button_browse_events);
-        Button buttonBrowseFacilities = findViewById(R.id.button_browse_facilities);
-        Button buttonBrowseImages = findViewById(R.id.button_browse_images);
-        Button buttonBrowseQrHashData = findViewById(R.id.button_browse_qrhashdata);
+        dobField.setInputType(InputType.TYPE_CLASS_DATETIME);
+        dobField.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                showDatePicker();
+                return true;
+            }
+            return false;
+        });
+    }
 
-
-        // Set listeners
+    private void setListeners() {
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
         saveChangesButton.setOnClickListener(v -> saveProfileData());
-        backButton.setOnClickListener(v -> onBackPressed());
+        backButton.setOnClickListener(v -> finish());
         removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
-
-        buttonBrowseQrHashData.setOnClickListener(v -> {
-            Intent intent = new Intent(this, ManageQrLinksActivity.class);
-            startActivity(intent);
-        });
-
-        buttonBrowseUsers.setOnClickListener(v -> BrowseUsers());
-        buttonBrowseEvents.setOnClickListener(v -> BrowseEvents());
-        buttonBrowseFacilities.setOnClickListener(v -> BrowseFacilities());
-        buttonBrowseImages.setOnClickListener(v -> BrowseImages());
-
-
-
-        setupDateOfBirthField();
-
-        // Load user profile
-        loadUserProfile();
-    }
-
-    private void BrowseUsers(){
-        Intent intent = new Intent(this, BrowseUsersActivity.class);
-        startActivity(intent);
-    }
-
-    private void BrowseEvents(){
-        Intent intent = new Intent(this, BrowseEventsActivity.class);
-        startActivity(intent);
-    }
-
-    private void BrowseFacilities(){
-        Intent intent = new Intent(this, BrowseFacilitiesActivity.class);
-        startActivity(intent);
-    }
-
-    private void BrowseImages(){
-        Intent intent = new Intent(this, BrowseImagesActivity.class);
-        startActivity(intent);
     }
 
     private void openFileChooser() {
@@ -140,167 +101,53 @@ public class AdminProfileActivity extends BaseActivity {
         imagePickerLauncher.launch(intent);
     }
 
-    private void setupDateOfBirthField() {
-        dobField.setInputType(InputType.TYPE_CLASS_DATETIME);
-        dobField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_calendar, 0);
-        dobField.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (event.getRawX() >= (dobField.getRight() - dobField.getCompoundDrawables()[2].getBounds().width())) {
-                    showDatePicker();
-                    return true;
-                }
-            }
-            return false;
-        });
-        dobField.addTextChangedListener(new TextWatcher() {
-            private boolean isUpdating;
-
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {}
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                if (isUpdating) return;
-
-                String input = s.toString().replaceAll("[^\\d]", "");
-                StringBuilder formattedDate = new StringBuilder();
-                if (input.length() >= 2) formattedDate.append(input.substring(0, 2)).append("/");
-                if (input.length() >= 4) formattedDate.append(input.substring(2, 4)).append("/");
-                if (input.length() > 4) formattedDate.append(input.substring(4));
-
-                isUpdating = true;
-                dobField.setText(formattedDate.toString());
-                dobField.setSelection(formattedDate.length());
-                isUpdating = false;
-            }
-        });
-    }
-
-    private void showDatePicker() {
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                (view, year1, month1, dayOfMonth) -> {
-                    Calendar selectedDate = Calendar.getInstance();
-                    selectedDate.set(year1, month1, dayOfMonth);
-                    int age = calculateAge(selectedDate);
-
-                    if (age >= MIN_AGE && age <= MAX_AGE) {
-                        String formattedDate = String.format(Locale.US, "%02d/%02d/%04d", month1 + 1, dayOfMonth, year1);
-                        dobField.setText(formattedDate);
-                        dobField.setError(null);
-                    } else {
-                        dobField.setError("Age must be between " + MIN_AGE + " and " + MAX_AGE);
-                    }
-                },
-                year, month, day);
-        datePickerDialog.show();
-    }
-
-    private int calculateAge(Calendar selectedDate) {
-        Calendar today = Calendar.getInstance();
-        int age = today.get(Calendar.YEAR) - selectedDate.get(Calendar.YEAR);
-        if (today.get(Calendar.DAY_OF_YEAR) < selectedDate.get(Calendar.DAY_OF_YEAR)) {
-            age--;
-        }
-        return age;
-    }
-
-    private void deleteProfileImage() {
-        controller.deleteProfileImage(new EditProfileController.EditProfileListener() {
-            @Override
-            public void onProfileLoaded(User user) {}
-
-            @Override
-            public void onProfileLoadFailed(Exception e) {}
-
-            @Override
-            public void onProfileSavedSuccessfully() {}
-
-            @Override
-            public void onProfileSaveFailed(Exception e) {}
-
-            @Override
-            public void onImageUploaded(String imageUrl) {}
-
-            @Override
-            public void onImageUploadFailed(Exception e) {}
-
-            @Override
-            public void onImageDeletedSuccessfully() {
-                runOnUiThread(() -> {
-                    Toast.makeText(AdminProfileActivity.this, "Profile image removed", Toast.LENGTH_SHORT).show();
-                    profileImageView.setImageResource(R.drawable.ic_profile);
-                    removeProfileImageButton.setVisibility(View.GONE);
-                });
-            }
-
-            @Override
-            public void onImageDeleteFailed(Exception e) {
-                runOnUiThread(() -> Toast.makeText(AdminProfileActivity.this, "Failed to delete profile image", Toast.LENGTH_SHORT).show());
-            }
-        });
-    }
-
     private void loadUserProfile() {
-        controller.loadUserProfile(new EditProfileController.EditProfileListener() {
-            @Override
-            public void onProfileLoaded(User user) {
-                runOnUiThread(() -> {
-                    nameField.setText(user.getName());
-                    emailField.setText(user.getEmail());
-                    dobField.setText(user.getDob());
-                    phoneField.setText(user.getPhone());
+        String deviceId = retrieveDeviceId();
+        if (deviceId == null || deviceId.isEmpty()) {
+            Toast.makeText(this, "Device ID not found. Please log in again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-                    ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
-                            AdminProfileActivity.this, R.array.country_array, android.R.layout.simple_spinner_item);
-                    adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-                    countrySpinner.setAdapter(adapter);
-                    countrySpinner.setSelection(adapter.getPosition(user.getCountry()));
+        DocumentReference userRef = db.collection("users").document(deviceId);
+        userRef.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        String name = documentSnapshot.getString("name");
+                        String email = documentSnapshot.getString("email");
+                        String dob = documentSnapshot.getString("dob");
+                        String phone = documentSnapshot.getString("phone");
+                        String country = documentSnapshot.getString("country");
+                        String profileImageUrl = documentSnapshot.getString("profileImageUrl");
 
-                    if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
-                        Glide.with(AdminProfileActivity.this)
-                                .load(user.getProfileImageUrl())
-                                .apply(RequestOptions.circleCropTransform())
-                                .into(profileImageView);
-                        removeProfileImageButton.setVisibility(View.VISIBLE);
+                        nameField.setText(name);
+                        emailField.setText(email);
+                        dobField.setText(dob);
+                        phoneField.setText(phone);
+
+                        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                                this, R.array.country_array, android.R.layout.simple_spinner_item);
+                        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+                        countrySpinner.setAdapter(adapter);
+                        countrySpinner.setSelection(adapter.getPosition(country));
+
+                        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
+                            // Load profile image from URL
+                            Glide.with(this)
+                                    .load(profileImageUrl)
+                                    .apply(RequestOptions.circleCropTransform())
+                                    .into(profileImageView);
+                            removeProfileImageButton.setVisibility(View.VISIBLE);
+                        } else {
+                            // Auto-generate avatar if no profile image URL
+                            generateDefaultAvatar(name);
+                        }
                     } else {
-                        profileImageView.setImageResource(R.drawable.ic_profile);
-                        removeProfileImageButton.setVisibility(View.GONE);
+                        // If no profile exists, generate a default avatar and initialize fields
+                        generateDefaultAvatar(null);
+                        initializeDefaultFields();
                     }
-                });
-            }
-
-            @Override
-            public void onProfileLoadFailed(Exception e) {
-                runOnUiThread(() -> Toast.makeText(AdminProfileActivity.this, "Failed to load profile", Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onProfileSavedSuccessfully() {}
-
-            @Override
-            public void onProfileSaveFailed(Exception e) {}
-
-            @Override
-            public void onImageUploaded(String imageUrl) {}
-
-            @Override
-            public void onImageUploadFailed(Exception e) {}
-
-            @Override
-            public void onImageDeletedSuccessfully() {}
-
-            @Override
-            public void onImageDeleteFailed(Exception e) {}
-        });
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to load profile.", e));
     }
 
     private void saveProfileData() {
@@ -311,53 +158,92 @@ public class AdminProfileActivity extends BaseActivity {
         String country = countrySpinner.getSelectedItem().toString();
 
         if (name.isEmpty() || email.isEmpty() || dob.isEmpty() || country.isEmpty()) {
-            Toast.makeText(this, "Please fill out all required fields", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Please fill all fields.", Toast.LENGTH_SHORT).show();
             return;
         }
 
         if (!Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
-            Toast.makeText(this, "Invalid email format", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Invalid email format.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setDob(dob);
-        user.setPhone(phone);
-        user.setCountry(country);
+        Map<String, Object> profileData = new HashMap<>();
+        profileData.put("name", name);
+        profileData.put("email", email);
+        profileData.put("dob", dob);
+        profileData.put("phone", phone);
+        profileData.put("country", country);
+        profileData.put("isAdmin", isAdmin);
+        profileData.put("isOrganizer", isOrganizer);
+        profileData.put("notificationsPerm", notificationsPerm);
 
-        controller.saveUserProfile(user, imageUri, new EditProfileController.EditProfileListener() {
-            @Override
-            public void onProfileLoaded(User user) {}
-
-            @Override
-            public void onProfileLoadFailed(Exception e) {}
-
-            @Override
-            public void onProfileSavedSuccessfully() {
-                runOnUiThread(() -> {
-                    Toast.makeText(AdminProfileActivity.this, "Profile updated successfully", Toast.LENGTH_SHORT).show();
-                    loadUserProfile();
-                });
-            }
-
-            @Override
-            public void onProfileSaveFailed(Exception e) {
-                runOnUiThread(() -> Toast.makeText(AdminProfileActivity.this, "Failed to save profile", Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onImageUploaded(String imageUrl) {}
-
-            @Override
-            public void onImageUploadFailed(Exception e) {}
-
-            @Override
-            public void onImageDeletedSuccessfully() {}
-
-            @Override
-            public void onImageDeleteFailed(Exception e) {}
-        });
+        String deviceId = retrieveDeviceId();
+        DocumentReference userRef = db.collection("users").document(deviceId);
+        userRef.set(profileData)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Profile updated successfully.", Toast.LENGTH_SHORT).show();
+                    if (imageUri != null) uploadProfileImage(userRef);
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to update profile.", e));
     }
+
+    private void uploadProfileImage(DocumentReference userRef) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile_images/" + retrieveDeviceId() + ".jpg");
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    userRef.update("profileImageUrl", uri.toString())
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Profile image updated successfully."));
+                }))
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to upload profile image.", e));
+    }
+
+    private void deleteProfileImage() {
+        DocumentReference userRef = db.collection("users").document(retrieveDeviceId());
+        userRef.update("profileImageUrl", null)
+                .addOnSuccessListener(aVoid -> {
+                    profileImageView.setImageResource(R.drawable.ic_profile);
+                    removeProfileImageButton.setVisibility(View.GONE);
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to delete profile image.", e));
+    }
+
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
+
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
+            String date = String.format(Locale.US, "%02d/%02d/%04d", month1 + 1, dayOfMonth, year1);
+            dobField.setText(date);
+        }, year, month, day);
+
+        datePickerDialog.show();
+    }
+
+    private void initializeDefaultFields() {
+        nameField.setText("");
+        emailField.setText("");
+        dobField.setText("");
+        phoneField.setText("");
+        isAdmin = true;
+        isOrganizer = true;
+        notificationsPerm = false;
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.country_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        countrySpinner.setAdapter(adapter);
+
+        // Generate a default avatar when no user data exists
+        generateDefaultAvatar(null);
+    }
+
+    private void generateDefaultAvatar(String name) {
+        String firstLetter = (name != null && !name.isEmpty()) ? name.substring(0, 1).toUpperCase(Locale.US) : "?";
+        Bitmap avatar = AvatarUtil.generateAvatar(firstLetter, 200, this);
+        profileImageView.setImageBitmap(avatar);
+        removeProfileImageButton.setVisibility(View.GONE);
+    }
+
 }

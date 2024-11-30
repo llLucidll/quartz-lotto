@@ -12,11 +12,8 @@ import com.example.myapplication.Views.OrganizerProfileView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.auth.AuthResult;
-import com.google.firebase.firestore.FirebaseFirestore;
 
 import org.osmdroid.config.Configuration;
-
 
 /**
  * MainActivity initializes anonymous authentication and handles navigation.
@@ -24,7 +21,6 @@ import org.osmdroid.config.Configuration;
 public class MainActivity extends BaseActivity {
     private static final String TAG = "MainActivity";
     private FirebaseAuth mAuth;
-    private FirebaseFirestore db;
     private BottomNavigationView bottomNavigationView;
     private UserManager userManager;
 
@@ -36,11 +32,11 @@ public class MainActivity extends BaseActivity {
         // Initialize Osmdroid configuration
         Configuration.getInstance().setUserAgentValue(getPackageName());
 
-        // Initialize Firebase Auth and firestore
+        // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
-        db = FirebaseFirestore.getInstance();
 
-        userManager = new UserManager(); //initializing usermanager
+        // Initialize UserManager with the current context
+        userManager = new UserManager(this);
 
         // Sign in anonymously
         signInAnonymously();
@@ -88,28 +84,13 @@ public class MainActivity extends BaseActivity {
         mAuth.signInAnonymously()
                 .addOnCompleteListener(this, task -> {
                     if (task.isSuccessful()) {
-                        // Sign in success, update UI with the signed-in user's information
+                        // Sign in success
                         Log.d(TAG, "signInAnonymously:success");
-                        FirebaseUser user = mAuth.getCurrentUser();
-                        // You can now use user.getUid() as the unique identifier
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInAnonymously:failure", task.getException());
                         Toast.makeText(MainActivity.this, "Authentication failed.", Toast.LENGTH_SHORT).show();
                     }
                 });
-    }
-
-    /**
-     * Retrieves the current user's UID.
-     *
-     * @return The UID of the current user, or null if not signed in.
-     */
-    public String getCurrentUserId() {
-        FirebaseUser user = mAuth.getCurrentUser();
-        if (user != null) {
-            return user.getUid();
-        }
-        return null;
     }
 }

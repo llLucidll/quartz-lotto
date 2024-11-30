@@ -1,67 +1,55 @@
 package com.example.myapplication;
 
-import com.example.myapplication.Views.HomeView;
-import com.example.myapplication.Views.AddFacilityView;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.*;
+import android.text.InputType;
+import android.text.TextUtils;
+import android.util.Log;
 import android.util.Patterns;
-import android.view.*;
+import android.view.MotionEvent;
+import android.view.View;
 import android.widget.*;
-
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.annotation.*;
-
+import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.myapplication.Views.ManageFacilityView;
-import com.google.firebase.firestore.*;
-import com.google.firebase.storage.*;
-
-
+import com.example.myapplication.Views.AddFacilityView;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import de.hdodenhof.circleimageview.CircleImageView;
 
-import java.text.*;
-import java.util.*;
+import java.util.Calendar;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
+/**
+ * EditProfileActivity allows entrants to edit their profile and updates data on Firestore.
+ */
 public class EditProfileActivity extends BaseActivity {
 
-    private static final int MIN_AGE = 1;
-    private static final int MAX_AGE = 100;
+    private static final String TAG = "EditProfileActivity";
 
-    private ImageButton removeProfileImageButton;
     private CircleImageView profileImageView;
+    private ImageButton editProfileImageButton, removeProfileImageButton;
     private EditText nameField, emailField, dobField, phoneField;
     private Spinner countrySpinner;
-    private Button addFacilityButton;
+    private Button saveChangesButton, addFacilityButton;
+    private Switch notificationSwitch;
 
-
-
-    private Uri imageUri;
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
+    private String deviceId;
+    private Uri imageUri;
+
     private boolean isAdmin = false;
     private boolean isOrganizer = false;
-
-    private String userId;
-
-    private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
-            new ActivityResultContracts.StartActivityForResult(),
-            result -> {
-                if (result.getResultCode() == RESULT_OK && result.getData() != null) {
-                    imageUri = result.getData().getData();
-                    Glide.with(this)
-                            .load(imageUri)
-                            .apply(RequestOptions.circleCropTransform())
-                            .into(profileImageView);
-                    removeProfileImageButton.setVisibility(View.VISIBLE);
-                }
-            });
+    private boolean notificationsPerm = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,237 +59,98 @@ public class EditProfileActivity extends BaseActivity {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
 
-        // Initialize userId using BaseActivity's method
-        userId = retrieveDeviceId();
-        if (userId == null) {
-            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+        deviceId = retrieveDeviceId();
+        if (deviceId == null) {
+            Toast.makeText(this, "Device ID not found. Please log in again.", Toast.LENGTH_SHORT).show();
             finish();
             return;
         }
 
-        // Initialize UI elements
+        Log.d(TAG, "Device ID: " + deviceId);
+
+        initializeUI();
+        setListeners();
+        loadUserProfile();
+    }
+
+    private void initializeUI() {
         profileImageView = findViewById(R.id.profile_image);
-        ImageButton editProfileImageButton = findViewById(R.id.edit_profile_image_button);
-        ImageButton backButton = findViewById(R.id.back_button);
+        editProfileImageButton = findViewById(R.id.edit_profile_image_button);
+        removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
         nameField = findViewById(R.id.name_field);
         emailField = findViewById(R.id.email_field);
         dobField = findViewById(R.id.dob_field);
         phoneField = findViewById(R.id.phone_field);
         countrySpinner = findViewById(R.id.country_spinner);
-        Button saveChangesButton = findViewById(R.id.save_changes_button);
-        removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
+        saveChangesButton = findViewById(R.id.save_changes_button);
         addFacilityButton = findViewById(R.id.add_facility_button);
-        //Button buttonSwitchAttendee = findViewById(R.id.buttonSwitchAttendee);
-        //Button buttonEvents = findViewById(R.id.my_events_button);
+        notificationSwitch = findViewById(R.id.notifications_switch);
 
-        // Set listeners
-        editProfileImageButton.setOnClickListener(v -> openFileChooser());
-        saveChangesButton.setOnClickListener(v -> saveProfileData());
-        backButton.setOnClickListener(v -> onBackPressed());
-        removeProfileImageButton.setOnClickListener(v -> removeProfileImage());
-        addFacilityButton.setOnClickListener(v -> addFacility());
-        //buttonSwitchAttendee.setOnClickListener(v -> switchProfileAttendee());
-        //buttonEvents.setOnClickListener(v -> myEvents());
-
-        setupDOBInputRestrictions();
-        setupDateOfBirthField();
-
-        setupNameFieldTextWatcher();
-
-        loadUserProfile();
+        dobField.setInputType(InputType.TYPE_CLASS_DATETIME);
+        dobField.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                showDatePicker();
+                return true;
+            }
+            return false;
+        });
     }
 
-
-    private void addFacility() {
-        Intent intent = new Intent(EditProfileActivity.this, AddFacilityView.class);
-        startActivity(intent);
+    private void setListeners() {
+        editProfileImageButton.setOnClickListener(v -> openFileChooser());
+        saveChangesButton.setOnClickListener(v -> saveProfileData());
+        removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
+        addFacilityButton.setOnClickListener(v -> addFacility());
+        notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notificationsPerm = isChecked);
     }
 
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
-        imagePickerLauncher.launch(intent);
+        startActivityForResult(intent, 1);
     }
 
-    private void setupDOBInputRestrictions() {
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
 
-        InputFilter[] filters = new InputFilter[]{
-                new InputFilter.LengthFilter(10),
-                (source, start, end, dest, dstart, dend) -> {
-                    for (int i = start; i < end; i++) {
-                        char c = source.charAt(i);
-                        if (!Character.isDigit(c) && c != '/') {
-                            return "";
-                        }
-                    }
-                    return null;
-                }
-        };
-        dobField.setFilters(filters);
-    }
-
-    private void setupDateOfBirthField() {
-        dobField.setInputType(InputType.TYPE_CLASS_DATETIME);
-        dobField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_calendar, 0);
-        dobField.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (event.getRawX() >= (dobField.getRight() - dobField.getCompoundDrawables()[2].getBounds().width())) {
-                    showDatePicker();
-                    return true;
-                }
-            }
-            return false;
-        });
-        dobField.addTextChangedListener(new DateOfBirthTextWatcher());
-    }
-
-    private void showDatePicker() {
-        final Calendar calendar = Calendar.getInstance();
-        int year = calendar.get(Calendar.YEAR);
-        int month = calendar.get(Calendar.MONTH);
-        int day = calendar.get(Calendar.DAY_OF_MONTH);
-
-        DatePickerDialog datePickerDialog = new DatePickerDialog(
-                this,
-                (view, year1, month1, dayOfMonth) -> {
-                    Calendar selectedDate = Calendar.getInstance();
-                    selectedDate.set(year1, month1, dayOfMonth);
-                    int age = calculateAge(selectedDate);
-
-                    if (age >= MIN_AGE && age <= MAX_AGE) {
-                        String formattedDate = String.format(Locale.US, "%02d/%02d/%04d", month1 + 1, dayOfMonth, year1);
-                        dobField.setText(formattedDate);
-                        dobField.setError(null);
-                    } else {
-                        dobField.setError("Age must be between " + MIN_AGE + " and " + MAX_AGE);
-
-                    }
-                },
-                year, month, day);
-        datePickerDialog.show();
-    }
-
-    private int calculateAge(Calendar selectedDate) {
-        Calendar today = Calendar.getInstance();
-
-        int age = today.get(Calendar.YEAR) - selectedDate.get(Calendar.YEAR);
-
-
-        if (today.get(Calendar.DAY_OF_YEAR) < selectedDate.get(Calendar.DAY_OF_YEAR)) {
-            age--;
-        }
-
-        return age;
-    }
-
-    private class DateOfBirthTextWatcher implements TextWatcher {
-        private boolean isUpdating;
-
-        @Override
-        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence s, int start, int before, int count) {
-        }
-
-        @Override
-        public void afterTextChanged(Editable s) {
-            if (isUpdating) return;
-            isUpdating = true;
-
-            String input = s.toString().replaceAll("[^\\d]", "");
-
-            if (input.length() > 8) {
-                input = input.substring(0, 8);
-            }
-
-            String formattedDate = formatDate(input);
-            dobField.setText(formattedDate);
-            dobField.setSelection(formattedDate.length());
-
-            if (formattedDate.length() == 10) {
-                if (!isDOBValid(formattedDate)) {
-                    dobField.setError("Invalid date or age not between " + MIN_AGE + " and " + MAX_AGE);
-                } else {
-                    dobField.setError(null); //clear error if valid
-                }
-            } else {
-                dobField.setError(null); //clear error if incomplete
-            }
-
-            isUpdating = false;
-        }
-
-        private String formatDate(String input) {
-            StringBuilder sb = new StringBuilder();
-
-            for (int i = 0; i < input.length() && i < 8; i++) {
-                sb.append(input.charAt(i));
-                if (i == 1 || i == 3) {
-                    sb.append('/');
-                }
-            }
-
-            return sb.toString();
-        }
-    }
-
-    private void setupNameFieldTextWatcher() {
-        nameField.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                updateProfilePictureBasedOnFirstLetter(s.toString());
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-
-            }
-        });
-    }
-
-    private void updateProfilePictureBasedOnFirstLetter(String name) {
-        if (!name.isEmpty()) {
-            String firstLetter = String.valueOf(name.charAt(0)).toUpperCase(Locale.US);
-            Bitmap avatarBitmap = AvatarUtil.generateAvatar(firstLetter, 200, this);
-            profileImageView.setImageBitmap(avatarBitmap);
-            removeProfileImageButton.setVisibility(View.GONE);
-        } else {
-            profileImageView.setImageResource(R.drawable.ic_profile);
-            removeProfileImageButton.setVisibility(View.GONE);
+        if (requestCode == 1 && resultCode == RESULT_OK && data != null && data.getData() != null) {
+            imageUri = data.getData();
+            Log.d(TAG, "Image URI: " + imageUri.toString());
+            Glide.with(this)
+                    .load(imageUri)
+                    .apply(RequestOptions.circleCropTransform())
+                    .into(profileImageView);
+            removeProfileImageButton.setVisibility(View.VISIBLE);
         }
     }
 
     private void loadUserProfile() {
-        DocumentReference userProfileRef = db.collection("users").document(userId);
-        userProfileRef.get()
+        DocumentReference userRef = db.collection("users").document(deviceId);
+        userRef.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         String name = documentSnapshot.getString("name");
                         String email = documentSnapshot.getString("email");
                         String dob = documentSnapshot.getString("dob");
-                        String country = documentSnapshot.getString("country");
-                        Boolean notificationsEnabled = documentSnapshot.getBoolean("notificationsEnabled");
                         String phone = documentSnapshot.getString("phone");
+                        String country = documentSnapshot.getString("country");
                         String profileImageUrl = documentSnapshot.getString("profileImageUrl");
-
-                        Boolean isAdminValue = documentSnapshot.getBoolean("isAdmin");
                         Boolean isOrganizerValue = documentSnapshot.getBoolean("isOrganizer");
+                        Boolean isAdminValue = documentSnapshot.getBoolean("isOrganizer");
+                        Boolean notificationsValue = documentSnapshot.getBoolean("notificationsPerm");
 
-                        isAdmin = isAdminValue != null && isAdminValue;
                         isOrganizer = isOrganizerValue != null && isOrganizerValue;
+                        isAdmin = isAdminValue != null && isAdminValue;
+                        notificationsPerm = notificationsValue != null && notificationsValue;
 
+                        nameField.setText(name);
+                        emailField.setText(email);
+                        dobField.setText(dob);
+                        phoneField.setText(phone);
+                        notificationSwitch.setChecked(notificationsPerm);
 
-                        if (name != null) nameField.setText(name);
-                        if (email != null) emailField.setText(email);
-                        if (dob != null) dobField.setText(dob);
-                        if (country != null) {
+                        if (!TextUtils.isEmpty(country)) {
                             ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                                     this, R.array.country_array, android.R.layout.simple_spinner_item);
                             adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -309,14 +158,11 @@ public class EditProfileActivity extends BaseActivity {
                             int spinnerPosition = adapter.getPosition(country);
                             countrySpinner.setSelection(spinnerPosition);
                         }
-                        if (phone != null) phoneField.setText(phone);
 
-                        if (profileImageUrl != null && !profileImageUrl.isEmpty()) {
-
+                        if (!TextUtils.isEmpty(profileImageUrl)) {
                             Glide.with(this)
                                     .load(profileImageUrl)
                                     .apply(RequestOptions.circleCropTransform())
-                                    .placeholder(R.drawable.ic_profile)
                                     .into(profileImageView);
                             removeProfileImageButton.setVisibility(View.VISIBLE);
                         } else {
@@ -324,40 +170,18 @@ public class EditProfileActivity extends BaseActivity {
                         }
                     }
                 })
-                .addOnFailureListener(e -> Toast.makeText(this, "Failed to load profile", Toast.LENGTH_SHORT).show());
-    }
-
-    private void generateDefaultAvatar(String name) {
-        if (name != null && !name.isEmpty()) {
-            String firstLetter = String.valueOf(name.charAt(0)).toUpperCase(Locale.US);
-            Bitmap avatarBitmap = AvatarUtil.generateAvatar(firstLetter, 200, this);
-            profileImageView.setImageBitmap(avatarBitmap);
-        } else {
-            profileImageView.setImageResource(R.drawable.ic_profile);
-        }
-        removeProfileImageButton.setVisibility(View.GONE);
-    }
-
-    private void removeProfileImage() {
-        StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
-        storageRef.delete().addOnSuccessListener(aVoid -> {
-            Toast.makeText(this, "Profile image removed", Toast.LENGTH_SHORT).show();
-            DocumentReference userProfileRef = db.collection("users").document(userId);
-            userProfileRef.update("profileImageUrl", FieldValue.delete())
-                    .addOnSuccessListener(aVoid1 -> loadUserProfile())
-                    .addOnFailureListener(e -> Toast.makeText(this, "Failed to update Firestore", Toast.LENGTH_SHORT).show());
-        }).addOnFailureListener(e -> Toast.makeText(this, "Failed to delete profile image", Toast.LENGTH_SHORT).show());
+                .addOnFailureListener(e -> Log.e(TAG, "Error loading profile: ", e));
     }
 
     private void saveProfileData() {
         String name = nameField.getText().toString().trim();
         String email = emailField.getText().toString().trim();
         String dob = dobField.getText().toString().trim();
-        String country = countrySpinner.getSelectedItem().toString();
         String phone = phoneField.getText().toString().trim();
+        String country = countrySpinner.getSelectedItem().toString();
 
-        if (name.isEmpty() || email.isEmpty() || dob.isEmpty() || country.isEmpty()) {
-            Toast.makeText(this, "Please fill out all required fields", Toast.LENGTH_SHORT).show();
+        if (TextUtils.isEmpty(name) || TextUtils.isEmpty(email) || TextUtils.isEmpty(dob) || TextUtils.isEmpty(country)) {
+            Toast.makeText(this, "Please fill all fields.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -366,81 +190,94 @@ public class EditProfileActivity extends BaseActivity {
             return;
         }
 
+        Map<String, Object> profileData = new HashMap<>();
+        profileData.put("name", name);
+        profileData.put("email", email);
+        profileData.put("dob", dob);
+        profileData.put("phone", phone);
+        profileData.put("country", country);
+        profileData.put("isOrganizer", isOrganizer);
+        profileData.put("isAdmin", isAdmin);
+        profileData.put("notificationsPerm", notificationsPerm);
+        profileData.put("events", null);
+        profileData.put("eventsAttending", new HashMap<>());
 
-        if (!isDOBValid(dob)) {
-            dobField.setError("Invalid date or age not between " + MIN_AGE + " and " + MAX_AGE);
+        DocumentReference userRef = db.collection("users").document(deviceId);
+        userRef.set(profileData)
+                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Profile updated successfully.", Toast.LENGTH_SHORT).show())
+                .addOnFailureListener(e -> Log.e(TAG, "Error saving profile: ", e));
+
+        if (imageUri != null) {
+            uploadProfileImage(userRef);
+        }
+    }
+
+    private void uploadProfileImage(DocumentReference userRef) {
+        if (imageUri == null) {
+            Log.e(TAG, "No imageUri to upload.");
             return;
         }
 
-        Map<String, Object> userProfile = new HashMap<>();
-        userProfile.put("name", name);
-        userProfile.put("email", email);
-        userProfile.put("dob", dob);
-        userProfile.put("country", country);
-        userProfile.put("isAdmin", isAdmin);
-        userProfile.put("isOrganizer", isOrganizer);
-        if (!phone.isEmpty()) userProfile.put("phone", phone);
-
-        DocumentReference userProfileRef = db.collection("users").document(userId);
-        userProfileRef.set(userProfile)
-                .addOnSuccessListener(aVoid -> Toast.makeText(this, "Profile updated successfully", Toast.LENGTH_SHORT).show())
-                .addOnFailureListener(e -> Toast.makeText(this, "Error updating profile", Toast.LENGTH_SHORT).show());
-
-        if (imageUri != null) {
-            StorageReference storageRef = storage.getReference("profile_images/" + userId + ".jpg");
-            storageRef.putFile(imageUri)
-                    .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
-                        userProfileRef.update("profileImageUrl", uri.toString())
-                                .addOnSuccessListener(aVoid1 -> {
-                                    Toast.makeText(this, "Profile image uploaded", Toast.LENGTH_SHORT).show();
-                                    loadUserProfile();
-                                })
-                                .addOnFailureListener(e -> Toast.makeText(this, "Failed to update Firestore with image URL", Toast.LENGTH_SHORT).show());
-                    }))
-                    .addOnFailureListener(e -> Toast.makeText(this, "Failed to upload profile image", Toast.LENGTH_SHORT).show());
-        }
+        StorageReference storageRef = storage.getReference("profile_images/" + deviceId + ".jpg");
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> {
+                    Log.d(TAG, "Image uploaded successfully.");
+                    storageRef.getDownloadUrl()
+                            .addOnSuccessListener(uri -> {
+                                Log.d(TAG, "Image URL: " + uri.toString());
+                                userRef.update("profileImageUrl", uri.toString())
+                                        .addOnSuccessListener(aVoid -> Log.d(TAG, "Profile image URL updated in Firestore."))
+                                        .addOnFailureListener(e -> Log.e(TAG, "Failed to update Firestore with image URL.", e));
+                            })
+                            .addOnFailureListener(e -> Log.e(TAG, "Failed to get download URL.", e));
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error uploading image.", e));
     }
 
-    private boolean isDOBValid(String dob) {
-        SimpleDateFormat sdf = new SimpleDateFormat("MM/dd/yyyy", Locale.US);
-        sdf.setLenient(false);
-        Date date;
-
-        try {
-            date = sdf.parse(dob);
-        } catch (ParseException e) {
-            return false;
-        }
-
-        if (date == null) {
-            return false;
-        }
-
-        Calendar dobCalendar = Calendar.getInstance();
-        dobCalendar.setTime(date);
-
-        Calendar today = Calendar.getInstance();
-
-        int age = today.get(Calendar.YEAR) - dobCalendar.get(Calendar.YEAR);
-
-
-        if (today.get(Calendar.DAY_OF_YEAR) < dobCalendar.get(Calendar.DAY_OF_YEAR)) {
-            age--;
-        }
-
-        return age >= MIN_AGE && age <= MAX_AGE;
+    private void deleteProfileImage() {
+        StorageReference storageRef = storage.getReference("profile_images/" + deviceId + ".jpg");
+        storageRef.delete()
+                .addOnSuccessListener(aVoid -> {
+                    Log.d(TAG, "Image deleted from Firebase Storage.");
+                    DocumentReference userRef = db.collection("users").document(deviceId);
+                    userRef.update("profileImageUrl", null)
+                            .addOnSuccessListener(aVoid1 -> {
+                                profileImageView.setImageResource(R.drawable.ic_profile);
+                                removeProfileImageButton.setVisibility(View.GONE);
+                                Log.d(TAG, "Profile image URL removed from Firestore.");
+                            })
+                            .addOnFailureListener(e -> Log.e(TAG, "Failed to remove image URL from Firestore.", e));
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to delete image from Firebase Storage.", e));
     }
 
+    private void showDatePicker() {
+        Calendar calendar = Calendar.getInstance();
+        int year = calendar.get(Calendar.YEAR);
+        int month = calendar.get(Calendar.MONTH);
+        int day = calendar.get(Calendar.DAY_OF_MONTH);
 
+        DatePickerDialog datePickerDialog = new DatePickerDialog(this, (view, year1, month1, dayOfMonth) -> {
+            String date = String.format(Locale.US, "%02d/%02d/%04d", month1 + 1, dayOfMonth, year1);
+            dobField.setText(date);
+        }, year, month, day);
 
-    private void switchProfileAttendee() {
-        Intent intent = new Intent(EditProfileActivity.this, EditProfileActivity.class);
+        datePickerDialog.show();
+    }
+
+    private void generateDefaultAvatar(String name) {
+        String firstLetter = (name != null && !name.isEmpty()) ? name.substring(0, 1).toUpperCase(Locale.US) : "?";
+        Bitmap avatar = AvatarUtil.generateAvatar(firstLetter, 200, this);
+        profileImageView.setImageBitmap(avatar);
+        removeProfileImageButton.setVisibility(View.GONE);
+    }
+
+    private void addFacility() {
+        Intent intent = new Intent(this, AddFacilityView.class);
         startActivity(intent);
+        isOrganizer = true; // Update the organizer status
+        db.collection("users").document(deviceId).update("isOrganizer", true)
+                .addOnSuccessListener(aVoid -> Log.d(TAG, "Updated isOrganizer to true."))
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to update isOrganizer: ", e));
     }
-
-    private void myEvents() {
-        Intent intent = new Intent(EditProfileActivity.this, HomeView.class);
-        startActivity(intent);
-    }
-
 }
