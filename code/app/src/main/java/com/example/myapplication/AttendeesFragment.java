@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -14,6 +15,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.myapplication.Controllers.EntrantListController;
 import com.example.myapplication.Models.Attendee;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
@@ -29,10 +31,12 @@ public class AttendeesFragment extends Fragment {
 
     private static final String TAG = "AttendeesFragment";
     private static final String ARG_EVENT_ID = "eventId";
+    private EntrantListController controller;
 
     private RecyclerView recyclerViewSelected, recyclerViewConfirmed, recyclerViewCancelled;
     private AttendeesAdapter selectedAdapter, confirmedAdapter, cancelledAdapter;
     private TextView noneConfirmed, noneSelected, noneCancelled;
+    private Button drawButton;
     private List<Attendee> selectedList = new ArrayList<>();
     private String selected = "selected";
     private List<Attendee> confirmedList = new ArrayList<>();
@@ -79,7 +83,7 @@ public class AttendeesFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_attendees, container, false);
-
+        controller = new EntrantListController();
         recyclerViewSelected = view.findViewById(R.id.recyclerViewSelected);
         recyclerViewConfirmed = view.findViewById(R.id.recyclerViewConfirmed);
         recyclerViewCancelled = view.findViewById(R.id.recyclerViewCancelled);
@@ -87,6 +91,8 @@ public class AttendeesFragment extends Fragment {
         noneConfirmed = view.findViewById(R.id.noneConfirmed);
         noneSelected = view.findViewById(R.id.noneSelected);
         noneCancelled = view.findViewById(R.id.noneCancelled);
+        drawButton = view.findViewById(R.id.draw_button);
+        drawButton.setOnClickListener(v -> controller.drawAttendees(eventId, true));
 
         recyclerViewSelected.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewConfirmed.setLayoutManager(new LinearLayoutManager(getContext()));
