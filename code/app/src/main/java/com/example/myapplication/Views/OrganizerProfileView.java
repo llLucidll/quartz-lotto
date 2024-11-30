@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.InputType;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.MotionEvent;
@@ -97,6 +99,25 @@ public class OrganizerProfileView extends BaseActivity {
             }
             return false;
         });
+
+        nameField.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                // No action needed
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Generate avatar as user types their name
+                generateDefaultAvatar(s.toString());
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                // No action needed
+            }
+        });
+
     }
 
     private void setListeners() {
@@ -164,7 +185,7 @@ public class OrganizerProfileView extends BaseActivity {
             removeProfileImageButton.setVisibility(View.VISIBLE);
         } else {
             // Generate an avatar based on the first letter of the user's name
-            generateAvatar(user.getName());
+            generateDefaultAvatar(user.getName());
         }
     }
 
@@ -185,7 +206,7 @@ public class OrganizerProfileView extends BaseActivity {
         countrySpinner.setAdapter(adapter);
 
         // Generate a default avatar
-        generateAvatar(null);
+        generateDefaultAvatar(null);
     }
 
     private void saveProfileData() {
@@ -272,7 +293,7 @@ public class OrganizerProfileView extends BaseActivity {
         startActivity(intent);
     }
 
-    private void generateAvatar(String name) {
+    private void generateDefaultAvatar(String name) {
         String firstLetter = (name != null && !name.isEmpty()) ? name.substring(0, 1).toUpperCase(Locale.US) : "?";
         Bitmap avatar = AvatarUtil.generateAvatar(firstLetter, 200, this);
         profileImageView.setImageBitmap(avatar);
