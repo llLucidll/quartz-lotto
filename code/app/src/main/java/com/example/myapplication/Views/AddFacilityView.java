@@ -1,5 +1,3 @@
-// com/example/myapplication/AddFacilityActivity.java
-
 package com.example.myapplication.Views;
 
 import android.content.Intent;
@@ -13,17 +11,17 @@ import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
-import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.myapplication.BaseActivity;
 import com.example.myapplication.Controllers.AddFacilityController;
 import com.example.myapplication.Models.Facility;
 import com.example.myapplication.R;
 
-public class AddFacilityView extends AppCompatActivity {
+public class AddFacilityView extends BaseActivity {
 
-    private static final String TAG = "AddFacilityActivity";
+    private static final String TAG = "AddFacilityView";
 
     private ImageView facilityImageView;
     private EditText facilityNameField, facilityLocationField;
@@ -52,25 +50,17 @@ public class AddFacilityView extends AppCompatActivity {
 
         controller = new AddFacilityController();
 
+        // Initialize UI components
         facilityImageView = findViewById(R.id.facilityImageView);
         facilityNameField = findViewById(R.id.facility_name);
         facilityLocationField = findViewById(R.id.facility_location);
         uploadFacilityImageButton = findViewById(R.id.uploadFacilityImageButton);
         saveFacilityButton = findViewById(R.id.saveFacilityButton);
 
-        Intent intent = getIntent();
-        if (intent.hasExtra("facilityId")) {
-            // Load existing facility details for editing
-            loadFacilityDetails();
-        }
-
         uploadFacilityImageButton.setOnClickListener(v -> openImagePicker());
         saveFacilityButton.setOnClickListener(v -> saveFacilityDetails());
     }
 
-    /**
-     * Opens the image picker to select an image for the facility.
-     */
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -78,71 +68,18 @@ public class AddFacilityView extends AppCompatActivity {
         Toast.makeText(this, "Select an image for the facility", Toast.LENGTH_SHORT).show();
     }
 
-    /**
-     * Loads the facility details via the Controller.
-     */
-    private void loadFacilityDetails() {
-        controller.loadFacility(new AddFacilityController.AddFacilityListener() {
-            @Override
-            public void onFacilitySavedSuccessfully() {
-                // Not used here
-            }
-
-            @Override
-            public void onFacilitySaveFailed(Exception e) {
-                runOnUiThread(() -> {
-                    Toast.makeText(AddFacilityView.this, "Failed to load facility details", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error loading facility details: ", e);
-                });
-            }
-
-            @Override
-            public void onFacilityLoaded(Facility facility) {
-                runOnUiThread(() -> {
-                    facilityNameField.setText(facility.getName());
-                    facilityLocationField.setText(facility.getLocation());
-                    if (facility.getImageUrl() != null && !facility.getImageUrl().isEmpty()) {
-                        Glide.with(AddFacilityView.this)
-                                .load(facility.getImageUrl())
-                                .apply(RequestOptions.centerCropTransform())
-                                .placeholder(R.drawable.ic_placeholder_image)
-                                .into(facilityImageView);
-                    }
-                });
-            }
-
-            @Override
-            public void onFacilityLoadFailed(Exception e) {
-                runOnUiThread(() -> {
-                    Toast.makeText(AddFacilityView.this, "Failed to load facility details", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error loading facility details: ", e);
-                });
-            }
-
-            @Override
-            public void onImageUploaded(String imageUrl) {
-                // Not used here
-            }
-
-            @Override
-            public void onImageUploadFailed(Exception e) {
-                runOnUiThread(() -> {
-                    Toast.makeText(AddFacilityView.this, "Failed to upload image", Toast.LENGTH_SHORT).show();
-                    Log.e(TAG, "Error uploading image: ", e);
-                });
-            }
-        });
-    }
-
-    /**
-     * Saves the facility details using the Controller.
-     */
     private void saveFacilityDetails() {
         String name = facilityNameField.getText().toString().trim();
         String location = facilityLocationField.getText().toString().trim();
 
         if (name.isEmpty() || location.isEmpty()) {
             Toast.makeText(this, "Please enter all required fields", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        String deviceId = retrieveDeviceId();
+        if (deviceId == null || deviceId.isEmpty()) {
+            Toast.makeText(this, "Device ID not found. Please log in again.", Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -170,12 +107,16 @@ public class AddFacilityView extends AppCompatActivity {
 
             @Override
             public void onFacilityLoadFailed(Exception e) {
-                // Not used here
+                // Provide an implementation for this method
+                runOnUiThread(() -> {
+                    Toast.makeText(AddFacilityView.this, "Error loading facility", Toast.LENGTH_SHORT).show();
+                    Log.e(TAG, "Error loading facility: ", e);
+                });
             }
 
             @Override
             public void onImageUploaded(String imageUrl) {
-                // Not used here
+                Log.d(TAG, "Image uploaded successfully: " + imageUrl);
             }
 
             @Override
@@ -185,6 +126,6 @@ public class AddFacilityView extends AppCompatActivity {
                     Log.e(TAG, "Error uploading image: ", e);
                 });
             }
-        }, AddFacilityView.this);
+        }, deviceId); // Pass deviceId
     }
 }
