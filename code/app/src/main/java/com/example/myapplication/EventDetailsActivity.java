@@ -35,7 +35,7 @@ public class EventDetailsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_event_details); // Your XML layout file
 
         // Retrieve eventId from intent
-        eventId = "H8CEhmiH2BfiUXXDvcJa";//getIntent().getStringExtra("eventId");
+        eventId = getIntent().getStringExtra("eventId");
         if (eventId == null) {
             Toast.makeText(this, "Event ID missing.", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "eventId is null in onCreate");

@@ -342,7 +342,7 @@ public class EventSignupActivity extends BaseActivity {
         // Navigate to events -> eventId -> waitlist and add the user
         firestore.collection("Events")
                 .document(eventId) // Navigate to the specific event
-                .collection("waitlist") // automatically creates waitlist collection if it doesn't exist
+                .collection("Waitlist") // automatically creates waitlist collection if it doesn't exist
                 .document(userDeviceId) // Use user ID as the document ID for uniqueness
                 .set(waitlistEntry)
                 .addOnSuccessListener(aVoid -> {
@@ -381,12 +381,12 @@ public class EventSignupActivity extends BaseActivity {
             }
 
             // Check if user is already in Waitlist
-            DocumentSnapshot waitlistSnapshot = transaction.get(waitlistRef);
+            /*DocumentSnapshot waitlistSnapshot = transaction.get(waitlistRef);
             if (waitlistSnapshot.exists()) {
                 Log.e(TAG, "User already signed up for Event.");
                 throw new FirebaseFirestoreException("User already signed up for the event.",
                         FirebaseFirestoreException.Code.ALREADY_EXISTS);
-            }
+            }*/
 
             // Check event capacity
             Long maxWaitlistLong = eventSnapshot.getLong("maxWaitlist");
@@ -400,7 +400,7 @@ public class EventSignupActivity extends BaseActivity {
                 Map<String, Object> waitlistData = new HashMap<>();
                 waitlistData.put("userName", userName);
                 waitlistData.put("userEmail", userEmail);
-                waitlistData.put("status", "Waitlisted");
+                waitlistData.put("status", "waiting");
                 waitlistData.put("latitude", userLatitude);      // Dynamic latitude
                 waitlistData.put("longitude", userLongitude);    // Dynamic longitude
                 transaction.set(waitlistRef, waitlistData);
