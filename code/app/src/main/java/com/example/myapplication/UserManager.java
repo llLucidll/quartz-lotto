@@ -2,43 +2,56 @@ package com.example.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Settings;
 import android.util.Log;
 import android.widget.Toast;
+
 import androidx.annotation.NonNull;
+
 import com.example.myapplication.Views.OrganizerProfileView;
-import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.*;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class UserManager {
     private static final String TAG = "UserManager";
     private FirebaseFirestore db;
-    private FirebaseAuth mAuth;
+    private String deviceId;
 
-
-    public UserManager() {
+    // Constructor to initialize Firestore and retrieve the deviceId
+    public UserManager(Context context) {
         db = FirebaseFirestore.getInstance();
-        mAuth = FirebaseAuth.getInstance();
+        deviceId = retrieveDeviceId(context);
+        if (deviceId == null) {
+            Log.e(TAG, "Failed to retrieve device ID.");
+        }
     }
 
+    // Method to retrieve the device ID
+    private String retrieveDeviceId(Context context) {
+        return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
+    }
+
+    // Fetch user role based on deviceId
     public void fetchUserRole(Context context, RoleCallback callback) {
-        String uid = mAuth.getCurrentUser().getUid();
-        if (uid == null) {
-            Toast.makeText(context, "User not authenticated.", Toast.LENGTH_SHORT).show();
+        if (deviceId == null || deviceId.isEmpty()) {
+            Toast.makeText(context, "Device ID not found.", Toast.LENGTH_SHORT).show();
+            callback.onRoleFetched("entrant"); // Default role
             return;
         }
 
-        DocumentReference userRef = db.collection("users").document(uid);
+        Log.d(TAG, "Fetching document for Device ID: " + deviceId);
+
+        DocumentReference userRef = db.collection("users").document(deviceId);
         userRef.get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
+                        Log.d(TAG, "Document data: " + documentSnapshot.getData());
                         Boolean isAdmin = documentSnapshot.getBoolean("isAdmin");
                         Boolean isOrganizer = documentSnapshot.getBoolean("isOrganizer");
 
-                        //handle nulls by treating them as false
+                        // Handle nulls by treating them as false
                         isAdmin = isAdmin != null && isAdmin;
                         isOrganizer = isOrganizer != null && isOrganizer;
-
-                        Log.d(TAG, "User roles - isAdmin: " + isAdmin + ", isOrganizer: " + isOrganizer);
 
                         if (isAdmin) {
                             callback.onRoleFetched("admin");
@@ -48,7 +61,7 @@ public class UserManager {
                             callback.onRoleFetched("entrant");
                         }
                     } else {
-                        Log.e(TAG, "User document does not exist.");
+                        Log.e(TAG, "User document does not exist for Device ID: " + deviceId);
                         Toast.makeText(context, "User data not found.", Toast.LENGTH_SHORT).show();
                         callback.onRoleFetched("entrant"); // Default role
                     }
@@ -81,15 +94,13 @@ public class UserManager {
         context.startActivity(intent);
     }
 
-
     public void promoteToOrganizer(Context context) {
-        String uid = mAuth.getCurrentUser().getUid();
-        if (uid == null) {
-            Toast.makeText(context, "User not authenticated.", Toast.LENGTH_SHORT).show();
+        if (deviceId == null || deviceId.isEmpty()) {
+            Toast.makeText(context, "Device ID not found.", Toast.LENGTH_SHORT).show();
             return;
         }
 
-        DocumentReference userRef = db.collection("users").document(uid);
+        DocumentReference userRef = db.collection("users").document(deviceId);
         userRef.update("isOrganizer", true)
                 .addOnSuccessListener(aVoid -> {
                     Log.d(TAG, "User promoted to organizer.");

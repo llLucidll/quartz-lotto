@@ -3,11 +3,11 @@ package com.example.myapplication.Views;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.icu.util.Calendar;
 import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
 import android.text.InputType;
-import android.text.TextWatcher;
+import android.util.Log;
 import android.util.Patterns;
 import android.view.MotionEvent;
 import android.view.View;
@@ -21,34 +21,34 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.AvatarUtil;
 import com.example.myapplication.BaseActivity;
 import com.example.myapplication.Controllers.EditProfileController;
-import com.example.myapplication.GroupEntrantsActivity;
 import com.example.myapplication.Models.User;
 import com.example.myapplication.OrganizerNotificationActivity;
 import com.example.myapplication.R;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
+import java.util.HashMap;
 import java.util.Locale;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
-/**
- * OrganizerProfileView allows organizers to view and edit their profiles.
- */
 public class OrganizerProfileView extends BaseActivity {
 
-    private static final int MIN_AGE = 1;
-    private static final int MAX_AGE = 100;
+    private static final String TAG = "OrganizerProfileView";
 
     private CircleImageView profileImageView;
     private ImageButton editProfileImageButton, backButton, removeProfileImageButton;
     private EditText nameField, emailField, dobField, phoneField;
     private Spinner countrySpinner;
     private Button saveChangesButton, manageFacilityButton, myEvents, notifGroups;
+    private Switch notificationSwitch;
 
     private Uri imageUri;
-    private EditProfileController controller;
-    private String userId; // Add userId field
+    private boolean isAdmin = false;
+    private boolean isOrganizer = true; // Default to true for organizers
+    private boolean notificationsPerm = false;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -68,12 +68,8 @@ public class OrganizerProfileView extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_organizer_profile);
 
-        controller = new EditProfileController();
-        userId = retrieveDeviceId(); // Initialize userId
-
         initializeUI();
         setListeners();
-
         loadUserProfile();
     }
 
@@ -90,9 +86,17 @@ public class OrganizerProfileView extends BaseActivity {
         removeProfileImageButton = findViewById(R.id.remove_profile_image_button);
         manageFacilityButton = findViewById(R.id.manage_facility_button);
         myEvents = findViewById(R.id.my_events_button);
-        notifGroups =findViewById(R.id.notif_groups);
+        notifGroups = findViewById(R.id.notif_groups);
+        notificationSwitch = findViewById(R.id.notifications_switch); // Assuming there is a switch for notifications
 
-        setupDateOfBirthField();
+        dobField.setInputType(InputType.TYPE_CLASS_DATETIME);
+        dobField.setOnTouchListener((v, event) -> {
+            if (event.getAction() == MotionEvent.ACTION_UP) {
+                showDatePicker();
+                return true;
+            }
+            return false;
+        });
     }
 
     private void setListeners() {
@@ -100,10 +104,10 @@ public class OrganizerProfileView extends BaseActivity {
         saveChangesButton.setOnClickListener(v -> saveProfileData());
         backButton.setOnClickListener(v -> finish());
         removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
-        manageFacilityButton.setOnClickListener(v -> startActivity(new Intent(this, AddFacilityView.class)));
+        manageFacilityButton.setOnClickListener(v -> addFacility());
         myEvents.setOnClickListener(v -> startActivity(new Intent(this, HomeView.class)));
         notifGroups.setOnClickListener(v -> startActivity(new Intent(this, OrganizerNotificationActivity.class)));
-
+        notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notificationsPerm = isChecked);
     }
 
     private void openFileChooser() {
@@ -113,35 +117,25 @@ public class OrganizerProfileView extends BaseActivity {
     }
 
     private void loadUserProfile() {
-        controller.loadUserProfile(new EditProfileController.EditProfileListener() {
-            @Override
-            public void onProfileLoaded(User user) {
-                runOnUiThread(() -> populateUIWithUserData(user));
-            }
+        String deviceId = retrieveDeviceId();
+        if (deviceId == null || deviceId.isEmpty()) {
+            Toast.makeText(this, "Device ID not found. Please log in again.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            @Override
-            public void onProfileLoadFailed(Exception e) {
-                runOnUiThread(() -> Toast.makeText(OrganizerProfileView.this, "Failed to load profile: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onProfileSavedSuccessfully() {}
-
-            @Override
-            public void onProfileSaveFailed(Exception e) {}
-
-            @Override
-            public void onImageUploaded(String imageUrl) {}
-
-            @Override
-            public void onImageUploadFailed(Exception e) {}
-
-            @Override
-            public void onImageDeletedSuccessfully() {}
-
-            @Override
-            public void onImageDeleteFailed(Exception e) {}
-        });
+        DocumentReference userRef = db.collection("users").document(deviceId);
+        userRef.get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        User user = documentSnapshot.toObject(User.class);
+                        if (user != null) {
+                            populateUIWithUserData(user);
+                        }
+                    } else {
+                        initializeDefaultFields();
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to load profile.", e));
     }
 
     private void populateUIWithUserData(User user) {
@@ -149,24 +143,49 @@ public class OrganizerProfileView extends BaseActivity {
         emailField.setText(user.getEmail());
         dobField.setText(user.getDob());
         phoneField.setText(user.getPhone());
+        isAdmin = user.isAdmin();
+        isOrganizer = user.isOrganizer();
+        notificationsPerm = user.isNotificationsPerm();
 
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
                 this, R.array.country_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         countrySpinner.setAdapter(adapter);
+        countrySpinner.setSelection(adapter.getPosition(user.getCountry()));
 
-        int spinnerPosition = adapter.getPosition(user.getCountry());
-        countrySpinner.setSelection(spinnerPosition);
+        notificationSwitch.setChecked(notificationsPerm);
 
         if (user.getProfileImageUrl() != null && !user.getProfileImageUrl().isEmpty()) {
+            // Load the profile image from URL
             Glide.with(this)
                     .load(user.getProfileImageUrl())
                     .apply(RequestOptions.circleCropTransform())
                     .into(profileImageView);
             removeProfileImageButton.setVisibility(View.VISIBLE);
         } else {
-            generateDefaultAvatar(user.getName());
+            // Generate an avatar based on the first letter of the user's name
+            generateAvatar(user.getName());
         }
+    }
+
+
+    private void initializeDefaultFields() {
+        nameField.setText("");
+        emailField.setText("");
+        dobField.setText("");
+        phoneField.setText("");
+        isAdmin = false;
+        isOrganizer = true;
+        notificationsPerm = false;
+        notificationSwitch.setChecked(false);
+
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this, R.array.country_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        countrySpinner.setAdapter(adapter);
+
+        // Generate a default avatar
+        generateAvatar(null);
     }
 
     private void saveProfileData() {
@@ -186,88 +205,52 @@ public class OrganizerProfileView extends BaseActivity {
             return;
         }
 
-        User user = new User(userId, name, null, email, dob, phone, country, true);
+        Map<String, Object> profileData = new HashMap<>();
+        profileData.put("name", name);
+        profileData.put("email", email);
+        profileData.put("dob", dob);
+        profileData.put("phone", phone);
+        profileData.put("country", country);
+        profileData.put("isAdmin", isAdmin);
+        profileData.put("isOrganizer", isOrganizer);
+        profileData.put("notificationsPerm", notificationsPerm);
+        profileData.put("events", null);
+        profileData.put("eventsAttending", new HashMap<String, Object>());
+        profileData.put("profileImageUrl", null);
 
-        controller.saveUserProfile(user, imageUri, new EditProfileController.EditProfileListener() {
-            @Override
-            public void onProfileSavedSuccessfully() {
-                runOnUiThread(() -> Toast.makeText(OrganizerProfileView.this, "Profile updated successfully.", Toast.LENGTH_SHORT).show());
-            }
+        String deviceId = retrieveDeviceId();
+        if (deviceId == null) {
+            Toast.makeText(this, "Device ID not found.", Toast.LENGTH_SHORT).show();
+            return;
+        }
 
-            @Override
-            public void onProfileSaveFailed(Exception e) {
-                runOnUiThread(() -> Toast.makeText(OrganizerProfileView.this, "Error saving profile: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-            }
+        DocumentReference userRef = db.collection("users").document(deviceId);
+        userRef.set(profileData)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Profile updated successfully.", Toast.LENGTH_SHORT).show();
+                    if (imageUri != null) uploadProfileImage(userRef);
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to update profile.", e));
+    }
 
-            @Override
-            public void onImageUploaded(String imageUrl) {}
-
-            @Override
-            public void onImageUploadFailed(Exception e) {
-                runOnUiThread(() -> Toast.makeText(OrganizerProfileView.this, "Failed to upload image: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onProfileLoaded(User user) {}
-
-            @Override
-            public void onProfileLoadFailed(Exception e) {}
-
-            @Override
-            public void onImageDeletedSuccessfully() {}
-
-            @Override
-            public void onImageDeleteFailed(Exception e) {}
-        });
+    private void uploadProfileImage(DocumentReference userRef) {
+        StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile_images/" + retrieveDeviceId() + ".jpg");
+        storageRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl().addOnSuccessListener(uri -> {
+                    userRef.update("profileImageUrl", uri.toString())
+                            .addOnSuccessListener(aVoid -> Log.d(TAG, "Profile image updated successfully."));
+                }))
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to upload profile image.", e));
     }
 
     private void deleteProfileImage() {
-        controller.deleteProfileImage(new EditProfileController.EditProfileListener() {
-            @Override
-            public void onImageDeletedSuccessfully() {
-                runOnUiThread(() -> {
-                    Toast.makeText(OrganizerProfileView.this, "Profile image deleted.", Toast.LENGTH_SHORT).show();
-                    loadUserProfile();
-                });
-            }
-
-            @Override
-            public void onImageDeleteFailed(Exception e) {
-                runOnUiThread(() -> Toast.makeText(OrganizerProfileView.this, "Failed to delete image: " + e.getMessage(), Toast.LENGTH_SHORT).show());
-            }
-
-            @Override
-            public void onProfileLoaded(User user) {}
-
-            @Override
-            public void onProfileLoadFailed(Exception e) {}
-
-            @Override
-            public void onProfileSavedSuccessfully() {}
-
-            @Override
-            public void onProfileSaveFailed(Exception e) {}
-
-            @Override
-            public void onImageUploaded(String imageUrl) {}
-
-            @Override
-            public void onImageUploadFailed(Exception e) {}
-        });
-    }
-
-    private void setupDateOfBirthField() {
-        dobField.setInputType(InputType.TYPE_CLASS_NUMBER);
-        dobField.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_calendar, 0);
-        dobField.setOnTouchListener((v, event) -> {
-            if (event.getAction() == MotionEvent.ACTION_UP) {
-                if (event.getRawX() >= (dobField.getRight() - dobField.getCompoundDrawables()[2].getBounds().width())) {
-                    showDatePicker();
-                    return true;
-                }
-            }
-            return false;
-        });
+        DocumentReference userRef = db.collection("users").document(retrieveDeviceId());
+        userRef.update("profileImageUrl", null)
+                .addOnSuccessListener(aVoid -> {
+                    profileImageView.setImageResource(R.drawable.ic_profile);
+                    removeProfileImageButton.setVisibility(View.GONE);
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Failed to delete profile image.", e));
     }
 
     private void showDatePicker() {
@@ -284,15 +267,16 @@ public class OrganizerProfileView extends BaseActivity {
         datePickerDialog.show();
     }
 
-    private void generateDefaultAvatar(String name) {
-        if (name != null && !name.isEmpty()) {
-            String firstLetter = name.substring(0, 1).toUpperCase(Locale.US);
-            Bitmap avatar = AvatarUtil.generateAvatar(firstLetter, 200, this);
-            profileImageView.setImageBitmap(avatar);
-            removeProfileImageButton.setVisibility(View.GONE);
-        } else {
-            profileImageView.setImageResource(R.drawable.ic_profile);
-            removeProfileImageButton.setVisibility(View.GONE);
-        }
+    private void addFacility() {
+        Intent intent = new Intent(this, AddFacilityView.class);
+        startActivity(intent);
     }
+
+    private void generateAvatar(String name) {
+        String firstLetter = (name != null && !name.isEmpty()) ? name.substring(0, 1).toUpperCase(Locale.US) : "?";
+        Bitmap avatar = AvatarUtil.generateAvatar(firstLetter, 200, this);
+        profileImageView.setImageBitmap(avatar);
+        removeProfileImageButton.setVisibility(View.GONE);
+    }
+
 }

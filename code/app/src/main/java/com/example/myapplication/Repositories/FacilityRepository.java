@@ -90,26 +90,26 @@ public class FacilityRepository {
                 .addOnFailureListener(callback::onFailure);
     }
 
-    // Load Facility for a Specific User
-    public void loadFacility(final LoadFacilityCallback callback) {
-        String userId = getCurrentUserId();
-        if (userId == null) {
-            callback.onFailure(new Exception("User not authenticated"));
+    // Load Facility for a Specific User by Device ID
+    public void loadFacility(String deviceId, final LoadFacilityCallback callback) {
+        if (deviceId == null || deviceId.isEmpty()) {
+            callback.onFailure(new Exception("Device ID not provided"));
             return;
         }
 
-        db.collection(FACILITY_COLLECTION).document(userId)
+        db.collection(FACILITY_COLLECTION).document(deviceId)
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
                         Facility facility = documentSnapshot.toObject(Facility.class);
                         callback.onSuccess(facility);
                     } else {
-                        callback.onFailure(new Exception("Facility not found"));
+                        callback.onFailure(new Exception("Facility not found for device ID: " + deviceId));
                     }
                 })
                 .addOnFailureListener(callback::onFailure);
     }
+
 
     // Delete Facility from Firestore
     public void deleteFacility(final FirestoreCallback callback) {
