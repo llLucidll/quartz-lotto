@@ -36,7 +36,7 @@ public class MainActivity extends BaseActivity {
         mAuth = FirebaseAuth.getInstance();
 
         // Initialize UserManager with the current context
-        userManager = new UserManager();
+        userManager = new UserManager(this);
 
         // Sign in anonymously
         signInAnonymously();
