@@ -1,6 +1,5 @@
 package com.example.myapplication.Controllers;
 
-import android.content.Context;
 import android.net.Uri;
 
 import com.example.myapplication.Models.Facility;
@@ -41,7 +40,7 @@ public class AddFacilityController {
 
         if (imageUri != null) {
             // Upload the image first
-            repository.uploadImage(imageUri, new FacilityRepository.UploadImageCallback() {
+            repository.uploadImage(imageUri, deviceId, new FacilityRepository.UploadImageCallback() {
                 @Override
                 public void onSuccess(String imageUrl) {
                     // Proceed to save the facility with the uploaded image URL
@@ -74,7 +73,7 @@ public class AddFacilityController {
         Facility facility = new Facility(imageUrl, location, name, deviceId);
 
         // Save the facility using the repository
-        repository.saveFacility(facility, new FacilityRepository.FirestoreCallback() {
+        repository.saveFacility(facility, deviceId, new FacilityRepository.FirestoreCallback() {
             @Override
             public void onSuccess() {
                 listener.onFacilitySavedSuccessfully();
@@ -111,5 +110,4 @@ public class AddFacilityController {
             }
         });
     }
-
 }

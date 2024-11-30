@@ -60,15 +60,15 @@ public class ManageFacilityController {
         }
 
         if (imageUri != null) {
-            repository.uploadImage(imageUri, new FacilityRepository.UploadImageCallback() {
+            repository.uploadImage(imageUri, deviceId, new FacilityRepository.UploadImageCallback() {
                 @Override
                 public void onSuccess(String imageUrl) {
                     Facility facility = new Facility(imageUrl, location, name, deviceId);
-                    repository.saveFacility(facility, new FacilityRepository.FirestoreCallback() {
+                    repository.saveFacility(facility, deviceId, new FacilityRepository.FirestoreCallback() {
                         @Override
                         public void onSuccess() {
                             listener.onFacilitySavedSuccessfully();
-                            Log.d(TAG, "Facility loaded successfully for deviceId: " + deviceId);
+                            Log.d(TAG, "Facility saved successfully for deviceId: " + deviceId);
                         }
 
                         @Override
@@ -85,7 +85,7 @@ public class ManageFacilityController {
             });
         } else {
             Facility facility = new Facility(null, location, name, deviceId);
-            repository.saveFacility(facility, new FacilityRepository.FirestoreCallback() {
+            repository.saveFacility(facility, deviceId, new FacilityRepository.FirestoreCallback() {
                 @Override
                 public void onSuccess() {
                     listener.onFacilitySavedSuccessfully();
@@ -106,7 +106,7 @@ public class ManageFacilityController {
             return;
         }
 
-        repository.deleteFacility(new FacilityRepository.FirestoreCallback() {
+        repository.deleteFacility(deviceId, new FacilityRepository.FirestoreCallback() {
             @Override
             public void onSuccess() {
                 // After successful deletion from Firestore, delete the image if exists
