@@ -1,26 +1,14 @@
-// com/example/myapplication/repositories/FacilityRepository.java
-
 package com.example.myapplication.Repositories;
 
 import android.net.Uri;
 import android.util.Log;
 
-import androidx.annotation.NonNull;
-
 import com.example.myapplication.Models.Facility;
-import com.google.android.gms.tasks.OnFailureListener;
-import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import java.util.UUID;
 
 public class FacilityRepository {
@@ -30,14 +18,11 @@ public class FacilityRepository {
 
     private FirebaseFirestore db;
     private FirebaseStorage storage;
-    private FirebaseAuth auth;
 
-
-    //Constructor
+    // Constructor
     public FacilityRepository() {
         db = FirebaseFirestore.getInstance();
         storage = FirebaseStorage.getInstance();
-        auth = FirebaseAuth.getInstance();
     }
 
     // Callback Interfaces
@@ -56,17 +41,15 @@ public class FacilityRepository {
         void onFailure(Exception e);
     }
 
-
     // Upload Image to Firebase Storage
-    public void uploadImage(Uri imageUri, final UploadImageCallback callback) {
-        String userId = getCurrentUserId();
-        if (userId == null) {
-            callback.onFailure(new Exception("User not authenticated"));
+    public void uploadImage(Uri imageUri, String deviceId, final UploadImageCallback callback) {
+        if (deviceId == null || deviceId.isEmpty()) {
+            callback.onFailure(new Exception("Device ID is not available"));
             return;
         }
 
         String imageName = UUID.randomUUID().toString() + ".jpg";
-        StorageReference storageRef = storage.getReference("facility_images/" + userId + "/" + imageName);
+        StorageReference storageRef = storage.getReference("facility_images/" + deviceId + "/" + imageName);
         storageRef.putFile(imageUri)
                 .addOnSuccessListener(taskSnapshot -> storageRef.getDownloadUrl()
                         .addOnSuccessListener(uri -> callback.onSuccess(uri.toString()))
@@ -75,25 +58,22 @@ public class FacilityRepository {
     }
 
     // Save or Update Facility in Firestore
-    public void saveFacility(Facility facility, final FirestoreCallback callback) {
-        String userId = getCurrentUserId();
-        if (userId == null) {
-            callback.onFailure(new Exception("User not authenticated"));
+    public void saveFacility(Facility facility, String deviceId, final FirestoreCallback callback) {
+        if (deviceId == null || deviceId.isEmpty()) {
+            callback.onFailure(new Exception("Device ID is not available"));
             return;
         }
 
-        facility.setId(userId); // Use userId as facility ID to ensure one facility per user
-
-        db.collection(FACILITY_COLLECTION).document(userId)
+        db.collection(FACILITY_COLLECTION).document(deviceId)
                 .set(facility, SetOptions.merge())
                 .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(callback::onFailure);
     }
 
-    // Load Facility for a Specific User by Device ID
+    // Load Facility for a Specific Device ID
     public void loadFacility(String deviceId, final LoadFacilityCallback callback) {
         if (deviceId == null || deviceId.isEmpty()) {
-            callback.onFailure(new Exception("Device ID not provided"));
+            callback.onFailure(new Exception("Device ID is not available"));
             return;
         }
 
@@ -110,32 +90,24 @@ public class FacilityRepository {
                 .addOnFailureListener(callback::onFailure);
     }
 
-
     // Delete Facility from Firestore
-    public void deleteFacility(final FirestoreCallback callback) {
-        String userId = getCurrentUserId();
-        if (userId == null) {
-            callback.onFailure(new Exception("User not authenticated"));
+    public void deleteFacility(String deviceId, final FirestoreCallback callback) {
+        if (deviceId == null || deviceId.isEmpty()) {
+            callback.onFailure(new Exception("Device ID is not available"));
             return;
         }
 
-        db.collection(FACILITY_COLLECTION).document(userId)
+        db.collection(FACILITY_COLLECTION).document(deviceId)
                 .delete()
                 .addOnSuccessListener(aVoid -> callback.onSuccess())
                 .addOnFailureListener(callback::onFailure);
     }
 
-    // Get Current User ID
-    public String getCurrentUserId() {
-        if (auth.getCurrentUser() != null) {
-            return auth.getCurrentUser().getUid();
-        }
-        return null;
-    }
-
     // Get Storage Reference from Image URL
     public StorageReference getStorageReference(String imageUrl) {
-        if (imageUrl == null || imageUrl.isEmpty()) return null;
+        if (imageUrl == null || imageUrl.isEmpty()) {
+            return null;
+        }
         return FirebaseStorage.getInstance().getReferenceFromUrl(imageUrl);
     }
 }

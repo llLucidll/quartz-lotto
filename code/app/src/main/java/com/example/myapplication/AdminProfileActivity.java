@@ -36,7 +36,7 @@ public class AdminProfileActivity extends BaseActivity {
     private ImageButton editProfileImageButton, removeProfileImageButton, backButton;
     private EditText nameField, emailField, dobField, phoneField;
     private Spinner countrySpinner;
-    private Button saveChangesButton;
+    private Button saveChangesButton, buttonBrowseUsers, buttonBrowseEvents, buttonBrowseFacilities, buttonBrowseImages, buttonBrowseQR;
 
     private Uri imageUri;
     private boolean isAdmin = true; // Default for admins
@@ -78,6 +78,13 @@ public class AdminProfileActivity extends BaseActivity {
         countrySpinner = findViewById(R.id.country_spinner);
         saveChangesButton = findViewById(R.id.save_changes_button);
 
+        // Buttons for admin-specific actions
+        buttonBrowseUsers = findViewById(R.id.button_browse_user_profiles);
+        buttonBrowseEvents = findViewById(R.id.button_browse_events);
+        buttonBrowseFacilities = findViewById(R.id.button_browse_facilities);
+        buttonBrowseImages = findViewById(R.id.button_browse_images);
+        buttonBrowseQR = findViewById(R.id.button_browse_qrhashdata);
+
         dobField.setInputType(InputType.TYPE_CLASS_DATETIME);
         dobField.setOnTouchListener((v, event) -> {
             if (event.getAction() == MotionEvent.ACTION_UP) {
@@ -88,11 +95,42 @@ public class AdminProfileActivity extends BaseActivity {
         });
     }
 
+    private void BrowseUsers(){
+        Intent intent = new Intent(this, BrowseUsersActivity.class);
+        startActivity(intent);
+    }
+
+    private void BrowseEvents(){
+        Intent intent = new Intent(this, BrowseEventsActivity.class);
+        startActivity(intent);
+    }
+
+    private void BrowseFacilities(){
+        Intent intent = new Intent(this, BrowseFacilitiesActivity.class);
+        startActivity(intent);
+    }
+
+    private void BrowseImages(){
+        Intent intent = new Intent(this, BrowseImagesActivity.class);
+        startActivity(intent);
+    }
+
+    private void BrowseQR(){
+        Intent intent = new Intent(this, ManageQrLinksActivity.class);
+        startActivity(intent);
+    }
+
+
     private void setListeners() {
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
         saveChangesButton.setOnClickListener(v -> saveProfileData());
         backButton.setOnClickListener(v -> finish());
         removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
+        buttonBrowseUsers.setOnClickListener(v -> BrowseUsers());
+        buttonBrowseEvents.setOnClickListener(v -> BrowseEvents());
+        buttonBrowseFacilities.setOnClickListener(v -> BrowseFacilities());
+        buttonBrowseImages.setOnClickListener(v -> BrowseImages());
+        buttonBrowseQR.setOnClickListener(v -> BrowseQR());
     }
 
     private void openFileChooser() {
