@@ -3,16 +3,20 @@ package com.example.myapplication.Repositories;
 import android.util.Log;
 
 import com.example.myapplication.Models.Attendee;
+import com.example.myapplication.Models.EntrantList;
 import com.google.android.gms.common.util.ArrayUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 
 /*
 Used for handling all Firebase stuff related to EntrantList
@@ -20,10 +24,11 @@ Used for handling all Firebase stuff related to EntrantList
 public class EntrantListRepository {
     private static final String EVENT_COLLECTION_NAME = "Events";
     private static final String WAITLIST_COLLECTION_NAME = "Waitlist";
-
+    private EntrantList entrantList;
     private static FirebaseFirestore db;
     private FirebaseStorage storage;
     private FirebaseAuth auth;
+
 
     // Constructor
     public EntrantListRepository() {
@@ -108,6 +113,31 @@ public class EntrantListRepository {
                 });
     }
 
+    /*
+    Sample attendees randomly from the waitingList when clicking the draw button
+     */
+    public void sampleAttendees(String eventId, int size) {
+        getEntrantlist(eventId, "waiting", new FirestoreCallback() {
+            @Override
+            public void onSuccess(ArrayList<Attendee> entrants) {
+                if (entrants.size() <= size) {
+                    Log.d("EntrantListRepositoryy", "sampled list" + entrants.get(0).getUserName());
+                    updateAttendeeList(eventId, entrants);
+                } else {
+                    List<Attendee> copy = entrants;
+                    Collections.shuffle(copy);
+                    ArrayList<Attendee> copied = new ArrayList<>(copy.subList(0, size));
+                    Log.d("EntrantListRepositoryy", "sampled list" + copied);
+                    updateAttendeeList(eventId, copied);
+                }
+            }
+            @Override
+            public void onFailure(Exception e) {
+
+            }
+        });
+    }
+
     /**
      * Used to update the status of the users who were selected in the draw to selected
      * @param eventId
@@ -120,20 +150,22 @@ public class EntrantListRepository {
         for (Attendee user : users) {
             userIds.add(user.getUserId());
         }
+        int size = userIds.size();
+        updateAttendeeListCount(eventId, size);
 
         db.collection(EVENT_COLLECTION_NAME)
                 .document(eventId)
                 .collection(WAITLIST_COLLECTION_NAME)
-                .whereIn("userId", userIds)
+                .whereIn(FieldPath.documentId(), userIds)
                 .get()
                 .addOnSuccessListener(querySnapshot -> {
                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                         document.getReference().update("status", "selected")
                                 .addOnSuccessListener(aVoid -> {
-                                    Log.d("EntrantListRepository", "User status updated successfully" + document.getId());
+                                    Log.d("EntrantListRepositoryy", "User status updated successfully" + document.getId());
                                 })
                                 .addOnFailureListener(e -> {
-                                    Log.w("EntrantListRepository", "Error updating user status" + document.getId(), e);
+                                    Log.w("EntrantListRepositoryy", "Error updating user status" + document.getId(), e);
                                 });
                     }
 
@@ -143,6 +175,22 @@ public class EntrantListRepository {
 
                 });
 
+
+        }
+
+    public void updateAttendeeListCount(String eventId, int size) {
+
+        db.collection(EVENT_COLLECTION_NAME)
+                .document(eventId)
+                .get()
+                .addOnSuccessListener(DocumentSnapshot -> {
+                    int currentCount = DocumentSnapshot.getLong("currentAttendees").intValue();
+                    if (currentCount == 0 ){
+                        DocumentSnapshot.getReference().update("currentAttendees", size);
+                    } else {
+                        DocumentSnapshot.getReference().update("currentAttendees", (currentCount + size));
+                    }
+                });
 
     }
 }

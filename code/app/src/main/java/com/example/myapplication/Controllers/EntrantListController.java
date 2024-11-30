@@ -47,24 +47,29 @@ public class EntrantListController {
         });
     }
 
-    /**
-     * Used to sample the entrants for the draw by using the method from the EntrantList model class
-     * @param entrants
-     * @return attendees
+    /*
+    Method that connects to the draw button on WaitlistFragment
      */
-    public void sampleEntrants(String eventId, ArrayList<Attendee> entrants, AttendeesCallback callback) {
+    public void drawAttendees(String eventId, boolean redraw) {
+        if (redraw) {
+            int size = 1;
+            repository.sampleAttendees(eventId, size);
+            Log.d("EntrantListController", "AttendeeSize" + size);
+        } else {
+            repository.getAttendeeListSize(eventId, new EntrantListRepository.Callback<Long>() {
+                @Override
+                public void onComplete(Long result, Exception e) {
+                    if (e != null) {
+                        Log.e("EntrantListController", "Error in getting attendee size" + result);
+                    }
+                    int size = result.intValue();
+                    Log.d("EntrantListController", "Got attendee size" + size);
+                    repository.sampleAttendees(eventId, size);
 
-        repository.getAttendeeListSize(eventId, (result, e) -> {
-            if (e != null) {
-                Log.e("EntrantListController", "Error getting attendee list size", e);
-                callback.onComplete(null, e);
-            } else {
-                int sampleSize = result.intValue();;
-                ArrayList<Attendee> attendees = entrantList.sampleAttendees(sampleSize);
-                callback.onComplete(attendees, null);
-            }
-        });
+                }
+            });
 
+        }
     }
 
 }
