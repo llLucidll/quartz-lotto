@@ -20,7 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * HomeActivity displays the list of events created by the organizer.
+ * HomeFragment (changed to type Activity) displays the list of events created by the organizer.
  */
 public class HomeFragment extends BaseActivity {
 
