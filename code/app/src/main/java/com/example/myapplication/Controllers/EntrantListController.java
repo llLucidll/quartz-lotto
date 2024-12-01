@@ -1,5 +1,6 @@
 package com.example.myapplication.Controllers;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.myapplication.AttendeesFragment;
@@ -50,10 +51,10 @@ public class EntrantListController {
     /*
     Method that connects to the draw button on WaitlistFragment
      */
-    public void drawAttendees(String eventId, boolean redraw) {
+    public void drawAttendees(String eventId, boolean redraw, Context context) {
         if (redraw) {
             int size = 1;
-            repository.sampleAttendees(eventId, size);
+            repository.sampleAttendees(eventId, size, context);
             Log.d("EntrantListController", "AttendeeSize" + size);
         } else {
             repository.getAttendeeListSize(eventId, new EntrantListRepository.Callback<Long>() {
@@ -64,7 +65,7 @@ public class EntrantListController {
                     }
                     int size = result.intValue();
                     Log.d("EntrantListController", "Got attendee size" + size);
-                    repository.sampleAttendees(eventId, size);
+                    repository.sampleAttendees(eventId, size, context);
 
                 }
             });
