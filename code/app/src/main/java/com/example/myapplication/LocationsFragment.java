@@ -70,7 +70,7 @@ public class LocationsFragment extends Fragment {
         // Initialize the map (assuming you're using OsmDroid or similar)
         mapView.setMultiTouchControls(true);
         mapView.getController().setZoom(15.0);
-        // Set a default center point (e.g., Edmonton coordinates)
+        // Set a default center point (Edmonton coordinates)
         GeoPoint startPoint = new GeoPoint(53.5461, -113.4938);
         mapView.getController().setCenter(startPoint);
 
@@ -91,7 +91,7 @@ public class LocationsFragment extends Fragment {
 
         db.collection("Events").document(eventId)
                 .collection("Waitlist")
-                .whereEqualTo("status", "waiting") // Ensure only active attendees are fetched
+                //.whereEqualTo("status", "selected") // Ensure only active attendees are fetched
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     mapView.getOverlays().clear(); // Clear existing markers

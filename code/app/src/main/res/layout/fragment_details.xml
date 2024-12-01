@@ -111,5 +111,12 @@
             android:layout_marginTop="24dp"
             android:visibility="gone" />
 
+        <Button
+            android:id="@+id/detailsUpdatePosterButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:backgroundTint="@color/avatar_color_4"
+            android:text="Update Event Poster" />
+
     </LinearLayout>
 </ScrollView>
