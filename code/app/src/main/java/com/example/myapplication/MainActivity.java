@@ -8,6 +8,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
+
+import com.example.myapplication.Views.HomeView;
 import com.example.myapplication.Views.OrganizerProfileView;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.FirebaseAuth;
@@ -53,7 +55,7 @@ public class MainActivity extends BaseActivity {
         // Load HomeFragment by default
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container, new HomeFragment())
+                    .replace(R.id.fragment_container, new HomeView()) // changed
                     .commit();
         }
 
@@ -61,7 +63,7 @@ public class MainActivity extends BaseActivity {
             Fragment selectedFragment = null;
             switch (item.getItemId()) {
                 case R.id.nav_home:
-                    selectedFragment = new HomeFragment();
+                    selectedFragment = new HomeView(); // changed
                     break;
                 case R.id.nav_camera:
                     selectedFragment = new QRScannerFragment(); // Navigate to QRScannerFragment

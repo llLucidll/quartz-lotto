@@ -68,7 +68,7 @@
         <activity android:name=".BrowseEventsActivity" />
         <activity android:name=".EventSignupActivity" />
         <activity android:name=".BrowseImagesActivity"/>
-        <activity android:name=".Views.HomeView"/>
+        <activity android:name=".HomeFragment"/>
         <activity android:name=".Views.OrganizerProfileView"/>
         <activity android:name=".OrganizerNotificationActivity"/>
         <activity android:name=".EventWaitlistActivity"/>

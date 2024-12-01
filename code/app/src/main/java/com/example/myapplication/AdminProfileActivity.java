@@ -161,7 +161,7 @@ public class AdminProfileActivity extends BaseActivity {
     }
 
     private void openMyEvents() {
-        Intent intent = new Intent(this, HomeView.class);
+        Intent intent = new Intent(this, HomeFragment.class); // changed
         startActivity(intent);
     }
 
