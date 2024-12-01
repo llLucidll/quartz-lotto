@@ -13,6 +13,7 @@ public class Event {
     private String description;
     private int maxAttendees;
     private Integer maxWaitlist; // Nullable
+    private Integer currentWaitlist;
     private boolean geolocationEnabled;
     private String qrCodeLink;
     private String posterUrl;
@@ -159,6 +160,16 @@ public class Event {
     @PropertyName("maxWaitlist")
     public void setMaxWaitlist(Integer maxWaitlist) {
         this.maxWaitlist = maxWaitlist;
+    }
+
+    @PropertyName("currentWaitlist")
+    public Integer getCurrentWaitlist() {
+        return currentWaitlist;
+    }
+
+    @PropertyName("currentWaitlist")
+    public void setCurrentWaitlist(Integer currentWaitlist) {
+        this.currentWaitlist = currentWaitlist;
     }
 
     @PropertyName("geolocationEnabled")
