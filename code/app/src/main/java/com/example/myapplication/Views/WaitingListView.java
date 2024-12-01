@@ -74,7 +74,14 @@ public class WaitingListView extends Fragment {
         controller = new EntrantListController();
         drawButton = view.findViewById(R.id.draw_button);
 
-        drawButton.setOnClickListener(v -> controller.drawAttendees(eventId, false));
+        // Pass the context when invoking drawAttendees
+        drawButton.setOnClickListener(v -> {
+            if (getContext() != null) {
+                controller.drawAttendees(eventId, true, getContext());
+            } else {
+                Toast.makeText(getActivity(), "Unable to draw attendees. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         controller.fetchEntrantList(eventId, "waiting", new EntrantListRepository.FetchEntrantListCallback() {
             @Override
