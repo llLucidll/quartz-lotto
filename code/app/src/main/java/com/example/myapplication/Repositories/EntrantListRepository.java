@@ -1,9 +1,11 @@
 package com.example.myapplication.Repositories;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.example.myapplication.Models.Attendee;
 import com.example.myapplication.Models.EntrantList;
+import com.example.myapplication.NotificationService;
 import com.google.android.gms.common.util.ArrayUtils;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -14,6 +16,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import android.content.Context;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -113,43 +116,49 @@ public class EntrantListRepository {
                 });
     }
 
-    /*
-    Sample attendees randomly from the waitingList when clicking the draw button
+    /**
+     * Samples attendees from the waitlist for the given event and sends notifications.
+     *
+     * @param eventId The event ID.
+     * @param size    The number of attendees to draw.
+     * @param context The context to send notifications.
      */
-    public void sampleAttendees(String eventId, int size) {
+    public void sampleAttendees(String eventId, int size, Context context) {
         getEntrantlist(eventId, "waiting", new FirestoreCallback() {
             @Override
             public void onSuccess(ArrayList<Attendee> entrants) {
+                ArrayList<Attendee> selectedAttendees;
                 if (entrants.size() <= size) {
-                    Log.d("EntrantListRepositoryy", "sampled list" + entrants.get(0).getUserName());
-                    updateAttendeeList(eventId, entrants);
+                    selectedAttendees = entrants;
                 } else {
-                    List<Attendee> copy = entrants;
-                    Collections.shuffle(copy);
-                    ArrayList<Attendee> copied = new ArrayList<>(copy.subList(0, size));
-                    Log.d("EntrantListRepositoryy", "sampled list" + copied);
-                    updateAttendeeList(eventId, copied);
+                    List<Attendee> shuffledList = new ArrayList<>(entrants);
+                    Collections.shuffle(shuffledList);
+                    selectedAttendees = new ArrayList<>(shuffledList.subList(0, size));
                 }
+
+                updateAttendeeList(eventId, selectedAttendees, context);
             }
+
             @Override
             public void onFailure(Exception e) {
-
+                Log.e("EntrantListRepository", "Error sampling attendees: ", e);
             }
         });
     }
 
     /**
-     * Used to update the status of the users who were selected in the draw to selected
-     * @param eventId
-     * @param users
+     * Updates the status of selected attendees in Firestore and sends notifications.
+     *
+     * @param eventId         The event ID.
+     * @param attendees       The list of selected attendees.
+     * @param context         The context to send notifications.
      */
-    public void updateAttendeeList(String eventId, ArrayList<Attendee> users) {
-
+    private void updateAttendeeList(String eventId, ArrayList<Attendee> attendees, Context context) {
         ArrayList<String> userIds = new ArrayList<>();
-        // Convert Attendee objects to String user Ids for easy db usage.
-        for (Attendee user : users) {
-            userIds.add(user.getUserId());
+        for (Attendee attendee : attendees) {
+            userIds.add(attendee.getUserId());
         }
+
         int size = userIds.size();
         updateAttendeeListCount(eventId, size);
 
@@ -162,21 +171,49 @@ public class EntrantListRepository {
                     for (DocumentSnapshot document : querySnapshot.getDocuments()) {
                         document.getReference().update("status", "selected")
                                 .addOnSuccessListener(aVoid -> {
-                                    Log.d("EntrantListRepositoryy", "User status updated successfully" + document.getId());
+                                    Log.d("EntrantListRepository", "User status updated: " + document.getId());
+                                    sendNotification(document.getId(), context);
                                 })
-                                .addOnFailureListener(e -> {
-                                    Log.w("EntrantListRepositoryy", "Error updating user status" + document.getId(), e);
-                                });
+                                .addOnFailureListener(e -> Log.w("EntrantListRepository", "Error updating user status: ", e));
                     }
-
                 })
-                .addOnFailureListener(e -> {
-                    Log.e("EntrantListRepository", "Error getting documents: ", e);
-
-                });
+                .addOnFailureListener(e -> Log.e("EntrantListRepository", "Error getting documents: ", e));
+    }
 
 
-        }
+    /**
+     * Sends a notification to the user with the given ID using `NotificationService`.
+     *
+     * @param userId  The user ID.
+     * @param context The context to send notifications.
+     */
+    private void sendNotification(String userId, Context context) {
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Boolean notificationsPerm = documentSnapshot.getBoolean("notificationsPerm");
+                        if (notificationsPerm != null && notificationsPerm) {
+                            // Construct the user map
+                            HashMap<String, Object> user = new HashMap<>();
+                            user.put("userId", userId);
+
+                            // Send notification
+                            NotificationService.sendNotification(
+                                    user,
+                                    context,
+                                    "Congratulations!",
+                                    "You have been selected as an attendee for the event. PLS SIGN UP"
+                            );
+                            Log.d("EntrantListRepository", "Notification sent to user: " + userId);
+                        } else {
+                            Log.d("EntrantListRepository", "Notifications disabled for user: " + userId);
+                        }
+                    } else {
+                        Log.e("EntrantListRepository", "User not found in Firestore for userId: " + userId);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("EntrantListRepository", "Error fetching user: ", e));
+    }
 
     public void updateAttendeeListCount(String eventId, int size) {
 

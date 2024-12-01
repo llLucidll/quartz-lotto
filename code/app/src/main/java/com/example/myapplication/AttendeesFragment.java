@@ -92,7 +92,15 @@ public class AttendeesFragment extends Fragment {
         noneSelected = view.findViewById(R.id.noneSelected);
         noneCancelled = view.findViewById(R.id.noneCancelled);
         drawButton = view.findViewById(R.id.draw_button);
-        drawButton.setOnClickListener(v -> controller.drawAttendees(eventId, true));
+        // Pass the context when invoking drawAttendees
+        drawButton.setOnClickListener(v -> {
+            if (getContext() != null) {
+                controller.drawAttendees(eventId, true, getContext());
+            } else {
+                Log.e(TAG, "Context is null, cannot draw attendees.");
+                Toast.makeText(getActivity(), "Unable to draw attendees. Please try again.", Toast.LENGTH_SHORT).show();
+            }
+        });
 
         recyclerViewSelected.setLayoutManager(new LinearLayoutManager(getContext()));
         recyclerViewConfirmed.setLayoutManager(new LinearLayoutManager(getContext()));
