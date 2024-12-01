@@ -44,6 +44,7 @@ public class EditProfileActivity extends BaseActivity {
     private Button saveChangesButton, addFacilityButton, myEventsButton;
     private Switch notificationSwitch;
 
+
     private FirebaseFirestore db;
     private FirebaseStorage storage;
 
@@ -125,7 +126,7 @@ public class EditProfileActivity extends BaseActivity {
         removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
         addFacilityButton.setOnClickListener(v -> addFacility());
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notificationsPerm = isChecked);
-        addFacilityButton.setOnClickListener(v -> myEvents());
+        addFacilityButton.setOnClickListener(v -> addFacility());
         myEventsButton.setOnClickListener(v -> myEvents());
     }
 

@@ -19,6 +19,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.myapplication.Views.HomeView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
@@ -44,6 +45,8 @@ public class AdminProfileActivity extends BaseActivity {
     private boolean isAdmin = true; // Default for admins
     private boolean isOrganizer = true; // Default for admins
     private boolean notificationsPerm = false;
+    private Button myEventsButton;
+
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -79,6 +82,8 @@ public class AdminProfileActivity extends BaseActivity {
         phoneField = findViewById(R.id.phone_field);
         countrySpinner = findViewById(R.id.country_spinner);
         saveChangesButton = findViewById(R.id.save_changes_button);
+        myEventsButton = findViewById(R.id.my_events_button);
+
 
         // Buttons for admin-specific actions
         buttonBrowseUsers = findViewById(R.id.button_browse_user_profiles);
@@ -151,7 +156,15 @@ public class AdminProfileActivity extends BaseActivity {
         buttonBrowseFacilities.setOnClickListener(v -> BrowseFacilities());
         buttonBrowseImages.setOnClickListener(v -> BrowseImages());
         buttonBrowseQR.setOnClickListener(v -> BrowseQR());
+        myEventsButton.setOnClickListener(v -> openMyEvents());
+
     }
+
+    private void openMyEvents() {
+        Intent intent = new Intent(this, HomeView.class);
+        startActivity(intent);
+    }
+
 
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
