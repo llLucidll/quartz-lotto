@@ -1,19 +1,13 @@
-// File: com/example/myapplication/HomeFragment.java
+// File: com/example/myapplication/HomeActivity.java
 package com.example.myapplication;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
-import android.view.View;
-import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -29,7 +23,7 @@ import java.util.List;
 /**
  * HomeFragment displays the list of events created by the organizer.
  */
-public class HomeFragment extends Fragment {
+public class HomeFragment extends BaseActivity {
 
     private RecyclerView eventsListView;
     private FirebaseFirestore db;
@@ -38,47 +32,38 @@ public class HomeFragment extends Fragment {
     private ListenerRegistration listenerRegistration;
     private static final int CREATE_EVENT_REQUEST_CODE = 1;
 
-    @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
-                             @Nullable Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+    protected void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_home); // Assuming the layout is reused
 
-        eventsListView = view.findViewById(R.id.events_list);
-        eventsListView.setLayoutManager(new LinearLayoutManager(getContext()));
+        eventsListView = findViewById(R.id.events_list);
+        eventsListView.setLayoutManager(new LinearLayoutManager(this));
 
         db = FirebaseFirestore.getInstance();
         eventList = new ArrayList<>();
 
         // Retrieve the current user's UID from BaseActivity
-        Activity activity = getActivity();
-        if (activity == null || !(activity instanceof BaseActivity)) {
-            Toast.makeText(getContext(), "Error retrieving user information.", Toast.LENGTH_SHORT).show();
-            return view;
-        }
-
-        String currentUserId = ((BaseActivity) activity).retrieveDeviceId();
+        String currentUserId = retrieveDeviceId();
         if (currentUserId == null) {
-            Toast.makeText(getContext(), "User not authenticated.", Toast.LENGTH_SHORT).show();
-            activity.finish(); // Close the activity if user is not authenticated
-            return view;
+            Toast.makeText(this, "User not authenticated.", Toast.LENGTH_SHORT).show();
+            finish(); // Close the activity if user is not authenticated
+            return;
         }
 
         // Initialize EventAdapter with the event list and currentUserId
-        adapter = new EventAdapter(getContext(), eventList, currentUserId);
+        adapter = new EventAdapter(this, eventList, currentUserId);
         eventsListView.setAdapter(adapter);
 
         // Load events initially and listen for real-time updates
         setupRealtimeUpdates(currentUserId);
 
         // Set up button for navigation
-        Button navigateButton = view.findViewById(R.id.edit_or_create_button);
+        Button navigateButton = findViewById(R.id.edit_or_create_button);
         navigateButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getActivity(), CreateEventActivity.class);
+            Intent intent = new Intent(this, CreateEventActivity.class);
             startActivityForResult(intent, CREATE_EVENT_REQUEST_CODE);
         });
-
-        return view;
     }
 
     /**
@@ -93,8 +78,8 @@ public class HomeFragment extends Fragment {
         listenerRegistration = eventsRef.whereEqualTo("organizerId", organizerId)
                 .addSnapshotListener((snapshots, e) -> {
                     if (e != null) {
-                        Toast.makeText(getContext(), "Error listening to updates: " + e.getMessage(), Toast.LENGTH_SHORT).show();
-                        Log.e("HomeFragment", "Listen failed.", e);
+                        Toast.makeText(this, "Error listening to updates: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                        Log.e("HomeActivity", "Listen failed.", e);
                         return;
                     }
 
@@ -129,26 +114,25 @@ public class HomeFragment extends Fragment {
                             eventList.add(event);
                         }
 
-
                         adapter.notifyDataSetChanged(); // Update the RecyclerView with new data
-                        Log.d("HomeFragment", "Events updated. Total events: " + eventList.size());
+                        Log.d("HomeActivity", "Events updated. Total events: " + eventList.size());
                     }
                 });
     }
 
     @Override
-    public void onDestroyView() {
-        super.onDestroyView();
+    protected void onDestroy() {
+        super.onDestroy();
         if (listenerRegistration != null) {
             listenerRegistration.remove(); // Stop listening to database updates
         }
     }
 
     @Override
-    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if (requestCode == CREATE_EVENT_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            Toast.makeText(getContext(), "Event created successfully!", Toast.LENGTH_SHORT).show();
+        if (requestCode == CREATE_EVENT_REQUEST_CODE && resultCode == RESULT_OK) {
+            Toast.makeText(this, "Event created successfully!", Toast.LENGTH_SHORT).show();
         }
     }
 }

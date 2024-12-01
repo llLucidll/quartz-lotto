@@ -23,6 +23,7 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.AvatarUtil;
 import com.example.myapplication.BaseActivity;
 import com.example.myapplication.Controllers.EditProfileController;
+import com.example.myapplication.HomeFragment;
 import com.example.myapplication.Models.User;
 import com.example.myapplication.OrganizerNotificationActivity;
 import com.example.myapplication.R;
@@ -126,7 +127,7 @@ public class OrganizerProfileView extends BaseActivity {
         backButton.setOnClickListener(v -> finish());
         removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
         manageFacilityButton.setOnClickListener(v -> addFacility());
-        myEvents.setOnClickListener(v -> startActivity(new Intent(this, HomeView.class)));
+        myEvents.setOnClickListener(v -> startActivity(new Intent(this, HomeFragment.class))); // changed
         notifGroups.setOnClickListener(v -> startActivity(new Intent(this, OrganizerNotificationActivity.class)));
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notificationsPerm = isChecked);
     }
