@@ -12,6 +12,7 @@ import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.HashMap;
 import java.util.Locale;
@@ -70,6 +71,37 @@ public class NotificationService {
 
         // Save the notification in Firebase
         saveNotificationToFirebase(userId, title, message);
+    }
+
+    /**
+     * Fetches and displays all notifications for the current device ID.
+     *
+     * @param deviceId The device ID of the current user.
+     * @param context  The context to send notifications.
+     */
+    public static void receiveNotifications(String deviceId, Context context) {
+        if (deviceId == null || deviceId.isEmpty()) {
+            Log.e(TAG, "Device ID is null or empty");
+            return;
+        }
+
+        FirebaseFirestore db = FirebaseFirestore.getInstance();
+        db.collection("notifications")
+                .whereEqualTo("userId", deviceId)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                        String title = document.getString("title");
+                        String message = document.getString("message");
+
+                        if (title != null && message != null) {
+                            Map<String, Object> user = new HashMap<>();
+                            user.put("userId", deviceId);
+                            sendNotification(user, context, title, message);
+                        }
+                    }
+                })
+                .addOnFailureListener(e -> Log.e(TAG, "Error fetching notifications: ", e));
     }
 
     /**
