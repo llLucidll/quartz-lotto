@@ -18,6 +18,7 @@ import androidx.annotation.Nullable;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.myapplication.Views.AddFacilityView;
+import com.example.myapplication.Views.HomeView;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.storage.FirebaseStorage;
@@ -40,7 +41,7 @@ public class EditProfileActivity extends BaseActivity {
     private ImageButton editProfileImageButton, removeProfileImageButton;
     private EditText nameField, emailField, dobField, phoneField;
     private Spinner countrySpinner;
-    private Button saveChangesButton, addFacilityButton;
+    private Button saveChangesButton, addFacilityButton, myEventsButton;
     private Switch notificationSwitch;
 
     private FirebaseFirestore db;
@@ -87,6 +88,7 @@ public class EditProfileActivity extends BaseActivity {
         saveChangesButton = findViewById(R.id.save_changes_button);
         addFacilityButton = findViewById(R.id.add_facility_button);
         notificationSwitch = findViewById(R.id.notifications_switch);
+        myEventsButton = findViewById(R.id.my_events_button);
 
         dobField.setInputType(InputType.TYPE_CLASS_DATETIME);
         dobField.setOnTouchListener((v, event) -> {
@@ -123,12 +125,19 @@ public class EditProfileActivity extends BaseActivity {
         removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
         addFacilityButton.setOnClickListener(v -> addFacility());
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notificationsPerm = isChecked);
+        addFacilityButton.setOnClickListener(v -> myEvents());
+        myEventsButton.setOnClickListener(v -> myEvents());
     }
 
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, 1);
+    }
+
+    private void myEvents() {
+        Intent intent = new Intent(this, HomeView.class);
+        startActivity(intent);
     }
 
     @Override

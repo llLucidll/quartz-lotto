@@ -73,7 +73,7 @@ public class FacilityRepository {
     // Load Facility for a Specific Device ID
     public void loadFacility(String deviceId, final LoadFacilityCallback callback) {
         if (deviceId == null || deviceId.isEmpty()) {
-            callback.onFailure(new Exception("Device ID is not available"));
+            callback.onFailure(new Exception("Device ID not provided"));
             return;
         }
 
@@ -81,14 +81,24 @@ public class FacilityRepository {
                 .get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
-                        Facility facility = documentSnapshot.toObject(Facility.class);
-                        callback.onSuccess(facility);
+                        try {
+                            String imageUrl = documentSnapshot.getString("ImageUrl");
+                            String location = documentSnapshot.getString("location");
+                            String name = documentSnapshot.getString("name");
+                            String id = documentSnapshot.getString("id");
+
+                            Facility facility = new Facility(imageUrl, location, name, id);
+                            callback.onSuccess(facility);
+                        } catch (Exception e) {
+                            callback.onFailure(new Exception("Error mapping facility data", e));
+                        }
                     } else {
                         callback.onFailure(new Exception("Facility not found for device ID: " + deviceId));
                     }
                 })
                 .addOnFailureListener(callback::onFailure);
     }
+
 
     // Delete Facility from Firestore
     public void deleteFacility(String deviceId, final FirestoreCallback callback) {
