@@ -1,7 +1,10 @@
 package com.example.myapplication.Views;
 
+import static android.content.ContentValues.TAG;
+
 import android.os.Bundle;
 import android.util.Log;
+import android.widget.Button;
 import android.widget.ListView;
 import android.widget.Toast;
 
@@ -13,14 +16,16 @@ import com.example.myapplication.EventAdapter;
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Models.Facility;
 import com.example.myapplication.R;
+import com.example.myapplication.Repositories.HomeRepository;
+import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class HomeView extends BaseActivity {
-    // Aditi
+public class HomeView extends AppCompatActivity {
     private ListView selectedEventsListView;
     private ListView waitlistEventsListView;
 
@@ -33,8 +38,6 @@ public class HomeView extends BaseActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        // Set the layout for this activity
         setContentView(R.layout.activity_home_page);
 
 
@@ -42,48 +45,26 @@ public class HomeView extends BaseActivity {
         waitlistEventsListView = findViewById(R.id.entrant_waitlist);
 
         selectedEvents = new ArrayList<>();
-
-        selectedEventsAdapter = new HomePageController(this, selectedEvents, true);
-
+        selectedEventsAdapter = new HomePageController(this, selectedEvents);
         selectedEventsListView.setAdapter(selectedEventsAdapter);
 
-        fetchWaitlistEvents();
+        waitlistEvents = new ArrayList<>();
+        waitlistEventsAdapter = new HomePageController(this, waitlistEvents);
+        waitlistEventsListView.setAdapter(waitlistEventsAdapter);
+
+        // Initialize HomeRepository and fetch waitlist events
+        updateWaitlistEvents(waitlistEvents);
 
     }
 
-    // Confirm an event from the waitlist to the selected list
-    public void confirmEvent(Event event) {
-        selectedEvents.add(event);
-        selectedEventsAdapter.notifyDataSetChanged();
 
-        Toast.makeText(this, "Event Confirmed", Toast.LENGTH_SHORT).show();
-    }
 
-    // Delete an event from either list
-    public void deleteEvent(Event event) {
-
-        Toast.makeText(this, "Event Deleted", Toast.LENGTH_SHORT).show();
-    }
-
-    private void fetchWaitlistEvents() {
-        FirebaseFirestore firestore = FirebaseFirestore.getInstance();
-        // String eventId = eventDoc.getId(); //GET EVENT ID
-//        db.collection("Events")
-//                .document(eventId)
-//                .collection("waitlist")
-//                .whereEqualTo("status", "not chosen")
-//                .get()
-//                .addOnSuccessListener(querySnapshot -> {
-//                    waitlistEvents.clear(); // Clear the current list to avoid duplicates
-//                    for (QueryDocumentSnapshot document : querySnapshot) {
-//                        Event event = document.toObject(Event.class);
-//                        waitlistEvents.add(event);
-//                    }
-//                    waitlistEventsAdapter.notifyDataSetChanged(); // Update the ListView
-//                })
-//                .addOnFailureListener(e -> {
-//                    Log.e("HomeView", "Error fetching waitlist events: ", e);
-//                    Toast.makeText(this, "Failed to load waitlist events.", Toast.LENGTH_SHORT).show();
-//                });
+    // Method to update waitlist events in the UI
+    public void updateWaitlistEvents(List<Event> waitlistEvents) {
+        HomeRepository homeRepository = new HomeRepository();
+        homeRepository.fetchWaitingDevices(this);
+        this.waitlistEvents.clear(); // Clear existing waitlist
+        this.waitlistEvents.addAll(waitlistEvents); // Add new events to the waitlist
+        waitlistEventsAdapter.notifyDataSetChanged(); // Notify adapter to refresh UI
     }
 }
