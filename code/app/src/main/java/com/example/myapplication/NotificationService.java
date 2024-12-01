@@ -97,12 +97,54 @@ public class NotificationService {
                         if (title != null && message != null) {
                             Map<String, Object> user = new HashMap<>();
                             user.put("userId", deviceId);
-                            sendNotification(user, context, title, message);
+                            sendNotificationWithoutSaving(user, context, title, message);
                         }
                     }
                 })
                 .addOnFailureListener(e -> Log.e(TAG, "Error fetching notifications: ", e));
     }
+
+    /**
+     * Sends a notification to a user without saving it in Firebase.
+     *
+     * @param user    A map containing user data, including "userId".
+     * @param context The context from which this method is called.
+     * @param title   The title of the notification.
+     * @param message The content text of the notification.
+     */
+    public static void sendNotificationWithoutSaving(Map<String, Object> user, Context context, String title, String message) {
+        if (user == null || !user.containsKey("userId")) {
+            Log.e(TAG, "User data is invalid or missing 'userId'");
+            return;
+        }
+
+        // Intent to open the app when notification is clicked
+        Intent intent = new Intent(context, MainActivity.class); // Replace with your desired activity
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                context,
+                0,
+                intent,
+                PendingIntent.FLAG_IMMUTABLE
+        );
+
+        // Build the notification
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, NotificationUtils.getChannelId())
+                .setSmallIcon(R.drawable.ic_notif) // Replace with your app's notification icon
+                .setContentTitle(title)
+                .setContentText(message)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true);
+
+        // Unique notification ID
+        int notificationId = (int) System.currentTimeMillis();
+
+        // Show the notification
+        NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
+        notificationManager.notify(notificationId, builder.build());
+    }
+
 
     /**
      * Saves the notification details to Firebase Firestore.
