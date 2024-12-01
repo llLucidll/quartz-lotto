@@ -35,6 +35,13 @@ public class MainActivity extends BaseActivity {
         // Initialize Firebase Auth
         mAuth = FirebaseAuth.getInstance();
 
+        // Retrieve the device ID
+        String deviceId = retrieveDeviceId();
+
+        // Fetch and display notifications for the current device
+        NotificationService.receiveNotifications(deviceId, this);
+
+
         // Initialize UserManager with the current context
         userManager = new UserManager(this);
 
