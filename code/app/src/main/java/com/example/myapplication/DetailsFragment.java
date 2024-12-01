@@ -1,17 +1,25 @@
 package com.example.myapplication;
 
+import android.app.AlertDialog;
+import android.content.Intent;
 import android.graphics.Bitmap;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.*;
+
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 import com.bumptech.glide.Glide;
 import com.google.firebase.firestore.*;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.zxing.BarcodeFormat;
 import com.google.zxing.WriterException;
 import com.journeyapps.barcodescanner.BarcodeEncoder;
@@ -23,12 +31,16 @@ public class DetailsFragment extends Fragment {
     private static final String ARG_EVENT_ID = "eventId";
     private String eventId;
     private FirebaseFirestore db;
-    private TextView eventNameTextView, dateTextView, timeTextView, descriptionTextView, maxAttendeesTextView, maxWaitlistTextView, geolocationTextView;
+    private TextView eventNameTextView, dateTextView, timeTextView, descriptionTextView, maxAttendeesTextView, maxWaitlistTextView, geolocationTextView, detailsUpdatePoster;
     private ImageView posterImageView, qrCodeImageView;
     private ProgressBar progressBar;
+    private ActivityResultLauncher<Intent> imagePickerLauncher; //for updating the image
+    private StorageReference storageReference;
+    private Button detailsUpdatePosterButton; //button to update poster
+    private FirebaseStorage storage;
+
 
     public DetailsFragment() {
-        // Required empty public constructor
     }
 
     /**
@@ -53,9 +65,11 @@ public class DetailsFragment extends Fragment {
             eventId = getArguments().getString(ARG_EVENT_ID);
         } else {
             Toast.makeText(getContext(), "Event ID missing.", Toast.LENGTH_SHORT).show();
-            // Optionally, navigate back or show an error
         }
         db = FirebaseFirestore.getInstance();
+
+        storage = FirebaseStorage.getInstance();
+        storageReference = storage.getReference();
     }
 
     @Override
@@ -74,6 +88,26 @@ public class DetailsFragment extends Fragment {
         posterImageView = view.findViewById(R.id.detailsPosterImageView);
         qrCodeImageView = view.findViewById(R.id.detailsQrCodeImageView);
         progressBar = view.findViewById(R.id.detailsProgressBar);
+        detailsUpdatePosterButton = view.findViewById(R.id.detailsUpdatePosterButton);
+
+
+        //initializing ActivityResultLauncher for image selection
+        imagePickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                result -> {
+                    if (result.getResultCode() == getActivity().RESULT_OK && result.getData() != null) {
+                        Uri selectedImageUri = result.getData().getData();
+                        if (selectedImageUri != null) {
+                            uploadNewPoster(selectedImageUri);
+                        }
+                    } else {
+                        Toast.makeText(getContext(), "Image selection canceled.", Toast.LENGTH_SHORT).show();
+                    }
+                }
+        );
+        //for update poster button
+        detailsUpdatePosterButton.setOnClickListener(v -> showUpdatePosterConfirmationDialog());
+
 
         // Fetch and display event details
         fetchEventDetails();
@@ -164,4 +198,77 @@ public class DetailsFragment extends Fragment {
             qrCodeImageView.setVisibility(View.GONE);
         }
     }
+
+    /**
+     * Show confirmation dialog before allowing the user to update the event poster
+     */
+    private void showUpdatePosterConfirmationDialog() {
+        new AlertDialog.Builder(getContext())
+                .setTitle("Update Event Poster")
+                .setMessage("Are you sure you want to update the event poster? This will replace the existing poster.")
+                .setPositiveButton("Yes", (dialog, which) -> openImagePicker())
+                .setNegativeButton("No", null)
+                .show();
+    }
+
+    /**
+     * Opens the image picker to allow the user to select a new poster
+     */
+    private void openImagePicker() {
+        Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
+        intent.setType("image/*");
+        imagePickerLauncher.launch(Intent.createChooser(intent, "Select Poster Image"));
+    }
+    /**
+     * Uploads the selected image to Firebase Storage and updates Firestore with the new poster URL
+     *
+     * @param imageUri The URI of the selected image
+     */
+    private void uploadNewPoster(Uri imageUri) {
+        progressBar.setVisibility(View.VISIBLE);
+        String posterPath = "event_posters/" + eventId + ".jpg";
+        StorageReference posterRef = storageReference.child(posterPath);
+
+        posterRef.putFile(imageUri)
+                .addOnSuccessListener(taskSnapshot -> posterRef.getDownloadUrl()
+                        .addOnSuccessListener(uri -> {
+                            String posterUrl = uri.toString();
+                            updatePosterUrlInFirestore(posterUrl);
+                        })
+                        .addOnFailureListener(e -> {
+                            progressBar.setVisibility(View.GONE);
+                            Toast.makeText(getContext(), "Failed to retrieve poster URL.", Toast.LENGTH_SHORT).show();
+                            Log.e("DetailsFragment", "Error getting download URL", e);
+                        }))
+                .addOnFailureListener(e -> {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Failed to upload poster.", Toast.LENGTH_SHORT).show();
+                    Log.e("DetailsFragment", "Error uploading poster", e);
+                });
+    }
+
+    /**
+     * Updates the event document in Firestore with the new poster URL.
+     *
+     * @param posterUrl The download URL of the uploaded poster.
+     */
+    private void updatePosterUrlInFirestore(String posterUrl) {
+        db.collection("Events").document(eventId)
+                .update("posterUrl", posterUrl)
+                .addOnSuccessListener(aVoid -> {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Poster updated successfully.", Toast.LENGTH_SHORT).show();
+                    // Update the ImageView with the new poster
+                    Glide.with(this)
+                            .load(posterUrl)
+                            .placeholder(R.drawable.ic_placeholder_image)
+                            .into(posterImageView);
+                })
+                .addOnFailureListener(e -> {
+                    progressBar.setVisibility(View.GONE);
+                    Toast.makeText(getContext(), "Failed to update poster URL.", Toast.LENGTH_SHORT).show();
+                    Log.e("DetailsFragment", "Error updating poster URL in Firestore", e);
+                });
+    }
 }
+
