@@ -230,7 +230,7 @@ public class EditProfileActivity extends BaseActivity {
         profileData.put("isAdmin", isAdmin);
         profileData.put("notificationsPerm", notificationsPerm);
         profileData.put("events", null);
-        profileData.put("eventsAttending", new HashMap<>());
+        //profileData.put("eventsAttending", new HashMap<>());
 
         DocumentReference userRef = db.collection("users").document(deviceId);
         userRef.set(profileData)
