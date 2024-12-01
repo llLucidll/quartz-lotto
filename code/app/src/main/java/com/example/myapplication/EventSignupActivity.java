@@ -68,7 +68,7 @@ public class EventSignupActivity extends BaseActivity {
         // Retrieve eventId from intent
         eventId = getIntent().getStringExtra("eventId");
         if (eventId == null) {
-            Toast.makeText(this, "Event ID missing.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Event ID missing.", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Event ID is missing from the intent.");
             finish();
             return;
@@ -79,21 +79,41 @@ public class EventSignupActivity extends BaseActivity {
         // Fetch and display event details
         fetchEventDetails();
 
-        // Set up sign-up button listener
+        //set up sign-up button listener with confirmation dialog
         signupButton.setOnClickListener(v -> {
-            if (locationObtained) {
-                registerForEvent();
-                addToHomepageWaitlist();
-            } else {
-                Toast.makeText(this, "Obtaining your location. Please wait.", Toast.LENGTH_SHORT).show();
-                Log.d(TAG, "Location not yet obtained. Attempting to get location.");
-                getCurrentLocation();
-            }
+            //show confirmation dialog before proceeding
+            showSignupConfirmationDialog();
         });
 
         // Check and request location permissions
         checkLocationPermission();
     }
+
+    /**
+     * Displays a confirmation dialog to the user before signing up for the event
+     */
+    private void showSignupConfirmationDialog() {
+        new AlertDialog.Builder(this)
+                .setTitle("Join Waitlist Confirmation")
+                .setMessage("Are you sure you want to join the waitlist for this event? This requires access to your location.")
+                .setPositiveButton("Yes", (dialog, which) -> {
+                    if (locationObtained) {
+                        registerForEvent();
+                        addToHomepageWaitlist();
+                    } else {
+                        Toast.makeText(this, "Getting your location.", Toast.LENGTH_SHORT).show();
+                        getCurrentLocation();
+                    }
+                })
+                .setNegativeButton("No", (dialog, which) -> {
+                    // User cancelled the action
+                    dialog.dismiss();
+                    Log.d(TAG, "User canceled the waitlist sign-up.");
+                })
+                .setCancelable(false)
+                .show();
+    }
+
 
     /**
      * Checks for location permissions and requests them if not granted.
@@ -179,7 +199,7 @@ public class EventSignupActivity extends BaseActivity {
                         }
                     })
                     .addOnFailureListener(e -> {
-                        Toast.makeText(this, "Failed to get location.", Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(this, "Failed to get location.", Toast.LENGTH_SHORT).show();
                         Log.e(TAG, "getCurrentLocation: ", e);
                     });
         } catch (SecurityException e) {
@@ -218,7 +238,7 @@ public class EventSignupActivity extends BaseActivity {
                 locationObtained = true;
                 Log.d(TAG, "New location obtained: " + userLatitude + ", " + userLongitude);
             } else {
-                Toast.makeText(EventSignupActivity.this, "Unable to get current location.", Toast.LENGTH_SHORT).show();
+                //Toast.makeText(EventSignupActivity.this, "Unable to get current location.", Toast.LENGTH_SHORT).show();
                 Log.w(TAG, "Location callback received null location.");
             }
         }
@@ -320,7 +340,7 @@ public class EventSignupActivity extends BaseActivity {
             performEventSignup(deviceId, userName, userEmail);
 
         }).addOnFailureListener(e -> {
-            Toast.makeText(this, "Error retrieving profile. Please try again.", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "Error retrieving profile. Please try again.", Toast.LENGTH_SHORT).show();
             Log.e(TAG, "Error retrieving user profile: ", e);
             resetSignupButton();
         });
@@ -411,21 +431,21 @@ public class EventSignupActivity extends BaseActivity {
 
             return null;
         }).addOnSuccessListener(aVoid -> {
-            Toast.makeText(this, "You have successfully signed up!", Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "You have successfully signed up!", Toast.LENGTH_SHORT).show();
             Log.d(TAG, "Sign-up transaction successful.");
             finish(); // Close the activity or update UI as needed
         }).addOnFailureListener(e -> {
             if (e instanceof FirebaseFirestoreException) {
                 FirebaseFirestoreException ffe = (FirebaseFirestoreException) e;
                 if (ffe.getCode() == FirebaseFirestoreException.Code.ALREADY_EXISTS) {
-                    Toast.makeText(this, ffe.getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, ffe.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Sign-up failed: " + ffe.getMessage());
                 } else {
-                    Toast.makeText(this, "Signup failed: " + ffe.getMessage(), Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(this, "Signup failed: " + ffe.getMessage(), Toast.LENGTH_SHORT).show();
                     Log.e(TAG, "Sign-up failed with Firestore error: ", e);
                 }
             } else {
-                Toast.makeText(this, "Signup failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(this, "Signup failed: " + e.getMessage(), Toast.LENGTH_SHORT).show();
                 Log.e(TAG, "Sign-up failed with unknown error: ", e);
             }
             resetSignupButton();
