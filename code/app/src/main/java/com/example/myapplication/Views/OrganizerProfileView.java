@@ -17,6 +17,8 @@ import android.widget.*;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
@@ -53,6 +55,8 @@ public class OrganizerProfileView extends BaseActivity {
     private boolean isOrganizer = true; // Default to true for organizers
     private boolean notificationsPerm = false;
 
+    public String deviceId = retrieveDeviceId();
+
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -76,6 +80,9 @@ public class OrganizerProfileView extends BaseActivity {
         loadUserProfile();
     }
 
+    /*
+     * Initialize UI components
+     */
     private void initializeUI() {
         profileImageView = findViewById(R.id.profile_image);
         editProfileImageButton = findViewById(R.id.edit_profile_image_button);
@@ -121,23 +128,38 @@ public class OrganizerProfileView extends BaseActivity {
 
     }
 
+    /*
+     * Set click listeners for UI components
+     */
     private void setListeners() {
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
         saveChangesButton.setOnClickListener(v -> saveProfileData());
         backButton.setOnClickListener(v -> finish());
         removeProfileImageButton.setOnClickListener(v -> deleteProfileImage());
         manageFacilityButton.setOnClickListener(v -> addFacility());
+        //myEvents.setOnClickListener(v -> loadFragment(HomeFragment.newInstance(deviceId), "HomeFragmentTag"));
         myEvents.setOnClickListener(v -> startActivity(new Intent(this, HomeFragment.class))); // changed
         notifGroups.setOnClickListener(v -> startActivity(new Intent(this, OrganizerNotificationActivity.class)));
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notificationsPerm = isChecked);
     }
+    private void loadFragment(Fragment fragment, String tag) {
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+        transaction.replace(R.id.fragmentContainer, fragment, tag);
+        transaction.commit();
+    }
 
+    /*
+     * Open file chooser for image selection
+     */
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         imagePickerLauncher.launch(intent);
     }
 
+    /*
+     * Load user profile data from Firestore
+     */
     private void loadUserProfile() {
         String deviceId = retrieveDeviceId();
         if (deviceId == null || deviceId.isEmpty()) {
@@ -160,6 +182,9 @@ public class OrganizerProfileView extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to load profile.", e));
     }
 
+    /*
+     * Populate UI with user data if the user already exists in the database
+     */
     private void populateUIWithUserData(User user) {
         nameField.setText(user.getName());
         emailField.setText(user.getEmail());
@@ -191,6 +216,9 @@ public class OrganizerProfileView extends BaseActivity {
     }
 
 
+    /*
+     * Initialize default fields for the user if they don't exist in the database
+     */
     private void initializeDefaultFields() {
         nameField.setText("");
         emailField.setText("");
@@ -210,6 +238,9 @@ public class OrganizerProfileView extends BaseActivity {
         generateDefaultAvatar(null);
     }
 
+    /*
+     * Save profile data to Firestore
+     */
     private void saveProfileData() {
         String name = nameField.getText().toString().trim();
         String email = emailField.getText().toString().trim();
@@ -255,6 +286,9 @@ public class OrganizerProfileView extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to update profile.", e));
     }
 
+    /*
+     * Upload profile image to Firebase Storage
+     */
     private void uploadProfileImage(DocumentReference userRef) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile_images/" + retrieveDeviceId() + ".jpg");
         storageRef.putFile(imageUri)
@@ -265,6 +299,9 @@ public class OrganizerProfileView extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to upload profile image.", e));
     }
 
+    /*
+     * Delete profile image from Firestore and Firebase Storage
+     */
     private void deleteProfileImage() {
         DocumentReference userRef = db.collection("users").document(retrieveDeviceId());
         userRef.update("profileImageUrl", null)
@@ -275,6 +312,9 @@ public class OrganizerProfileView extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to delete profile image.", e));
     }
 
+    /*
+     * Show date picker dialog
+     */
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -289,6 +329,9 @@ public class OrganizerProfileView extends BaseActivity {
         datePickerDialog.show();
     }
 
+    /*
+     * Start the add facility activity when the manage facility button is clicked
+     */
     private void addFacility() {
         Intent intent = new Intent(this, AddFacilityView.class);
         startActivity(intent);
