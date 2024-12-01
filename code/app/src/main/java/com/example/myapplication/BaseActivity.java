@@ -24,8 +24,7 @@ public abstract class BaseActivity extends AppCompatActivity {
      * @return Device ID as a String.
      */
     protected String retrieveDeviceId() {
-        return "bc99a31651734f39";
-        //return Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
+        return Settings.Secure.getString(getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 
     /**

@@ -101,12 +101,14 @@ public class AddFacilityController {
         repository.loadFacility(deviceId, new FacilityRepository.LoadFacilityCallback() {
             @Override
             public void onSuccess(Facility facility) {
+                // Facility found, return it via the listener
                 listener.onFacilityLoaded(facility);
             }
 
             @Override
             public void onFailure(Exception e) {
-                listener.onFacilityLoadFailed(e);
+                // Facility not found, notify listener to display the Toast
+                listener.onFacilityLoadFailed(new Exception("Please make a facility to become an organizer."));
             }
         });
     }

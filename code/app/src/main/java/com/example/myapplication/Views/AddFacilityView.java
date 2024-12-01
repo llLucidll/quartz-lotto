@@ -59,6 +59,58 @@ public class AddFacilityView extends BaseActivity {
 
         uploadFacilityImageButton.setOnClickListener(v -> openImagePicker());
         saveFacilityButton.setOnClickListener(v -> saveFacilityDetails());
+
+        // Load facility for the current deviceId
+        String deviceId = retrieveDeviceId();
+        if (deviceId == null || deviceId.isEmpty()) {
+            Toast.makeText(this, "Device ID not found. Please log in again.", Toast.LENGTH_SHORT).show();
+            finish();
+            return;
+        }
+
+        controller.loadFacility(new AddFacilityController.AddFacilityListener() {
+            @Override
+            public void onFacilityLoaded(Facility facility) {
+                runOnUiThread(() -> {
+                    facilityNameField.setText(facility.getName());
+                    facilityLocationField.setText(facility.getLocation());
+                    if (facility.getImageUrl() != null && !facility.getImageUrl().isEmpty()) {
+                        Glide.with(AddFacilityView.this)
+                                .load(facility.getImageUrl())
+                                .apply(RequestOptions.centerCropTransform())
+                                .into(facilityImageView);
+                    }
+                });
+            }
+
+            @Override
+            public void onFacilityLoadFailed(Exception e) {
+                runOnUiThread(() -> {
+                    Toast.makeText(AddFacilityView.this, "Please make a facility to be an organizer.", Toast.LENGTH_SHORT).show();
+                });
+            }
+
+            @Override
+            public void onFacilitySavedSuccessfully() {
+                // Not used here
+            }
+
+            @Override
+            public void onFacilitySaveFailed(Exception e) {
+                // Not used here
+            }
+
+            @Override
+            public void onImageUploaded(String imageUrl) {
+                // Not used here
+            }
+
+            @Override
+            public void onImageUploadFailed(Exception e) {
+                // Not used here
+            }
+        }, retrieveDeviceId());
+
     }
 
     private void openImagePicker() {
