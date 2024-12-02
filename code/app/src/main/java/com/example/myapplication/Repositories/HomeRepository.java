@@ -26,7 +26,8 @@ public class HomeRepository {
     }
 
     /**
-     * Fetches events where the user is on the waitlist with "waiting" status.
+     * Returns all events where your status is waiting in
+     * @param homeView
      */
     public void fetchWaitlistEvents(HomeView homeView) {
         String targetDeviceId = this.deviceId; //stores deviceid
@@ -75,7 +76,8 @@ public class HomeRepository {
     }
 
     /**
-     * Fetches events where the user is "selected" or "confirmed".
+     * Returns all events where your device id shows up in and your status is selected
+     * @param homeView
      */
     public void fetchSelectedEvents(HomeView homeView) {
         String targetDeviceId = this.deviceId;
@@ -125,10 +127,12 @@ public class HomeRepository {
     }
 
     /**
-     * Removes the user from the waitlist of the specified event.
+     * Removes the user from the waitlist when they hit leave waitlist
+     * @param eventName
      */
     public void removeFromWaitlist(String eventId) {
         String deviceID = this.deviceId;
+
 
         DocumentReference eventDocRef = db.collection("Events").document(eventId);
         DocumentReference waitlistDocRef = eventDocRef.collection("Waitlist").document(deviceID);
@@ -177,10 +181,13 @@ public class HomeRepository {
         }).addOnFailureListener(e -> {
             Log.w("Firebase", "Error removing device ID from waitlist", e);
         });
+
     }
 
     /**
-     * Updates the user's status for a specific event.
+     * Updates the event Status when the user confirms/declines the invitation.
+     * @param eventName
+     * @param newStatus
      */
     public void updateEventStatus(String eventId, String newStatus) {
         String deviceID = this.deviceId;
