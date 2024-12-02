@@ -8,6 +8,13 @@ import com.example.myapplication.Models.Attendee;
 import org.junit.Before;
 import org.junit.Test;
 
+/**
+ * US 01.05.03 As an entrant I want to be able to decline
+ * US 01.05.02 As an entrant I want to be able to accept the invitation
+ * to register/sign up when chosen to participate in an event
+ * US 01.06.01 As an entrant I want to view event details within the app by scanning the promotional QR code
+ * US 01.06.02 As an entrant I want to be able to be sign up for an event by scanning the QR code
+ */
 public class EventRegistrationTest {
     private Event event;
     private Attendee attendee1, attendee2;

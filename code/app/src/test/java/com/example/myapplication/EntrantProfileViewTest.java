@@ -1,19 +1,5 @@
 package com.example.myapplication;
-/*
-Tests for following user stories:
-US 02.01.03 As an organizer, I want to create and manage my facility profile.
 
-US 01.02.01 As an entrant, I want to provide my personal information such as name, email and optional phone number in the app
-
-US 01.02.02 As an entrant I want to update information such as name, email and contact information on my profile
-
-US 01.03.01 As an entrant I want to upload a profile picture for a more personalized experience
-
-US 01.03.02 As an entrant I want remove profile picture if need be
-
-US 01.03.03 As an entrant I want my profile picture to be deterministically generated from my profile name if I haven't uploaded a profile image yet.
-
- */
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.BitmapDrawable;
@@ -51,6 +37,12 @@ import de.hdodenhof.circleimageview.CircleImageView;
 
 /**
  * Unit tests for EntrantProfileView using Robolectric.
+ * US 02.01.03 As an organizer, I want to create and manage my facility profile.
+ * US 01.02.01 As an entrant, I want to provide my personal information such as name, email and optional phone number in the app
+ * US 01.02.02 As an entrant I want to update information such as name, email and contact information on my profile
+ * US 01.03.01 As an entrant I want to upload a profile picture for a more personalized experience
+ * US 01.03.02 As an entrant I want remove profile picture if need be
+ * US 01.03.03 As an entrant I want my profile picture to be deterministically generated from my profile name if I haven't uploaded a profile image yet.
  */
 
 @RunWith(RobolectricTestRunner.class)

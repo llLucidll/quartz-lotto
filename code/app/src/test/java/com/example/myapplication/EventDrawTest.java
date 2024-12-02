@@ -1,4 +1,4 @@
-package com.example.Models.myapplication;
+package com.example.myapplication;
 import static org.junit.Assert.assertEquals;
 
 import com.example.myapplication.Models.Attendee;
@@ -8,9 +8,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-/*
-US 02.05.03 {Draw a replacement applicant from the pooling system when a previously selected applicant cancels or rejects the invitation}
-US 02.05.02 {Sample a specified number of attendees from the waiting list}
+/**
+ * US 02.05.03 {Draw a replacement applicant from the pooling system when a previously selected applicant cancels or rejects the invitation}
+ * US 02.05.02 {Sample a specified number of attendees from the waiting list}
  */
 public class EventDrawTest {
     private EntrantList entrantList;

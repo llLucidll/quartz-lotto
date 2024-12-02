@@ -1,12 +1,15 @@
-package com.example.myapplication.Models;
+package com.example.myapplication;
 
 import static org.junit.Assert.*;
+
+import com.example.myapplication.Models.Facility;
 
 import org.junit.Before;
 import org.junit.Test;
 
-/*
-Testing the Facility class itself for underlying correctness.
+/**
+ * Testing the Facility model class itself for underlying correctness.
+ * US 02.01.03 As an organizer, I want to create and manage my facility profile.
  */
 public class FacilityTest {
 
