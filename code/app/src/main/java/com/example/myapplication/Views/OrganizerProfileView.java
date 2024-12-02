@@ -50,12 +50,13 @@ public class OrganizerProfileView extends BaseActivity {
     private Button saveChangesButton, manageFacilityButton, myEvents, notifGroups;
     private Switch notificationSwitch;
 
+
     private Uri imageUri;
     private boolean isAdmin = false;
     private boolean isOrganizer = true; // Default to true for organizers
     private boolean notificationsPerm = false;
 
-    public String deviceId = retrieveDeviceId();
+    public String deviceId;
 
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -74,10 +75,12 @@ public class OrganizerProfileView extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_organizer_profile);
+        deviceId = retrieveDeviceId();
 
         initializeUI();
         setListeners();
         loadUserProfile();
+
     }
 
     /*
