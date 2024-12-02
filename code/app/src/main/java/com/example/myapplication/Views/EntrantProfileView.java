@@ -1,4 +1,3 @@
-// com/example/myapplication/EditProfileActivity.java
 
 package com.example.myapplication.Views;
 
@@ -198,7 +197,7 @@ public class EntrantProfileView extends AppCompatActivity {
             @Override
             public void onImageDeleteFailed(Exception e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(EntrantProfileView.this, "Failed to remove profile image", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EntrantProfileView.this, "Failed to remove profile image due to no Firebase connection", Toast.LENGTH_SHORT).show();
                 });
             }
         });
@@ -403,7 +402,7 @@ public class EntrantProfileView extends AppCompatActivity {
             @Override
             public void onProfileSaveFailed(Exception e) {
                 runOnUiThread(() -> {
-                    Toast.makeText(EntrantProfileView.this, "Error updating profile", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(EntrantProfileView.this, "Error updating profile due to no Firebase connection", Toast.LENGTH_SHORT).show();
                 });
             }
 

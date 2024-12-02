@@ -23,6 +23,7 @@ public class HomePageController extends ArrayAdapter<Event> {
         this.events = events;
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
