@@ -95,6 +95,7 @@ public class NotificationService {
                         String message = document.getString("message");
 
                         if (title != null && message != null) {
+                            Log.d(TAG, "Displaying notification - Title: " + title + ", Message: " + message);
                             Map<String, Object> user = new HashMap<>();
                             user.put("userId", deviceId);
                             sendNotificationWithoutSaving(user, context, title, message);
@@ -105,7 +106,7 @@ public class NotificationService {
     }
 
     /**
-     * Sends a notification to a user without saving it in Firebase.
+     * Sends a notification to a user without saving it to Firebase.
      *
      * @param user    A map containing user data, including "userId".
      * @param context The context from which this method is called.
@@ -117,6 +118,8 @@ public class NotificationService {
             Log.e(TAG, "User data is invalid or missing 'userId'");
             return;
         }
+
+        String userId = (String) user.get("userId");
 
         // Intent to open the app when notification is clicked
         Intent intent = new Intent(context, MainActivity.class); // Replace with your desired activity
@@ -143,6 +146,23 @@ public class NotificationService {
         // Show the notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(notificationId, builder.build());
+    }
+
+    public static void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = NotificationUtils.getChannelId();
+            CharSequence name = "Default Channel";
+            String description = "Channel for general notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
     }
 
 
