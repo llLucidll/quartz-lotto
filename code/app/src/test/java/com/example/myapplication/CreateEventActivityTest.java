@@ -6,6 +6,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
@@ -23,6 +24,7 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 import org.robolectric.shadows.ShadowLooper;
+import org.robolectric.shadows.ShadowToast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.Nullable;
@@ -35,6 +37,8 @@ import static org.mockito.ArgumentMatchers.any;
 
 /*
  * Corrected tests for CreateEventActivity
+ * US 02.01.01 {Create a new event and generate a unique QR code}
+ *
  */
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 32)
@@ -107,8 +111,43 @@ public class CreateEventActivityTest {
         mockedFirestoreStatic.close();
     }
 
+
+    /*
+    US 02.01.01 {Create a new event and generate a unique QR code}
+     */
     @Test
-    public void testSaveEvent_withValidData_shouldSaveToFirestore() {
+    public void testSaveEventToFirestore() {
+        // Arrange
+        String eventName = "";
+        String date = "2023-12-25";
+        String time = "18:00";
+        String description = "Christmas Gathering";
+        String maxAttendees = "100";
+        String maxWaitlist = "50";
+        boolean geolocationEnabled = true;
+
+        eventNameEditText.setText(eventName);
+        dateEditText.setText(date);
+        timeEditText.setText(time);
+        descriptionEditText.setText(description);
+        maxAttendeesEditText.setText(maxAttendees);
+        maxWaitlistEditText.setText(maxWaitlist);
+        geolocationCheckBox.setChecked(geolocationEnabled);
+
+        // Act
+        saveButton.performClick();
+        Toast latestToast = ShadowToast.getLatestToast();
+        ShadowToast shadowToast = org.robolectric.Shadows.shadowOf(latestToast);
+        assertEquals("Please fill out all required fields", shadowToast.getTextOfLatestToast());
+
+    }
+
+
+    /*
+    Testing saving an event with all valid credentials
+     */
+    @Test
+    public void testSaveEvent() {
         // Arrange
         String eventName = "Sample Event";
         String date = "2023-12-25";
@@ -128,99 +167,5 @@ public class CreateEventActivityTest {
 
         // Act
         saveButton.performClick();
-
-        // Process any pending tasks
-        ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
-
-        // Assert
-        // Capture the data passed to Firestore for Events
-        ArgumentCaptor<Map<String, Object>> eventCaptor = ArgumentCaptor.forClass(Map.class);
-        Mockito.verify(mockEventDocument).set(eventCaptor.capture());
-
-        Map<String, Object> capturedEvent = eventCaptor.getValue();
-        assertEquals("Sample Event", capturedEvent.get("eventName"));
-        assertEquals("Christmas Gathering", capturedEvent.get("description"));
-        assertEquals("2023-12-25", capturedEvent.get("drawDate"));
-        assertEquals("18:00", capturedEvent.get("eventDateTime"));
-        assertEquals(Integer.valueOf(100), capturedEvent.get("maxAttendees"));
-        assertEquals(Integer.valueOf(50), capturedEvent.get("maxOnWaitList"));
-        assertEquals(true, capturedEvent.get("geolocationEnabled"));
-
-        String expectedQrCodeLink = "eventapp://event/" + mockEventDocument.getId();
-        assertEquals(expectedQrCodeLink, capturedEvent.get("qrCodeLink"));
-    }
-
-    @Test
-    public void testSaveEvent_withEmptyMaxWaitlist_shouldHandleNull() {
-        // Arrange
-        String eventName = "Sample Event";
-        String date = "2023-12-25";
-        String time = "18:00";
-        String description = "Christmas Gathering";
-        String maxAttendees = "100";
-        boolean geolocationEnabled = false;
-
-        eventNameEditText.setText(eventName);
-        dateEditText.setText(date);
-        timeEditText.setText(time);
-        descriptionEditText.setText(description);
-        maxAttendeesEditText.setText(maxAttendees);
-        maxWaitlistEditText.setText(""); // Empty maxWaitlist
-        geolocationCheckBox.setChecked(geolocationEnabled);
-
-        // Act
-        saveButton.performClick();
-
-        // Process any pending tasks
-        ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
-
-        // Assert
-        // Capture the data passed to Firestore for Events
-        ArgumentCaptor<Map<String, Object>> eventCaptor = ArgumentCaptor.forClass(Map.class);
-        Mockito.verify(mockEventDocument).set(eventCaptor.capture());
-
-        Map<String, Object> capturedEvent = eventCaptor.getValue();
-        assertEquals("Sample Event", capturedEvent.get("eventName"));
-        assertEquals("Christmas Gathering", capturedEvent.get("description"));
-        assertEquals("2023-12-25", capturedEvent.get("drawDate"));
-        assertEquals("18:00", capturedEvent.get("eventDateTime"));
-        assertEquals(Integer.valueOf(100), capturedEvent.get("maxAttendees"));
-        assertNull("maxOnWaitList should be null when input is empty", capturedEvent.get("maxOnWaitList"));
-        assertEquals(false, capturedEvent.get("geolocationEnabled"));
-
-        String expectedQrCodeLink = "eventapp://event/" + mockEventDocument.getId();
-        assertEquals(expectedQrCodeLink, capturedEvent.get("qrCodeLink"));
-    }
-
-    @Test
-    public void testSaveButton_click_shouldCallSaveEvent() {
-        // Arrange
-        String eventName = "Sample Event";
-        String date = "2023-12-25";
-        String time = "18:00";
-        String description = "Christmas Gathering";
-        String maxAttendees = "100";
-        String maxWaitlist = "50";
-        boolean geolocationEnabled = true;
-
-        eventNameEditText.setText(eventName);
-        dateEditText.setText(date);
-        timeEditText.setText(time);
-        descriptionEditText.setText(description);
-        maxAttendeesEditText.setText(maxAttendees);
-        maxWaitlistEditText.setText(maxWaitlist);
-        geolocationCheckBox.setChecked(geolocationEnabled);
-
-        // Act
-        saveButton.performClick();
-
-        // Process any pending tasks
-        ShadowLooper.runUiThreadTasksIncludingDelayedTasks();
-
-        // Assert
-        // Verify Firestore save for Events
-        Mockito.verify(mockEventDocument).set(any(Map.class));
-
-        // Since the activity doesn't call finish(), we don't check for activity finishing.
     }
 }

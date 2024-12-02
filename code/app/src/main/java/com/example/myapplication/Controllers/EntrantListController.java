@@ -6,7 +6,6 @@ import android.util.Log;
 import com.example.myapplication.AttendeesFragment;
 import com.example.myapplication.Repositories.EntrantListRepository;
 import com.example.myapplication.Views.WaitingListView;
-import com.example.myapplication.Views.AttendeeListView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
