@@ -236,15 +236,6 @@
             android:textStyle="bold"
             android:layout_marginBottom="10dp" />
 
-        <Button
-            android:id="@+id/my_events_button"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:backgroundTint="#B76E79"
-            android:text="My Events"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            android:layout_marginBottom="10dp" />
 
     </LinearLayout>
 </ScrollView>

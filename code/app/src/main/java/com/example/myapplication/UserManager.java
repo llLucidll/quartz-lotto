@@ -28,6 +28,7 @@ public class UserManager {
 
     // Method to retrieve the device ID
     private String retrieveDeviceId(Context context) {
+        //return "bc99a31651734f39";
         return Settings.Secure.getString(context.getContentResolver(), Settings.Secure.ANDROID_ID);
     }
 

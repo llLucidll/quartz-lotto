@@ -41,7 +41,7 @@ public class EditProfileActivity extends BaseActivity {
     private ImageButton editProfileImageButton, removeProfileImageButton;
     private EditText nameField, emailField, dobField, phoneField;
     private Spinner countrySpinner;
-    private Button saveChangesButton, addFacilityButton, myEventsButton;
+    private Button saveChangesButton, addFacilityButton;// myEventsButton;
     private Switch notificationSwitch;
 
 
@@ -89,7 +89,7 @@ public class EditProfileActivity extends BaseActivity {
         saveChangesButton = findViewById(R.id.save_changes_button);
         addFacilityButton = findViewById(R.id.add_facility_button);
         notificationSwitch = findViewById(R.id.notifications_switch);
-        myEventsButton = findViewById(R.id.my_events_button);
+        //myEventsButton = findViewById(R.id.my_events_button);
 
         dobField.setInputType(InputType.TYPE_CLASS_DATETIME);
         dobField.setOnTouchListener((v, event) -> {
@@ -127,7 +127,7 @@ public class EditProfileActivity extends BaseActivity {
         addFacilityButton.setOnClickListener(v -> addFacility());
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notificationsPerm = isChecked);
         addFacilityButton.setOnClickListener(v -> addFacility());
-        myEventsButton.setOnClickListener(v -> myEvents());
+        //myEventsButton.setOnClickListener(v -> myEvents());
     }
 
     private void openFileChooser() {
@@ -136,10 +136,10 @@ public class EditProfileActivity extends BaseActivity {
         startActivityForResult(intent, 1);
     }
 
-    private void myEvents() {
-        Intent intent = new Intent(this, HomeView.class);
-        startActivity(intent);
-    }
+//    private void myEvents() {
+//        Intent intent = new Intent(this, HomeFragment.class); // changed
+//        startActivity(intent);
+//    }
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
