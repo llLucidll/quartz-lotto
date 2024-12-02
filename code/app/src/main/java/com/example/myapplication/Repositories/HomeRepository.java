@@ -128,8 +128,8 @@ public class HomeRepository {
 
     /**
      * Removes the user from the waitlist when they hit leave waitlist
-     * @param eventName
-     */
+     * @param eventId
+     **/
     public void removeFromWaitlist(String eventId) {
         String deviceID = this.deviceId;
 
@@ -171,7 +171,6 @@ public class HomeRepository {
                     transaction.update(eventDocRef, "currentAttendees", currentAttendees - 1);
                 }
             }
-
             // Remove user from waitlist
             transaction.delete(waitlistDocRef);
 
@@ -186,7 +185,7 @@ public class HomeRepository {
 
     /**
      * Updates the event Status when the user confirms/declines the invitation.
-     * @param eventName
+     * @param eventId
      * @param newStatus
      */
     public void updateEventStatus(String eventId, String newStatus) {
@@ -245,4 +244,5 @@ public class HomeRepository {
             Log.w("Firebase", "Error updating status", e);
         });
     }
+
 }

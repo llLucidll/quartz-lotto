@@ -77,7 +77,7 @@ public class WaitingListView extends Fragment {
         // Pass the context when invoking drawAttendees
         drawButton.setOnClickListener(v -> {
             if (getContext() != null) {
-                controller.drawAttendees(eventId, true, getContext());
+                controller.drawAttendees(eventId, false, getContext());
             } else {
                 Toast.makeText(getActivity(), "Unable to draw attendees. Please try again.", Toast.LENGTH_SHORT).show();
             }
