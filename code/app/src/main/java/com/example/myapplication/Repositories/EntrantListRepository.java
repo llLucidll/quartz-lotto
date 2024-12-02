@@ -135,7 +135,6 @@ public class EntrantListRepository {
                     Collections.shuffle(shuffledList);
                     selectedAttendees = new ArrayList<>(shuffledList.subList(0, size));
                 }
-
                 updateAttendeeList(eventId, selectedAttendees, context);
             }
 
@@ -221,13 +220,21 @@ public class EntrantListRepository {
                 .document(eventId)
                 .get()
                 .addOnSuccessListener(DocumentSnapshot -> {
-                    int currentCount = DocumentSnapshot.getLong("currentAttendees").intValue();
-                    if (currentCount == 0 ){
+                    int currentAttendeeCount = DocumentSnapshot.getLong("currentAttendees").intValue();
+                    int currentWaitlistCount = DocumentSnapshot.getLong("currentWaitlist").intValue();
+                    if (currentAttendeeCount == 0 ){
                         DocumentSnapshot.getReference().update("currentAttendees", size);
+                    } else  {
+                        DocumentSnapshot.getReference().update("currentAttendees", (currentAttendeeCount + size));
+                    }
+
+                    if ((currentWaitlistCount - size) <= 0) {
+                        DocumentSnapshot.getReference().update("currentWaitlist", 0);
                     } else {
-                        DocumentSnapshot.getReference().update("currentAttendees", (currentCount + size));
+                        DocumentSnapshot.getReference().update("currentWaitlist", (currentWaitlistCount - size));
                     }
                 });
 
     }
+
 }
