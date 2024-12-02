@@ -9,7 +9,6 @@ import android.widget.ListView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
 import com.example.myapplication.SelectedEventsAdapter;
@@ -19,7 +18,9 @@ import com.example.myapplication.R;
 import com.example.myapplication.Repositories.HomeRepository;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeView extends Fragment {
     private ListView selectedEventsListView;
@@ -29,6 +30,8 @@ public class HomeView extends Fragment {
     private HomePageController waitlistEventsAdapter;
     private List<Event> selectedEvents;
     private List<Event> waitlistEvents;
+    private Map<String, String> userStatuses; // Map to store user statuses
+
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -40,8 +43,9 @@ public class HomeView extends Fragment {
 
         selectedEvents = new ArrayList<>();
         waitlistEvents = new ArrayList<>();
+        userStatuses = new HashMap<>(); // Initialize the map
 
-        selectedEventsAdapter = new SelectedEventsAdapter(getContext(), selectedEvents);
+        selectedEventsAdapter = new SelectedEventsAdapter(getContext(), selectedEvents, userStatuses);
         selectedEventsListView.setAdapter(selectedEventsAdapter);
 
         waitlistEventsAdapter = new HomePageController(getContext(), waitlistEvents);
@@ -50,6 +54,7 @@ public class HomeView extends Fragment {
         // Fetch events
         fetchWaitlistEvents();
         fetchSelectedEvents();
+
         return view;
     }
 
@@ -73,11 +78,19 @@ public class HomeView extends Fragment {
     }
 
     /**
-     * Updates the selected events in the UI.
+     * Updates the selected events and user statuses in the UI.
+     *
+     * @param fetchedSelectedEvents List of events where the user is "selected" or "confirmed".
+     * @param fetchedUserStatuses   Map of eventId to user status.
      */
-    public void updateSelectedEvents(List<Event> fetchedSelectedEvents) {
+    public void updateSelectedEvents(List<Event> fetchedSelectedEvents, Map<String, String> fetchedUserStatuses) {
         this.selectedEvents.clear();
         this.selectedEvents.addAll(fetchedSelectedEvents);
+
+        // Update the userStatuses map
+        this.userStatuses.clear();
+        this.userStatuses.putAll(fetchedUserStatuses);
+
         selectedEventsAdapter.notifyDataSetChanged();
     }
 }
