@@ -30,6 +30,7 @@ public class MainActivity extends BaseActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        NotificationService.createNotificationChannel(this);
 
         // Initialize Osmdroid configuration
         Configuration.getInstance().setUserAgentValue(getPackageName());
@@ -41,14 +42,13 @@ public class MainActivity extends BaseActivity {
         String deviceId = retrieveDeviceId();
 
         // Fetch and display notifications for the current device
-        NotificationService.receiveNotifications(deviceId, this);
-
 
         // Initialize UserManager with the current context
         userManager = new UserManager(this);
 
         // Sign in anonymously
         signInAnonymously();
+        NotificationService.receiveNotifications(deviceId, this);
 
         bottomNavigationView = findViewById(R.id.bottom_navigation);
 
@@ -95,6 +95,7 @@ public class MainActivity extends BaseActivity {
                     if (task.isSuccessful()) {
                         // Sign in success
                         Log.d(TAG, "signInAnonymously:success");
+
                     } else {
                         // If sign in fails, display a message to the user.
                         Log.w(TAG, "signInAnonymously:failure", task.getException());

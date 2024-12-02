@@ -6,12 +6,15 @@ import android.util.Log;
 
 import com.example.myapplication.Models.Event;
 import com.example.myapplication.Views.HomeView;
+import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class HomeRepository {
     private final FirebaseFirestore db;
@@ -23,11 +26,13 @@ public class HomeRepository {
     }
 
     /**
-     * Fetches events where the user is on the waitlist with "waiting" status.
+     * Returns all events where your status is waiting in
+     * @param homeView
      */
     public void fetchWaitlistEvents(HomeView homeView) {
         String targetDeviceId = this.deviceId; //stores deviceid
         List<Event> deviceWaitlistEvents = new ArrayList<>(); //initializes empty list to hold events where user is on waitlist with "waiting" status
+        Map<String, String> fetchedUserStatuses = new HashMap<>();
 
         db.collection("Events")
                 .get()//gets all events in event collection
@@ -71,11 +76,13 @@ public class HomeRepository {
     }
 
     /**
-     * Fetches events where the user is "selected" or "confirmed".
+     * Returns all events where your device id shows up in and your status is selected
+     * @param homeView
      */
     public void fetchSelectedEvents(HomeView homeView) {
         String targetDeviceId = this.deviceId;
         List<Event> deviceSelectedEvents = new ArrayList<>();
+        Map<String, String> fetchedUserStatuses = new HashMap<>();
 
         db.collection("Events")
                 .get()
@@ -101,6 +108,7 @@ public class HomeRepository {
                                                 String status = waitlistDoc.getString("status");
                                                 if ("selected".equals(status) || "confirmed".equals(status)) {
                                                     deviceSelectedEvents.add(event);
+                                                    fetchedUserStatuses.put(event.getEventId(), status);
                                                 }
                                             }
                                         } else {
@@ -108,7 +116,7 @@ public class HomeRepository {
                                         }
 
                                         if (eventsProcessed[0] == totalEvents) {
-                                            homeView.updateSelectedEvents(deviceSelectedEvents);
+                                            homeView.updateSelectedEvents(deviceSelectedEvents, fetchedUserStatuses);
                                         }
                                     });
                         }
@@ -119,62 +127,122 @@ public class HomeRepository {
     }
 
     /**
-     * Removes the user from the waitlist of the specified event.
-     */
-    public void removeFromWaitlist(String eventName) {
+     * Removes the user from the waitlist when they hit leave waitlist
+     * @param eventId
+     **/
+    public void removeFromWaitlist(String eventId) {
         String deviceID = this.deviceId;
 
-        db.collection("Events")
-                .whereEqualTo("eventName", eventName)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            db.collection("Events")
-                                    .document(document.getId())
-                                    .collection("Waitlist")
-                                    .document(deviceID)
-                                    .delete()
-                                    .addOnSuccessListener(aVoid -> {
-                                        Log.d("Firebase", "Device ID successfully removed from waitlist.");
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.w("Firebase", "Error removing device ID from waitlist", e);
-                                    });
-                        }
-                    } else {
-                        Log.w("Firebase", "No event found with the name: " + eventName);
-                    }
-                });
+
+        DocumentReference eventDocRef = db.collection("Events").document(eventId);
+        DocumentReference waitlistDocRef = eventDocRef.collection("Waitlist").document(deviceID);
+
+        db.runTransaction(transaction -> {
+            DocumentSnapshot eventSnapshot = transaction.get(eventDocRef);
+            if (!eventSnapshot.exists()) {
+                try {
+                    throw new Exception("Event does not exist!");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            DocumentSnapshot waitlistSnapshot = transaction.get(waitlistDocRef);
+            if (!waitlistSnapshot.exists()) {
+                try {
+                    throw new Exception("User is not on the waitlist!");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            String status = waitlistSnapshot.getString("status");
+            Long currentWaitlist = eventSnapshot.getLong("currentWaitlist");
+            Long currentAttendees = eventSnapshot.getLong("currentAttendees");
+
+            if ("waiting".equals(status)) {
+                // User is on waitlist, decrement currentWaitlist
+                if (currentWaitlist != null && currentWaitlist > 0) {
+                    transaction.update(eventDocRef, "currentWaitlist", currentWaitlist - 1);
+                }
+            } else if ("selected".equals(status) || "confirmed".equals(status)) {
+                // User is in selected or confirmed, decrement currentAttendees
+                if (currentAttendees != null && currentAttendees > 0) {
+                    transaction.update(eventDocRef, "currentAttendees", currentAttendees - 1);
+                }
+            }
+            // Remove user from waitlist
+            transaction.delete(waitlistDocRef);
+
+            return null;
+        }).addOnSuccessListener(aVoid -> {
+            Log.d("Firebase", "Device ID successfully removed from waitlist.");
+        }).addOnFailureListener(e -> {
+            Log.w("Firebase", "Error removing device ID from waitlist", e);
+        });
+
     }
 
     /**
-     * Updates the user's status for a specific event.
+     * Updates the event Status when the user confirms/declines the invitation.
+     * @param eventId
+     * @param newStatus
      */
-    public void updateEventStatus(String eventName, String newStatus) {
+    public void updateEventStatus(String eventId, String newStatus) {
         String deviceID = this.deviceId;
 
-        db.collection("Events")
-                .whereEqualTo("eventName", eventName)
-                .get()
-                .addOnCompleteListener(task -> {
-                    if (task.isSuccessful() && task.getResult() != null) {
-                        for (QueryDocumentSnapshot document : task.getResult()) {
-                            db.collection("Events")
-                                    .document(document.getId())
-                                    .collection("Waitlist")
-                                    .document(deviceID)
-                                    .update("status", newStatus)
-                                    .addOnSuccessListener(aVoid -> {
-                                        Log.d("Firebase", "Status updated to " + newStatus);
-                                    })
-                                    .addOnFailureListener(e -> {
-                                        Log.w("Firebase", "Error updating status", e);
-                                    });
-                        }
-                    } else {
-                        Log.w("Firebase", "No event found with the name: " + eventName);
-                    }
-                });
+        DocumentReference eventDocRef = db.collection("Events").document(eventId);
+        DocumentReference waitlistDocRef = eventDocRef.collection("Waitlist").document(deviceID);
+
+        db.runTransaction(transaction -> {
+            DocumentSnapshot eventSnapshot = transaction.get(eventDocRef);
+            if (!eventSnapshot.exists()) {
+                try {
+                    throw new Exception("Event does not exist!");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            DocumentSnapshot waitlistSnapshot = transaction.get(waitlistDocRef);
+            if (!waitlistSnapshot.exists()) {
+                try {
+                    throw new Exception("User is not on the waitlist!");
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            String currentStatus = waitlistSnapshot.getString("status");
+            Long currentWaitlist = eventSnapshot.getLong("currentWaitlist");
+            Long currentAttendees = eventSnapshot.getLong("currentAttendees");
+
+            if ("selected".equals(currentStatus) && "confirmed".equals(newStatus)) {
+                // User confirms participation
+                if (currentWaitlist != null && currentWaitlist > 0) {
+                    transaction.update(eventDocRef, "currentWaitlist", currentWaitlist - 1);
+                }
+                if (currentAttendees != null) {
+                    transaction.update(eventDocRef, "currentAttendees", currentAttendees + 1);
+                } else {
+                    transaction.update(eventDocRef, "currentAttendees", 1L);
+                }
+                // Update user status
+                transaction.update(waitlistDocRef, "status", newStatus);
+            } else {
+                try {
+                    throw new Exception("Invalid status transition from " + currentStatus + " to " + newStatus);
+                } catch (Exception e) {
+                    throw new RuntimeException(e);
+                }
+            }
+
+            return null;
+        }).addOnSuccessListener(aVoid -> {
+            Log.d("Firebase", "Status updated to " + newStatus);
+        }).addOnFailureListener(e -> {
+            Log.w("Firebase", "Error updating status", e);
+        });
     }
+
 }

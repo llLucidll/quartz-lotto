@@ -23,6 +23,7 @@ public class HomePageController extends ArrayAdapter<Event> {
         this.events = events;
     }
 
+
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         if (convertView == null) {
@@ -49,7 +50,7 @@ public class HomePageController extends ArrayAdapter<Event> {
 
             //create an instance of HomeRepository and then call it to remove the deviceid from firebase
             HomeRepository homeRepository = new HomeRepository(context);
-            homeRepository.removeFromWaitlist(event.getEventName());
+            homeRepository.removeFromWaitlist(event.getEventId());
 
             Toast.makeText(context, "You have left the event: " + event.getEventName(), Toast.LENGTH_SHORT).show();
         });

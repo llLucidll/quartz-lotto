@@ -2,6 +2,8 @@ package com.example.myapplication;
 
 import static org.junit.Assert.*;
 
+import com.example.myapplication.Models.Facility;
+
 import org.junit.Before;
 import org.junit.Test;
 

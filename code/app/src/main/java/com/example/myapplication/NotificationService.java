@@ -1,15 +1,20 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
+import android.Manifest;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -39,6 +44,20 @@ public class NotificationService {
         if (user == null || !user.containsKey("userId")) {
             Log.e(TAG, "User data is invalid or missing 'userId'");
             return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (context instanceof Activity) {
+                    ActivityCompat.requestPermissions(
+                            (Activity) context,
+                            new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                            1001
+                    );
+                }
+                Log.d(TAG, "Notification permission not granted. Requesting permission.");
+                return;
+            }
         }
 
         String userId = (String) user.get("userId");
@@ -95,6 +114,7 @@ public class NotificationService {
                         String message = document.getString("message");
 
                         if (title != null && message != null) {
+                            Log.d(TAG, "Displaying notification - Title: " + title + ", Message: " + message);
                             Map<String, Object> user = new HashMap<>();
                             user.put("userId", deviceId);
                             sendNotificationWithoutSaving(user, context, title, message);
@@ -105,7 +125,7 @@ public class NotificationService {
     }
 
     /**
-     * Sends a notification to a user without saving it in Firebase.
+     * Sends a notification to a user without saving it to Firebase.
      *
      * @param user    A map containing user data, including "userId".
      * @param context The context from which this method is called.
@@ -117,6 +137,23 @@ public class NotificationService {
             Log.e(TAG, "User data is invalid or missing 'userId'");
             return;
         }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (context instanceof Activity) {
+                    ActivityCompat.requestPermissions(
+                            (Activity) context,
+                            new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                            1001
+                    );
+                }
+                Log.d(TAG, "Notification permission not granted. Requesting permission.");
+                return;
+            }
+        }
+
+        String userId = (String) user.get("userId");
 
         // Intent to open the app when notification is clicked
         Intent intent = new Intent(context, MainActivity.class); // Replace with your desired activity
@@ -143,6 +180,23 @@ public class NotificationService {
         // Show the notification
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.notify(notificationId, builder.build());
+    }
+
+    public static void createNotificationChannel(Context context) {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            String channelId = NotificationUtils.getChannelId();
+            CharSequence name = "Default Channel";
+            String description = "Channel for general notifications";
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+
+            NotificationChannel channel = new NotificationChannel(channelId, name, importance);
+            channel.setDescription(description);
+
+            NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
+            if (notificationManager != null) {
+                notificationManager.createNotificationChannel(channel);
+            }
+        }
     }
 
 

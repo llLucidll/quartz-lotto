@@ -24,7 +24,6 @@ public class FacilityTest {
         );
     }
 
-
     @Test
     public void testImageUrl() {
         assertEquals("https://example.com/image.jpg", facility.getImageUrl());

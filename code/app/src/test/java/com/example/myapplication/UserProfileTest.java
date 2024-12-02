@@ -58,6 +58,7 @@ public class UserProfileTest {
 
     @Test
     public void testSetNotifyNotChosenFromWaitingList() {
+        // Only test `notChosenFromWaitingList` behavior here
         userProfile.setNotifyNotChosenFromWaitingList(false);
         assert(userProfile.isChosenFromWaitingList());
     }

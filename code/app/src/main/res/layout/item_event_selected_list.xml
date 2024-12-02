@@ -25,7 +25,7 @@
         android:textSize="14sp"
         android:textColor="#757575" />
 
-    <!-- Buttons -->
+    <!-- Buttons and Registered Text -->
     <LinearLayout
         android:id="@+id/button_layout"
         android:layout_width="match_parent"
@@ -50,5 +50,15 @@
             android:text="Decline"
             android:backgroundTint="#F44336"
             android:textColor="#FFFFFF" />
+
+        <!-- Registered TextView -->
+        <TextView
+            android:id="@+id/registered_text_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Registered"
+            android:textSize="16sp"
+            android:textColor="@android:color/holo_green_dark"
+            android:visibility="gone" />
     </LinearLayout>
 </LinearLayout>
