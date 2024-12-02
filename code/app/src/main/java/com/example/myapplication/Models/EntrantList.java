@@ -26,37 +26,59 @@ public class EntrantList {
         this.sampleSize = sampleSize;
     }
 
+    /**
+     * Getter for attendees.
+     * @return List of attendees.
+     */
     public List<Attendee> getUsers() {
         return attendees;
     }
 
+    /**
+     * Setter for attendees.
+     * @param user Attendee to be added.
+     */
     public void setUser(Attendee user) {
         attendees.add(user);
     }
 
 
+    /**
+     * Getter for capacity.
+     * @return Maximum number of attendees allowed.
+     */
     public int getCapacity() {
         return capacity;
     }
 
+    /**
+     * Setter for capacity.
+     * @param capacity Maximum number of attendees allowed.
+     */
     public void setCapacity(int capacity) {
         this.capacity = capacity;
     }
 
 
+    /**
+     * Getter for sampleSize.
+     * @return size to draw from the list of attendees.
+     */
     public int getSampleSize() {
         return sampleSize;
     }
 
-    /*
-    gets the maxAttendees from the database for the particular event.
+    /**
+     * Setter for sampleSize.
+     * @param sampleSize size to draw from the list of attendees.
      */
     public void setSampleSize(int sampleSize) {
         this.sampleSize = sampleSize;
     }
 
-    /*
-    Samples a random subset of attendees. Method here only for testing using underlying model class.
+    /**
+     * Samples a random subset of attendees. Method here only for testing using underlying model class.
+     * @param size The number of attendees to be sampled.
      */
     public ArrayList<Attendee> sampleAttendees(int size) {
         if (attendees.size() <= size) {
