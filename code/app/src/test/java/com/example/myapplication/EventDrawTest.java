@@ -9,8 +9,9 @@ import org.junit.Test;
 
 import java.util.ArrayList;
 /**
- * US 02.05.03 {Draw a replacement applicant from the pooling system when a previously selected applicant cancels or rejects the invitation}
- * US 02.05.02 {Sample a specified number of attendees from the waiting list}
+ * US 02.05.03 Draw a replacement applicant from the pooling system when a previously selected applicant cancels or rejects the invitation
+ * US 02.05.02 Sample a specified number of attendees from the waiting list
+ * US 01.05.01 As an entrant I want another chance to be chosen from the waiting list if a selected user declines an invitation to sign up
  */
 public class EventDrawTest {
     private EntrantList entrantList;
