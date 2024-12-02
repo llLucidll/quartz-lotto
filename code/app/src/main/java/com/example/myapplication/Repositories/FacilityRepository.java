@@ -11,6 +11,9 @@ import com.google.firebase.storage.StorageReference;
 
 import java.util.UUID;
 
+/**
+ * Used for handling all Firebase interactions related to Facility
+ */
 public class FacilityRepository {
 
     private static final String TAG = "FacilityRepository";

@@ -11,6 +11,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
+/**
+ * Controller class for browsing events.
+ */
 public class BrowseEventsController {
 
     private final FirebaseFirestore db;

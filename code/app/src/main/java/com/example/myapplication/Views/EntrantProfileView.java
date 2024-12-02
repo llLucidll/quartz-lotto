@@ -55,6 +55,9 @@ public class EntrantProfileView extends AppCompatActivity {
     private Uri imageUri;
     private EditProfileController controller;
 
+    /**
+     * Launches the image picker activity for selecting an image.
+     */
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -383,12 +386,10 @@ public class EntrantProfileView extends AppCompatActivity {
         controller.saveUserProfile(user, imageUri, new EditProfileController.EditProfileListener() {
             @Override
             public void onProfileLoaded(User user) {
-                // Not used here
             }
 
             @Override
             public void onProfileLoadFailed(Exception e) {
-                // Not used here
             }
 
             @Override
@@ -408,7 +409,6 @@ public class EntrantProfileView extends AppCompatActivity {
 
             @Override
             public void onImageUploaded(String imageUrl) {
-                // Not used here
             }
 
             @Override
@@ -420,7 +420,6 @@ public class EntrantProfileView extends AppCompatActivity {
 
             @Override
             public void onImageDeletedSuccessfully() {
-                // Not used here
             }
 
             @Override
@@ -510,14 +509,12 @@ public class EntrantProfileView extends AppCompatActivity {
      * @param facility The Facility object containing details.
      */
     private void updateUIWithFacility(Facility facility) {
-        // Implement if needed based on your application logic
     }
 
     /**
      * Clears the UI when no facility is present.
      */
     private void clearFacilityUI() {
-        // Implement if needed based on your application logic
     }
 
     /**

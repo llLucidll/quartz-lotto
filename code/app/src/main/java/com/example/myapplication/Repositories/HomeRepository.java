@@ -16,6 +16,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Used for handling all Firebase interactions related to Home
+ */
 public class HomeRepository {
     private final FirebaseFirestore db;
     private final String deviceId;

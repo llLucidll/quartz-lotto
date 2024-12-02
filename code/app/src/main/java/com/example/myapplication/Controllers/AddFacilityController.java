@@ -5,6 +5,9 @@ import android.net.Uri;
 import com.example.myapplication.Models.Facility;
 import com.example.myapplication.Repositories.FacilityRepository;
 
+/**
+ * Controller class for adding a facility.
+ */
 public class AddFacilityController {
 
     private FacilityRepository repository;

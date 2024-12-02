@@ -7,14 +7,19 @@ import java.util.List;
 import com.example.myapplication.Repositories.EntrantListRepository;
 import com.example.myapplication.Models.User;
 
-/*
-Model class used by Entrant List for each event.
+/**
+ * Model class used by Entrant List for each event.
  */
 public class EntrantList {
     private List<Attendee> attendees;
     private int capacity;
     private int sampleSize;
 
+    /**
+     * Constructor for EntrantList.
+     * @param capacity The maximum number of attendees allowed.
+     * @param sampleSize The number of attendees to be sampled.
+     */
     public EntrantList(int capacity, int sampleSize) {
         this.attendees = new ArrayList<>();
         this.capacity = capacity;

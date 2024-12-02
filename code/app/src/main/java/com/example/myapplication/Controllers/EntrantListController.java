@@ -12,8 +12,8 @@ import java.util.HashMap;
 import com.example.myapplication.Models.Attendee;
 import com.example.myapplication.Models.EntrantList;
 
-/*
-Used to handle parsing of data before passing to View for EntrantList
+/**
+ * Used to handle parsing of data before passing to View for EntrantList
  */
 public class EntrantListController {
     private EntrantListRepository repository;

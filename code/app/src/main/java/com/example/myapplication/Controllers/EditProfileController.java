@@ -7,6 +7,9 @@ import android.net.Uri;
 import com.example.myapplication.Models.User;
 import com.example.myapplication.Repositories.UserRepository;
 
+/**
+ * Controller class for editing the user's profile.
+ */
 public class EditProfileController {
 
     private UserRepository repository;

@@ -19,6 +19,9 @@ import com.example.myapplication.Controllers.AddFacilityController;
 import com.example.myapplication.Models.Facility;
 import com.example.myapplication.R;
 
+/**
+ * Activity for adding a facility
+ */
 public class AddFacilityView extends BaseActivity {
 
     private static final String TAG = "AddFacilityView";
@@ -31,6 +34,9 @@ public class AddFacilityView extends BaseActivity {
 
     private AddFacilityController controller;
 
+    /**
+     * Launches the image picker activity for selecting an image
+     */
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -43,6 +49,12 @@ public class AddFacilityView extends BaseActivity {
                 }
             });
 
+    /**
+     * Called when the activity is first created.
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,6 +125,9 @@ public class AddFacilityView extends BaseActivity {
 
     }
 
+    /**
+     * Opens the image picker to select an image
+     */
     private void openImagePicker() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
@@ -120,6 +135,9 @@ public class AddFacilityView extends BaseActivity {
         Toast.makeText(this, "Select an image for the facility", Toast.LENGTH_SHORT).show();
     }
 
+    /**
+     * Saves the facility details to the database
+     */
     private void saveFacilityDetails() {
         String name = facilityNameField.getText().toString().trim();
         String location = facilityLocationField.getText().toString().trim();

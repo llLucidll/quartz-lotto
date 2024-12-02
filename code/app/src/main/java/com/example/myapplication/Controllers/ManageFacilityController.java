@@ -8,6 +8,9 @@ import com.example.myapplication.Models.Facility;
 import com.example.myapplication.Repositories.FacilityRepository;
 import com.google.firebase.storage.StorageReference;
 
+/**
+ * Controller class for managing facilities.
+ */
 public class ManageFacilityController {
 
     private static final String TAG = "ManageFacilityController";

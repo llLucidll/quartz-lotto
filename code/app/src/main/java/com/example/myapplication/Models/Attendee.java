@@ -1,5 +1,8 @@
 package com.example.myapplication.Models;
 
+/**
+ * Attendee class represents an attendee who has signed up for an event.
+ */
 public class Attendee {
     private String userId;
     private String userName;
