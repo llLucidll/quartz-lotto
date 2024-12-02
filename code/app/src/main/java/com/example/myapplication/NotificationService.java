@@ -182,6 +182,11 @@ public class NotificationService {
         notificationManager.notify(notificationId, builder.build());
     }
 
+    /**
+     * Creates a notification channel for displaying notifications.
+     * @param context
+     */
+
     public static void createNotificationChannel(Context context) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             String channelId = NotificationUtils.getChannelId();

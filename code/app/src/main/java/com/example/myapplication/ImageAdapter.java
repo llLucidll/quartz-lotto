@@ -41,12 +41,28 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
         this.storage = FirebaseStorage.getInstance();
     }
 
+    /**
+     * Creates a new ImageViewHolder.
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return
+     */
+
     @NonNull
     @Override
     public ImageViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_image, parent, false); // Updated layout
         return new ImageViewHolder(view);
     }
+
+    /**
+     * Binds data to the ViewHolder.
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
 
     @Override
     public void onBindViewHolder(@NonNull ImageViewHolder holder, int position) {
@@ -87,6 +103,11 @@ public class ImageAdapter extends RecyclerView.Adapter<ImageAdapter.ImageViewHol
                 })
                 .addOnFailureListener(e -> Toast.makeText(context, "Failed to delete image: " + e.getMessage(), Toast.LENGTH_SHORT).show());
     }
+
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     * @return
+     */
 
     @Override
     public int getItemCount() {

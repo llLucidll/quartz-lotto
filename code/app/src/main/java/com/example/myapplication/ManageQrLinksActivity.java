@@ -15,6 +15,9 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Activity to manage QR links for events.
+ */
 public class ManageQrLinksActivity extends AppCompatActivity {
 
     private static final String TAG = "ManageQrLinksActivity";
@@ -24,6 +27,13 @@ public class ManageQrLinksActivity extends AppCompatActivity {
     private FirebaseFirestore db;
     private List<Event> eventList = new ArrayList<>();
 
+    /**
+     * Called when the activity is first created.
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,6 +51,9 @@ public class ManageQrLinksActivity extends AppCompatActivity {
         loadEventsWithQrHash();
     }
 
+    /**
+     * Loads events from Firestore and updates the RecyclerView.
+     */
     private void loadEventsWithQrHash() {
         db.collection("Events")
                 .whereNotEqualTo("qrCodeLink", null)
@@ -61,6 +74,11 @@ public class ManageQrLinksActivity extends AppCompatActivity {
                     Log.e(TAG, "Error loading events: ", e);
                 });
     }
+
+    /**
+     * Deletes the QR hash for a specific event.
+     * @param eventId The ID of the event.
+     */
 
     private void deleteQrHash(String eventId) {
         db.collection("Events").document(eventId)

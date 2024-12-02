@@ -18,7 +18,6 @@ public class UserProfile {
     private boolean notChosenFromWaitingList;
 
     private UserProfile user;
-    //TODO profile picture, name,email dob fields, country region selection, facility preferences?
 
     public UserProfile() {
         // Default is true
@@ -63,11 +62,9 @@ public class UserProfile {
     }
 
 
-    //TODO MAKE THIS A LIST IMPLEMENTATION AS USERS CAN JOIN MULTIPLE WAITING LISTS.
     public boolean isChosenFromWaitingList() {
         return chosenFromWaitingList;
         //Status of user updated to true when selected from waiting list.
-        //TODO CAN CHANGE!
     }
 
     public void setNotifyChosenFromWaitingList(boolean chosenFromWaitingList) {

@@ -57,6 +57,12 @@ public class DetailsFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     *  Called to do initial creation of a fragment.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +77,19 @@ public class DetailsFragment extends Fragment {
         storage = FirebaseStorage.getInstance();
         storageReference = storage.getReference();
     }
+
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
 
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container,

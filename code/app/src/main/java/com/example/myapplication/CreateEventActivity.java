@@ -44,6 +44,13 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
     private ProgressDialog progressDialog;
     private boolean isSaving = false; // Flag to track if save is in progress
 
+    /**
+     * Called when the activity is first created.
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     *
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -124,6 +131,13 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
     }
+
+    /**
+     * Handles the back button press in the action bar.
+     * @param item The menu item that was selected.
+     *
+     * @return
+     */
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

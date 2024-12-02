@@ -41,12 +41,28 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
         this.currentUserId = currentUserId;
     }
 
+    /**
+     * Called when RecyclerView needs a new ViewHolder of the given type to represent
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return
+     */
+
     @NonNull
     @Override
     public EventViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_event, parent, false);
         return new EventViewHolder(view);
     }
+
+    /**
+     * Called by RecyclerView to display the data at the specified position.
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
 
     @Override
     public void onBindViewHolder(@NonNull EventViewHolder holder, int position) {
@@ -72,6 +88,12 @@ public class EventAdapter extends RecyclerView.Adapter<EventAdapter.EventViewHol
             context.startActivity(intent);
         });
     }
+
+    /**
+     * Returns the total number of items in the data set held by the adapter.
+     *
+     * @return The total number of items in this adapter.
+     */
 
     @Override
     public int getItemCount() {
