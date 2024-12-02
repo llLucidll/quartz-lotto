@@ -20,6 +20,11 @@ public class EventPagerAdapter extends FragmentStateAdapter {
         this.eventId = eventId;
     }
 
+    /**
+     * Creates a new fragment based on the provided position.
+     * @param position
+     * @return The fragment to display
+     */
     @NonNull
     @Override
     public Fragment createFragment(int position) {
@@ -36,6 +41,11 @@ public class EventPagerAdapter extends FragmentStateAdapter {
                 return DetailsFragment.newInstance(eventId);
         }
     }
+
+    /**
+     * Returns the number of fragments to display.
+     * @return The number of fragments to display
+     */
 
     @Override
     public int getItemCount() {

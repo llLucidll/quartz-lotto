@@ -119,6 +119,10 @@ public class HomeFragment extends BaseActivity {
                 });
     }
 
+    /**
+     * Called when the activity is destroyed.
+     */
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -126,6 +130,18 @@ public class HomeFragment extends BaseActivity {
             listenerRegistration.remove(); // Stop listening to database updates
         }
     }
+
+    /**
+     * Called when the activity receives a result from another activity.
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {

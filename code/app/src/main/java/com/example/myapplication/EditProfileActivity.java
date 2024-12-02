@@ -55,6 +55,9 @@ public class EditProfileActivity extends BaseActivity {
     private boolean isOrganizer = false;
     private boolean notificationsPerm = false;
 
+    /**
+     * Called when the activity is first created.
+     */
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -76,6 +79,10 @@ public class EditProfileActivity extends BaseActivity {
         setListeners();
         loadUserProfile();
     }
+
+    /**
+     * Initializes the UI components.
+     */
 
     private void initializeUI() {
         profileImageView = findViewById(R.id.profile_image);
@@ -100,17 +107,33 @@ public class EditProfileActivity extends BaseActivity {
             return false;
         });
 
+        /**
+         * TextWatcher for name field
+         */
+
         nameField.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
                 // No action needed
             }
 
+            /**
+             *
+             * @param s
+             * @param start
+             * @param before
+             * @param count
+             */
+
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
                 // Generate avatar as user types their name
                 generateDefaultAvatar(s.toString());
             }
+            /**
+             *
+             * @param s
+             */
 
             @Override
             public void afterTextChanged(Editable s) {
@@ -119,6 +142,10 @@ public class EditProfileActivity extends BaseActivity {
         });
 
     }
+
+    /**
+     * Sets up listeners for UI components.
+     */
 
     private void setListeners() {
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
@@ -130,16 +157,27 @@ public class EditProfileActivity extends BaseActivity {
         //myEventsButton.setOnClickListener(v -> myEvents());
     }
 
+    /**
+     * Opens a file chooser to select an image.
+     */
+
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         startActivityForResult(intent, 1);
     }
 
-//    private void myEvents() {
-//        Intent intent = new Intent(this, HomeFragment.class); // changed
-//        startActivity(intent);
-//    }
+    /**
+     * Handles the result of the file chooser activity.
+     * @param requestCode The integer request code originally supplied to
+     *                    startActivityForResult(), allowing you to identify who this
+     *                    result came from.
+     * @param resultCode The integer result code returned by the child activity
+     *                   through its setResult().
+     * @param data An Intent, which can return result data to the caller
+     *               (various data can be attached to Intent "extras").
+     *
+     */
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
@@ -155,6 +193,10 @@ public class EditProfileActivity extends BaseActivity {
             removeProfileImageButton.setVisibility(View.VISIBLE);
         }
     }
+
+    /**
+     * Loads the user's profile data from Firestore.
+     */
 
     private void loadUserProfile() {
         DocumentReference userRef = db.collection("users").document(deviceId);
@@ -204,6 +246,10 @@ public class EditProfileActivity extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Error loading profile: ", e));
     }
 
+    /**
+     * Saves the user's profile data to Firestore.
+     */
+
     private void saveProfileData() {
         String name = nameField.getText().toString().trim();
         String email = emailField.getText().toString().trim();
@@ -243,6 +289,11 @@ public class EditProfileActivity extends BaseActivity {
         }
     }
 
+    /**
+     * Uploads the user's profile image to Firebase Storage.
+     * @param userRef
+     */
+
     private void uploadProfileImage(DocumentReference userRef) {
         if (imageUri == null) {
             Log.e(TAG, "No imageUri to upload.");
@@ -265,6 +316,9 @@ public class EditProfileActivity extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Error uploading image.", e));
     }
 
+    /**
+     * Deletes the user's profile image from Firebase Storage.
+     */
     private void deleteProfileImage() {
         StorageReference storageRef = storage.getReference("profile_images/" + deviceId + ".jpg");
         storageRef.delete()
@@ -282,6 +336,10 @@ public class EditProfileActivity extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to delete image from Firebase Storage.", e));
     }
 
+    /**
+     * Shows a date picker dialog to allow the user to select a date.
+     */
+
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -296,12 +354,21 @@ public class EditProfileActivity extends BaseActivity {
         datePickerDialog.show();
     }
 
+    /**
+     *  Generates a default avatar for the user.
+     * @param name
+     */
+
     private void generateDefaultAvatar(String name) {
         String firstLetter = (name != null && !name.isEmpty()) ? name.substring(0, 1).toUpperCase(Locale.US) : "?";
         Bitmap avatar = AvatarUtil.generateAvatar(firstLetter, 200, this);
         profileImageView.setImageBitmap(avatar);
         removeProfileImageButton.setVisibility(View.GONE);
     }
+
+    /**
+     * Adds a facility to the user's profile.
+     */
 
     private void addFacility() {
         Intent intent = new Intent(this, AddFacilityView.class);

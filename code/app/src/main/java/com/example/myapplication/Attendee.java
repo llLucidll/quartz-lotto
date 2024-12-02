@@ -1,5 +1,8 @@
 package com.example.myapplication;
 
+/**
+ * Attendee represents an attendee in an event.
+ */
 public class Attendee {
     private String userID;
     private String name;
@@ -18,6 +21,10 @@ public class Attendee {
         this.status = status;
     }
 
+    /**
+     * Getter and setter methods for the Attendee class.
+     * @return userID, name, status
+     */
     public String getUserID() {
         return userID;
     }

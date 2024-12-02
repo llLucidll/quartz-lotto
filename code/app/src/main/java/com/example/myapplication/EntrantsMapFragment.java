@@ -20,12 +20,28 @@ import java.util.Map;
 
 public class EntrantsMapFragment extends Fragment implements OnMapReadyCallback {
 
+    /**
+     * EntrantsMapFragment displays a map with markers for each entrant in the event.
+     */
     private MapView mapView;
     private GoogleMap googleMap;
 
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
     private static final String TAG = "EntrantsMapFragment";
+
+    /**
+     *
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
 
     @Nullable
     @Override
@@ -40,6 +56,10 @@ public class EntrantsMapFragment extends Fragment implements OnMapReadyCallback 
         return view;
     }
 
+    /**
+     * Called when the map is ready to be used.
+     * @param map
+     */
     @Override
     public void onMapReady(@NonNull GoogleMap map) {
         googleMap = map;

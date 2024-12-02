@@ -35,6 +35,11 @@ public class LocationsFragment extends Fragment {
     private MapView mapView;
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    /**
+     * Factory method to create a new instance of this fragment.
+     * @param eventId
+     * @return
+     */
     public static LocationsFragment newInstance(String eventId) {
         LocationsFragment fragment = new LocationsFragment();
         Bundle args = new Bundle();
@@ -43,9 +48,19 @@ public class LocationsFragment extends Fragment {
         return fragment;
     }
 
+    /**
+     * Required empty public constructor
+     */
+
     public LocationsFragment() {
         // Required empty public constructor
     }
+
+    /**
+     * Called to do initial creation of a fragment.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -59,6 +74,19 @@ public class LocationsFragment extends Fragment {
             Log.e(TAG, "Event ID is missing from arguments.");
         }
     }
+
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
 
     @Nullable
     @Override

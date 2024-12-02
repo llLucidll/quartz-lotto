@@ -28,6 +28,13 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.Atte
     private String eventId;   // Dynamic eventId
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
 
+    /**
+     * Constructor for AttendeesAdapter.
+     * @param attendeeList The list of attendees to display.
+     * @param context The context of the activity.
+     * @param status The status of the user for the event ("waiting", "selected", "confirmed" or "cancelled").
+     * @param eventId The ID of the event.
+     */
     public AttendeesAdapter(List<Attendee> attendeeList, Context context, String status, String eventId) {
         this.attendeeList = attendeeList;
         this.context = context;
@@ -44,12 +51,28 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.Atte
         this.status = status;
     }
 
+    /**
+     * Sets the list of attendees and updates the adapter.
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return A new ViewHolder that holds a View of the given view type.
+     */
+
     @NonNull
     @Override
     public AttendeeViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(context).inflate(R.layout.item_attendee, parent, false);
         return new AttendeeViewHolder(view);
     }
+
+    /**
+     *  Binds the data at the specified position to the ViewHolder.
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
 
     @Override
     public void onBindViewHolder(@NonNull AttendeeViewHolder holder, int position) {
@@ -78,6 +101,11 @@ public class AttendeesAdapter extends RecyclerView.Adapter<AttendeesAdapter.Atte
             holder.cancelButton.setVisibility(View.GONE);
         }
     }
+
+    /**
+     *
+     * @return attendeeList's size.
+     */
 
     @Override
     public int getItemCount() {

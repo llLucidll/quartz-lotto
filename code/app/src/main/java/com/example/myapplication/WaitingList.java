@@ -7,9 +7,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Random;
 
-/*
-Waiting List class.
-TODO:
+/**
+ * Represents a waiting list for a specific event.
  */
 public class WaitingList {
     private List<UserProfile> waitingList;

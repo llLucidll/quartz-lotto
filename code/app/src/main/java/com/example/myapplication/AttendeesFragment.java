@@ -60,10 +60,19 @@ public class AttendeesFragment extends Fragment {
         fragment.setArguments(args);
         return fragment;
     }
+    /**
+     * Default constructor required for Fragment.
+     */
 
     public AttendeesFragment() {
         // Required empty public constructor
     }
+
+    /**
+     * Called to do initial creation of a fragment.
+     * @param savedInstanceState If the fragment is being re-created from
+     * a previous saved state, this is the state.
+     */
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,6 +86,19 @@ public class AttendeesFragment extends Fragment {
             Log.e(TAG, "Event ID is missing from arguments.");
         }
     }
+
+    /**
+     * Called to have the fragment instantiate its user interface view.
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return
+     */
 
     @Nullable
     @Override
@@ -115,22 +137,6 @@ public class AttendeesFragment extends Fragment {
         recyclerViewCancelled.setAdapter(cancelledAdapter);
 
 
-
-//        // Fetch userType and then attendees
-//        if (getActivity() instanceof BaseActivity) {
-//            ((BaseActivity) getActivity()).getUserType(new BaseActivity.UserTypeCallback() {
-//                @Override
-//                public void onCallback(String status) {
-//                    selectedAdapter.setStatus(status);
-//                    confirmedAdapter.setStatus(status);
-//                    cancelledAdapter.setStatus(status);
-//                    selectedAdapter.notifyDataSetChanged();
-//                    confirmedAdapter.notifyDataSetChanged();
-//                    cancelledAdapter.notifyDataSetChanged();
-//                    fetchAttendees();
-//                }
-//            });
-//        } else {
         fetchAttendees();
 
 
@@ -182,6 +188,9 @@ public class AttendeesFragment extends Fragment {
                     Log.e(TAG, "Error fetching attendees: ", e);
                 });
     }
+    /**
+     * Updates the visibility of the empty list messages.
+     */
     private void updateEmptyListMessages() {
 
 
