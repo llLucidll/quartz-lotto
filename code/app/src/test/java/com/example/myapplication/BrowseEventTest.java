@@ -11,6 +11,7 @@ import java.util.List;
 /**
  * Unit test for browsing and deleting events.
  * Tests adding, retrieving, and removing events from a list.
+ * US 03.04.01 {Browse events}
  */
 public class BrowseEventTest {
 

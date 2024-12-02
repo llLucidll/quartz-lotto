@@ -51,14 +51,16 @@ public class EntrantList {
     }
 
     /*
-    Samples a random subset of attendees
+    Samples a random subset of attendees. Method here only for testing using underlying model class.
      */
     public ArrayList<Attendee> sampleAttendees(int size) {
         if (attendees.size() <= size) {
             return (ArrayList<Attendee>) attendees;
         } else {
             Collections.shuffle(attendees);
-            return (ArrayList<Attendee>) attendees.subList(0, size);
+            List<Attendee> sample = attendees.subList(0, size);
+            ArrayList<Attendee> sampledList = new ArrayList<>(sample);
+            return sampledList;
         }
     }
 }

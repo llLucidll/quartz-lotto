@@ -9,6 +9,7 @@ import static org.junit.Assert.*;
 
 /**
  * Unit test for browsing users using the User model.
+ * US 03.05.01 {Browse User profiles}
  */
 public class BrowseUsersTest {
 

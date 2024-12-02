@@ -7,6 +7,9 @@ import static org.junit.Assert.*;
 
 import com.example.myapplication.UserProfile;
 
+/*
+Test for checking the underlying Profile class for correctness
+ */
 public class UserProfileTest {
     private UserProfile userProfile;
 
