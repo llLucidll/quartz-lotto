@@ -191,7 +191,7 @@ public class CreateEventActivity extends BaseActivity { // Extends BaseActivity
      *
      * @param qrCodeLink The data to encode in the QR code.
      */
-    private void generateQRCode(String qrCodeLink) {
+    public void generateQRCode(String qrCodeLink) {
         try {
             BarcodeEncoder barcodeEncoder = new BarcodeEncoder();
             Bitmap bitmap = barcodeEncoder.encodeBitmap(qrCodeLink, BarcodeFormat.QR_CODE, 300, 300);

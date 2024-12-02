@@ -33,9 +33,10 @@ import java.util.Map;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 
-/*
+/**
  * Corrected tests for CreateEventActivity
- */
+ *
+ **/
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 32)
 public class CreateEventActivityTest {

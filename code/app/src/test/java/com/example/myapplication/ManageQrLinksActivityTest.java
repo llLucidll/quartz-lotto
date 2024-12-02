@@ -1,6 +1,8 @@
-package com.example.myapplication.Models;
+package com.example.myapplication;
 
 import static org.junit.Assert.*;
+
+import com.example.myapplication.Models.Event;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -11,6 +13,10 @@ import java.util.List;
 /**
  * Unit test for managing QR links within events.
  * Tests adding events with QR links, retrieving QR links, and deleting QR links.
+ * US 01.06.01 As an entrant I want to view event details within the app by scanning the promotional QR code
+ * US 01.06.02 As an entrant I want to be able to be sign up for an event by scanning the QR code
+ * US 02.01.01 As an organizer I want to create a new event and generate a unique promotional QR code that links to the event description and event poster in the app
+ * US 02.01.02 As an organizer I want to store the generated QR code in my database
  */
 public class ManageQrLinksActivityTest {
 

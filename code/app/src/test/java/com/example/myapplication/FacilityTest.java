@@ -1,10 +1,15 @@
-package com.example.myapplication.Models;
+package com.example.myapplication;
 
 import static org.junit.Assert.*;
 
 import org.junit.Before;
 import org.junit.Test;
+import com.example.myapplication.Models.Facility;
 
+/**
+ * Unit tests for the Facility class.
+ * US 02.01.03 As an organizer, I want to create and manage my facility profile.
+ */
 public class FacilityTest {
 
     private Facility facility;
@@ -18,6 +23,7 @@ public class FacilityTest {
                 "1"
         );
     }
+
 
     @Test
     public void testImageUrl() {

@@ -1,4 +1,4 @@
-package com.example.myapplication.Models;
+package com.example.myapplication;
 
 import org.junit.Test;
 
@@ -7,8 +7,12 @@ import java.util.List;
 
 import static org.junit.Assert.*;
 
+import com.example.myapplication.Models.User;
+
 /**
  * Unit test for browsing users using the User model.
+ * US 03.02.01 As an administrator, I want to be able to remove profiles.
+ * US 03.05.01 As an administrator, I want to be able to browse profiles.
  */
 public class BrowseUsersTest {
 

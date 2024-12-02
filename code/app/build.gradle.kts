@@ -58,6 +58,7 @@ dependencies {
     implementation(libs.firebase.crashlytics.buildtools)
     implementation(libs.ext.junit)
     implementation(libs.rules)
+    implementation(libs.espresso.intents)
     testImplementation(libs.junit)
     testImplementation(libs.robolectric)
     // Mockito Inline for mocking static methods
@@ -95,4 +96,3 @@ dependencies {
 
 
 }
-
