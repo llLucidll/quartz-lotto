@@ -35,7 +35,7 @@ import java.util.Map;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 
-/*
+/**
  * Corrected tests for CreateEventActivity
  * US 02.01.01 {Create a new event and generate a unique QR code}
  *

@@ -30,8 +30,8 @@ public class WaitingListView extends Fragment {
     private static final String ARG_EVENT_ID = "eventId";
     private String eventId;
     private RecyclerView waitingView;
-    private AttendeesAdapter adapter;
-    private EntrantListController controller;
+    public AttendeesAdapter adapter;
+    public EntrantListController controller;
     private EntrantListRepository.FetchEntrantListCallback callback;
     private Button drawButton;
 

@@ -44,6 +44,16 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.eq;
 
+/**
+ * US 01.04.01 As an entrant I want to receive notification when chosen from the waiting list (when I "win" the lottery)
+ * US 01.04.02 As an entrant I want to receive notification of not chosen on the app (when I "lose" the lottery)
+ * US 01.04.03 As an entrant I want to opt out of receiving notifications from organizers and admin
+ * US 02.05.01 As an organizer I want to send a notification to chosen entrants to sign up for events.
+ * US 02.06.04 As an organizer I want to cancel entrants that did not sign up for the event
+ * US 02.07.01 As an organizer I want to send notifications to all entrants on the waiting list
+ * US 02.07.02 As an organizer I want to send notifications to all selected entrants
+ * US 02.07.03 As an organizer I want to send a notification to all cancelled entrants
+ */
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 32) // Set SDK to TIRAMISU (API 32)
 public class NotificationServiceTest {
