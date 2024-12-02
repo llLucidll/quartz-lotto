@@ -271,7 +271,7 @@ public class OrganizerProfileView extends BaseActivity {
         profileData.put("isOrganizer", isOrganizer);
         profileData.put("notificationsPerm", notificationsPerm);
         profileData.put("events", null);
-        profileData.put("eventsAttending", new HashMap<String, Object>());
+        //profileData.put("eventsAttending", new HashMap<String, Object>());
         profileData.put("profileImageUrl", null);
 
         String deviceId = retrieveDeviceId();

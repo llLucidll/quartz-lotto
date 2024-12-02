@@ -23,7 +23,8 @@ public class HomeRepository {
     }
 
     /**
-     * Fetches events where the user is on the waitlist with "waiting" status.
+     * Returns all events where your status is waiting in
+     * @param homeView
      */
     public void fetchWaitlistEvents(HomeView homeView) {
         String targetDeviceId = this.deviceId; //stores deviceid
@@ -71,7 +72,8 @@ public class HomeRepository {
     }
 
     /**
-     * Fetches events where the user is "selected" or "confirmed".
+     * Returns all events where your device id shows up in and your status is selected
+     * @param homeView
      */
     public void fetchSelectedEvents(HomeView homeView) {
         String targetDeviceId = this.deviceId;
@@ -119,7 +121,8 @@ public class HomeRepository {
     }
 
     /**
-     * Removes the user from the waitlist of the specified event.
+     * Removes the user from the waitlist when they hit leave waitlist
+     * @param eventName
      */
     public void removeFromWaitlist(String eventName) {
         String deviceID = this.deviceId;
@@ -130,6 +133,7 @@ public class HomeRepository {
                 .addOnCompleteListener(task -> {
                     if (task.isSuccessful() && task.getResult() != null) {
                         for (QueryDocumentSnapshot document : task.getResult()) {
+
                             db.collection("Events")
                                     .document(document.getId())
                                     .collection("Waitlist")
@@ -149,7 +153,9 @@ public class HomeRepository {
     }
 
     /**
-     * Updates the user's status for a specific event.
+     * Updates the event Status when the user confirms/declines the invitation.
+     * @param eventName
+     * @param newStatus
      */
     public void updateEventStatus(String eventName, String newStatus) {
         String deviceID = this.deviceId;
