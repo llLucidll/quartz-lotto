@@ -33,6 +33,9 @@ public class ManageFacilityView extends BaseActivity {
 
     private Facility currentFacility;
 
+    /**
+     * Initializes the activity, sets up UI elements, and loads facility details.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,6 +73,9 @@ public class ManageFacilityView extends BaseActivity {
         loadFacility();
     }
 
+    /**
+     * Called when the activity is resumed.
+     */
     @Override
     protected void onResume() {
         super.onResume();

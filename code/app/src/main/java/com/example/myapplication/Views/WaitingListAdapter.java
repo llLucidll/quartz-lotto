@@ -12,6 +12,9 @@ import com.example.myapplication.R;
 
 import java.util.ArrayList;
 
+/**
+ * WaitingListAdapter is an adapter for displaying a list of attendees in a waiting list.
+ */
 public class WaitingListAdapter extends RecyclerView.Adapter<WaitingListAdapter.WaitingListViewHolder> {
 
     private final ArrayList<String> waitlist;

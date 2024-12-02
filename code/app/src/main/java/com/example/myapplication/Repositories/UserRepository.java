@@ -16,6 +16,9 @@ import com.google.firebase.firestore.SetOptions;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 
+/**
+ * Used for handling all Firebase interactions related to User
+ */
 public class UserRepository {
 
     private static final String TAG = "UserRepository";

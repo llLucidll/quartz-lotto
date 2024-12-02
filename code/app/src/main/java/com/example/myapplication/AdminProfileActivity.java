@@ -31,6 +31,9 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * AdminProfileActivity allows admins to view and edit their profile.
+ */
 public class AdminProfileActivity extends BaseActivity {
 
     private static final String TAG = "AdminProfileActivity";
@@ -47,7 +50,9 @@ public class AdminProfileActivity extends BaseActivity {
     private boolean notificationsPerm = false;
     private Button myEventsButton;
 
-
+    /**
+     * Initialize the activity and set up UI elements.
+     */
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -61,6 +66,11 @@ public class AdminProfileActivity extends BaseActivity {
                 }
             });
 
+    /**
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -71,6 +81,9 @@ public class AdminProfileActivity extends BaseActivity {
         loadUserProfile();
     }
 
+    /**
+     * Initialize UI components.
+     */
     private void initializeUI() {
         profileImageView = findViewById(R.id.profile_image);
         editProfileImageButton = findViewById(R.id.edit_profile_image_button);
@@ -120,32 +133,49 @@ public class AdminProfileActivity extends BaseActivity {
         });
     }
 
+    /**
+     * BrowseUsers opens the BrowseUsersActivity.
+     */
     private void BrowseUsers(){
         Intent intent = new Intent(this, BrowseUsersActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * BrowseEvents opens the BrowseEventsActivity.
+     */
     private void BrowseEvents(){
         Intent intent = new Intent(this, BrowseEventsActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * BrowseFacilities opens the BrowseFacilitiesActivity.
+     */
     private void BrowseFacilities(){
         Intent intent = new Intent(this, BrowseFacilitiesActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * BrowseImages opens the BrowseImagesActivity.
+     */
     private void BrowseImages(){
         Intent intent = new Intent(this, BrowseImagesActivity.class);
         startActivity(intent);
     }
 
+    /**
+     * BrowseQR opens the ManageQrLinksActivity.
+     */
     private void BrowseQR(){
         Intent intent = new Intent(this, ManageQrLinksActivity.class);
         startActivity(intent);
     }
 
-
+    /**
+     * Set up click listeners for buttons.
+     */
     private void setListeners() {
         editProfileImageButton.setOnClickListener(v -> openFileChooser());
         saveChangesButton.setOnClickListener(v -> saveProfileData());
@@ -160,18 +190,26 @@ public class AdminProfileActivity extends BaseActivity {
 
     }
 
+    /**
+     * OpenMyEvents opens the HomeFragment.
+     */
     private void openMyEvents() {
         Intent intent = new Intent(this, HomeFragment.class); // changed
         startActivity(intent);
     }
 
-
+    /**
+     * OpenFileChooser allows the user to select an image from their device.
+     */
     private void openFileChooser() {
         Intent intent = new Intent(Intent.ACTION_GET_CONTENT);
         intent.setType("image/*");
         imagePickerLauncher.launch(intent);
     }
 
+    /**
+     * LoadUserProfile fetches and displays the user's profile data.
+     */
     private void loadUserProfile() {
         String deviceId = retrieveDeviceId();
         if (deviceId == null || deviceId.isEmpty()) {
@@ -221,6 +259,9 @@ public class AdminProfileActivity extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to load profile.", e));
     }
 
+    /**
+     * SaveProfileData saves the user's profile data to Firestore.
+     */
     private void saveProfileData() {
         String name = nameField.getText().toString().trim();
         String email = emailField.getText().toString().trim();
@@ -258,6 +299,9 @@ public class AdminProfileActivity extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to update profile.", e));
     }
 
+    /**
+     * UploadProfileImage uploads the user's profile image to Firebase Storage.
+     */
     private void uploadProfileImage(DocumentReference userRef) {
         StorageReference storageRef = FirebaseStorage.getInstance().getReference("profile_images/" + retrieveDeviceId() + ".jpg");
         storageRef.putFile(imageUri)
@@ -268,6 +312,9 @@ public class AdminProfileActivity extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to upload profile image.", e));
     }
 
+    /**
+     * DeleteProfileImage deletes the user's profile image from Firestore.
+     */
     private void deleteProfileImage() {
         DocumentReference userRef = db.collection("users").document(retrieveDeviceId());
         userRef.update("profileImageUrl", null)
@@ -278,6 +325,9 @@ public class AdminProfileActivity extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to delete profile image.", e));
     }
 
+    /**
+     * ShowDatePicker opens a date picker dialog.
+     */
     private void showDatePicker() {
         Calendar calendar = Calendar.getInstance();
         int year = calendar.get(Calendar.YEAR);
@@ -292,6 +342,9 @@ public class AdminProfileActivity extends BaseActivity {
         datePickerDialog.show();
     }
 
+    /**
+     * InitializeDefaultFields sets default values for fields.
+     */
     private void initializeDefaultFields() {
         nameField.setText("");
         emailField.setText("");
@@ -310,6 +363,9 @@ public class AdminProfileActivity extends BaseActivity {
         generateDefaultAvatar(null);
     }
 
+    /**
+     * GenerateDefaultAvatar generates a default avatar for the user.
+     */
     private void generateDefaultAvatar(String name) {
         String firstLetter = (name != null && !name.isEmpty()) ? name.substring(0, 1).toUpperCase(Locale.US) : "?";
         Bitmap avatar = AvatarUtil.generateAvatar(firstLetter, 200, this);

@@ -13,6 +13,9 @@ import com.example.myapplication.Controllers.BrowseEventsController;
 
 import java.util.List;
 
+/**
+ * View for browsing events
+ */
 public class BrowseEventsView {
 
     private final Context context;
@@ -20,6 +23,12 @@ public class BrowseEventsView {
     private final EventAdapterAdmin eventAdapterAdmin;
     private final BrowseEventsController controller;
 
+    /**
+     * Constructor for BrowseEventsView
+     * @param context
+     * @param recyclerView
+     * @param controller
+     */
     public BrowseEventsView(Context context, RecyclerView recyclerView, BrowseEventsController controller) {
         this.context = context;
         this.eventRecyclerView = recyclerView;
@@ -30,10 +39,18 @@ public class BrowseEventsView {
         eventRecyclerView.setAdapter(eventAdapterAdmin);
     }
 
+    /**
+     * Sets the toolbar for the view
+     * @param toolbar
+     * @param onBackPressed
+     */
     public void setToolbar(Toolbar toolbar, Runnable onBackPressed) {
         toolbar.setNavigationOnClickListener(v -> onBackPressed.run());
     }
 
+    /**
+     * Loads events from the controller
+     */
     public void loadEvents() {
         controller.fetchEvents(events -> {
             eventAdapterAdmin.eventList.clear();
@@ -42,6 +59,10 @@ public class BrowseEventsView {
         }, errorMessage -> Toast.makeText(context, errorMessage, Toast.LENGTH_SHORT).show());
     }
 
+    /**
+     * Deletes an event
+     * @param event
+     */
     private void deleteEvent(Event event) {
         controller.deleteEvent(event, () -> {
             eventAdapterAdmin.eventList.remove(event);

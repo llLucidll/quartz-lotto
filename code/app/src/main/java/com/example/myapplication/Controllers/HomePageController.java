@@ -13,6 +13,9 @@ import com.example.myapplication.Views.HomeView;
 
 import java.util.List;
 
+/**
+ * Controller for managing events in the home page.
+ */
 public class HomePageController extends ArrayAdapter<Event> {
     private Context context;
     private List<Event> events;

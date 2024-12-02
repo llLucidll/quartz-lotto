@@ -39,6 +39,9 @@ import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 
+/**
+ * OrganizerProfileView allows organizers to view and edit their profile.
+ */
 public class OrganizerProfileView extends BaseActivity {
 
     private static final String TAG = "OrganizerProfileView";
@@ -58,6 +61,9 @@ public class OrganizerProfileView extends BaseActivity {
 
     public String deviceId;
 
+    /**
+     * Initialize the activity and set up UI elements.
+     */
     private final ActivityResultLauncher<Intent> imagePickerLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> {
@@ -71,6 +77,11 @@ public class OrganizerProfileView extends BaseActivity {
                 }
             });
 
+    /**
+     * @param savedInstanceState If the activity is being re-initialized after
+     *     previously being shut down then this Bundle contains the data it most
+     *     recently supplied in {@link #onSaveInstanceState}.  <b><i>Note: Otherwise it is null.</i></b>
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,7 +94,7 @@ public class OrganizerProfileView extends BaseActivity {
 
     }
 
-    /*
+    /**
      * Initialize UI components
      */
     private void initializeUI() {
@@ -131,7 +142,7 @@ public class OrganizerProfileView extends BaseActivity {
 
     }
 
-    /*
+    /**
      * Set click listeners for UI components
      */
     private void setListeners() {
@@ -145,13 +156,19 @@ public class OrganizerProfileView extends BaseActivity {
         notifGroups.setOnClickListener(v -> startActivity(new Intent(this, OrganizerNotificationActivity.class)));
         notificationSwitch.setOnCheckedChangeListener((buttonView, isChecked) -> notificationsPerm = isChecked);
     }
+
+    /**
+     * Load a fragment into the fragment container.
+     * @param fragment The fragment to load.
+     * @param tag The tag associated with the fragment.
+     */
     private void loadFragment(Fragment fragment, String tag) {
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.replace(R.id.fragmentContainer, fragment, tag);
         transaction.commit();
     }
 
-    /*
+    /**
      * Open file chooser for image selection
      */
     private void openFileChooser() {
@@ -160,7 +177,7 @@ public class OrganizerProfileView extends BaseActivity {
         imagePickerLauncher.launch(intent);
     }
 
-    /*
+    /**
      * Load user profile data from Firestore
      */
     private void loadUserProfile() {
@@ -185,7 +202,7 @@ public class OrganizerProfileView extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to load profile.", e));
     }
 
-    /*
+    /**
      * Populate UI with user data if the user already exists in the database
      */
     private void populateUIWithUserData(User user) {
@@ -219,7 +236,7 @@ public class OrganizerProfileView extends BaseActivity {
     }
 
 
-    /*
+    /**
      * Initialize default fields for the user if they don't exist in the database
      */
     private void initializeDefaultFields() {
@@ -241,7 +258,7 @@ public class OrganizerProfileView extends BaseActivity {
         generateDefaultAvatar(null);
     }
 
-    /*
+    /**
      * Save profile data to Firestore
      */
     private void saveProfileData() {
@@ -289,7 +306,7 @@ public class OrganizerProfileView extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to update profile.", e));
     }
 
-    /*
+    /**
      * Upload profile image to Firebase Storage
      */
     private void uploadProfileImage(DocumentReference userRef) {
@@ -302,7 +319,7 @@ public class OrganizerProfileView extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to upload profile image.", e));
     }
 
-    /*
+    /**
      * Delete profile image from Firestore and Firebase Storage
      */
     private void deleteProfileImage() {
@@ -315,7 +332,7 @@ public class OrganizerProfileView extends BaseActivity {
                 .addOnFailureListener(e -> Log.e(TAG, "Failed to delete profile image.", e));
     }
 
-    /*
+    /**
      * Show date picker dialog
      */
     private void showDatePicker() {
@@ -332,7 +349,7 @@ public class OrganizerProfileView extends BaseActivity {
         datePickerDialog.show();
     }
 
-    /*
+    /**
      * Start the add facility activity when the manage facility button is clicked
      */
     private void addFacility() {
@@ -340,6 +357,10 @@ public class OrganizerProfileView extends BaseActivity {
         startActivity(intent);
     }
 
+    /**
+     * Generate a default avatar based on the first letter of the user's name
+     * @param name The user's name
+     */
     private void generateDefaultAvatar(String name) {
         String firstLetter = (name != null && !name.isEmpty()) ? name.substring(0, 1).toUpperCase(Locale.US) : "?";
         Bitmap avatar = AvatarUtil.generateAvatar(firstLetter, 200, this);

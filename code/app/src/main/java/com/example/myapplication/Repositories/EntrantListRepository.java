@@ -21,9 +21,9 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 
-/*
-Used for handling all Firebase stuff related to EntrantList
-*/
+/**
+ * Used for handling all Firebase interactions related to EntrantList
+ */
 public class EntrantListRepository {
     private static final String EVENT_COLLECTION_NAME = "Events";
     private static final String WAITLIST_COLLECTION_NAME = "Waitlist";

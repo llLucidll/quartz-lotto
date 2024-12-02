@@ -1,6 +1,9 @@
 //ayesha
 package com.example.myapplication.Models;
 
+/**
+ * StorageImage class represents an image stored in Firebase Storage.
+ */
 public class StorageImage {
     private String name;
     private String path;
@@ -9,6 +12,12 @@ public class StorageImage {
 
     public StorageImage() {}
 
+    /**
+     * Constructor for StorageImage.
+     * @param name
+     * @param path
+     * @param url
+     */
     public StorageImage(String name, String path, String url) {
         this.name = name;
         this.path = path;
