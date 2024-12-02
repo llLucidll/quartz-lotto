@@ -1,8 +1,6 @@
-package com.example.myapplication;
+package com.example.myapplication.Models;
 
 import static org.junit.Assert.*;
-
-import com.example.myapplication.Models.Event;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -13,8 +11,7 @@ import java.util.List;
 /**
  * Unit test for browsing and deleting events.
  * Tests adding, retrieving, and removing events from a list.
- * US 03.01.01 As an administrator, I want to be able to remove events.
- * US 03.04.01 As an administrator, I want to be able to browse events.
+ * US 03.04.01 {Browse events}
  */
 public class BrowseEventTest {
 

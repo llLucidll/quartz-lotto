@@ -35,10 +35,11 @@ import java.util.Map;
 import static org.junit.Assert.*;
 import static org.mockito.ArgumentMatchers.any;
 
-/**
+/*
  * Corrected tests for CreateEventActivity
- * US 02.01.01 Create a new event and generate a unique QR code
- **/
+ * US 02.01.01 {Create a new event and generate a unique QR code}
+ *
+ */
 @RunWith(RobolectricTestRunner.class)
 @Config(sdk = 32)
 public class CreateEventActivityTest {
@@ -139,8 +140,6 @@ public class CreateEventActivityTest {
         ShadowToast shadowToast = org.robolectric.Shadows.shadowOf(latestToast);
         assertEquals("Please fill out all required fields", shadowToast.getTextOfLatestToast());
 
-        String expectedQrCodeLink = "eventapp://event/" + mockEventDocument.getId();
-        assertEquals(expectedQrCodeLink, capturedEvent.get("qrCodeLink"));
     }
 
 

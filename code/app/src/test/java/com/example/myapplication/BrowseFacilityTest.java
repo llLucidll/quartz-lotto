@@ -1,4 +1,4 @@
-package com.example.myapplication;
+package com.example.myapplication.Models;
 
 import static org.junit.Assert.*;
 
@@ -8,14 +8,11 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import com.example.myapplication.Models.Facility;
 
 /**
  * Unit test for browsing facilities.
  * Tests adding, retrieving, and removing facilities from a list.
- * US 03.07.01 As an administrator I want to remove facilities that violate app policy
  */
 public class BrowseFacilityTest {
 
