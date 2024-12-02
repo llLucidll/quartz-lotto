@@ -39,17 +39,6 @@
         android:background="@drawable/rounded_background"
         android:padding="8dp" />
 
-    <!-- Bottom Navigation -->
-    <com.google.android.material.bottomnavigation.BottomNavigationView
-        android:id="@+id/bottom_navigation"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:backgroundTint="#FFFFFF"
-        app:itemIconTint="@color/nav_icon_color"
-        app:itemTextColor="@color/nav_text_color"
-        app:labelVisibilityMode="unlabeled"
-        app:menu="@menu/bottom_nav_menu" />
 
     <Button
         android:id="@+id/edit_or_create_button"
@@ -57,7 +46,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_marginEnd="16dp"
-        android:layout_above="@id/bottom_navigation"
+        android:layout_below="@id/events_list"
         android:layout_marginBottom="16dp"
         android:text="Create Event" />
 
