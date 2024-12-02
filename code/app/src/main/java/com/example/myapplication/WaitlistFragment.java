@@ -16,6 +16,10 @@ public class WaitlistFragment extends Fragment {
     private static final String ARG_EVENT_ID = "eventId";
     private String eventId;
 
+    /**
+     * Required empty public constructor
+     */
+
     public WaitlistFragment() {
         // Required empty public constructor
     }
@@ -62,7 +66,7 @@ public class WaitlistFragment extends Fragment {
      * @param savedInstanceState If non-null, this fragment is being re-constructed
      * from a previous saved state as given here.
      *
-     * @return
+     * @return Return the View for the fragment's UI, or null.
      */
 
     @Override

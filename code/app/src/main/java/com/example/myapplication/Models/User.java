@@ -27,7 +27,9 @@ public class User {
     private Map<String, EventAttendance> eventsAttending; // Key: eventId, Value: attendance details
     private List<Event> events; // List of events the user is associated with
 
-    // Default empty constructor for Firebase deserialization
+    /**
+     * Default constructor required for Firebase deserialization.
+     */
     public User() {
         this.eventsAttending = new HashMap<>();
     }
@@ -61,110 +63,222 @@ public class User {
 
     // ------------------------ the normal other getters and setters ------------------------
 
+    /**
+     * Retrieves the unique identifier for the user.
+     * @return Unique identifier for the user.
+     */
+
     @PropertyName("userID")
     public String getUserID() {
         return userID;
     }
+
+    /**
+     * Sets the unique identifier for the user.
+     * @param userID Unique identifier for the user.
+     */
 
     @PropertyName("userID")
     public void setUserID(String userID) {
         this.userID = userID;
     }
 
+    /**
+     * Retrieves the full name of the user.
+     * @return Full name of the user.
+     */
+
     @PropertyName("name")
     public String getName() {
         return name;
     }
+
+    /**
+     * Sets the full name of the user.
+     * @param name Full name of the user.
+     */
 
     @PropertyName("name")
     public void setName(String name) {
         this.name = name;
     }
 
+    /**
+     *
+     * @return URL to the user's profile image.
+     */
+
     @PropertyName("profileImageUrl")
     public String getProfileImageUrl() {
         return profileImageUrl;
     }
+
+    /**
+     * Sets the URL to the user's profile image.
+     * @param profileImageUrl URL to the profile image.
+     */
 
     @PropertyName("profileImageUrl")
     public void setProfileImageUrl(String profileImageUrl) {
         this.profileImageUrl = profileImageUrl;
     }
 
+    /**
+     * Retrieves the email address of the user.
+     * @return Email address of the user.
+     */
+
     @PropertyName("email")
     public String getEmail() {
         return email;
     }
+
+    /**
+     * Sets the email address of the user.
+     * @param email Email address of the user.
+     */
 
     @PropertyName("email")
     public void setEmail(String email) {
         this.email = email;
     }
 
+    /**
+     * Retrieves the date of birth of the user.
+     * @return Date of birth of the user.
+     */
+
     @PropertyName("dob")
     public String getDob() {
         return dob;
     }
+
+    /**
+     * Sets the date of birth of the user.
+     * @param dob Date of birth of the user.
+     */
 
     @PropertyName("dob")
     public void setDob(String dob) {
         this.dob = dob;
     }
 
+    /**
+     * Retrieves the phone number of the user.
+     * @return Phone number of the user.
+     */
+
     @PropertyName("phone")
     public String getPhone() {
         return phone;
     }
+
+    /**
+     * Sets the phone number of the user.
+     * @param phone Phone number of the user.
+     */
 
     @PropertyName("phone")
     public void setPhone(String phone) {
         this.phone = phone;
     }
 
+    /**
+     * Retrieves the country of residence of the user.
+     * @return Country of residence of the user.
+     */
+
     @PropertyName("country")
     public String getCountry() {
         return country;
     }
+
+    /**
+     * Sets the country of residence of the user.
+     * @param country Country of residence of the user.
+     */
 
     @PropertyName("country")
     public void setCountry(String country) {
         this.country = country;
     }
 
+    /**
+     * Retrieves whether the user has admin privileges.
+     * @return True if the user is an admin, false otherwise.
+     */
+
     @PropertyName("isAdmin")
     public boolean isAdmin() {
         return isAdmin;
     }
+
+    /**
+     * Sets whether the user is an admin.
+     * @param admin True if the user is an admin, false otherwise.
+     */
 
     @PropertyName("isAdmin")
     public void setAdmin(boolean admin) {
         isAdmin = admin;
     }
 
+    /**
+     * Retrieves whether the user has notifications permission.
+     * @return True if the user has notifications permission, false otherwise.
+     */
+
     @PropertyName("notificationsPerm")
     public boolean isNotificationsPerm() {
         return notificationsPerm;
     }
+
+    /**
+     * Sets whether the user has notifications permission.
+     * @param notificationsPerm True if the user has notifications permission, false otherwise.
+     */
 
     @PropertyName("notificationsPerm")
     public void setNotificationsPerm(boolean notificationsPerm) {
         this.notificationsPerm = notificationsPerm;
     }
 
+    /**
+     * Retrieves whether the user is an organizer.
+     * @return True if the user is an organizer, false otherwise.
+     */
+
     @PropertyName("isOrganizer")
     public boolean isOrganizer() {
         return isOrganizer;
     }
+
+    /**
+     * Sets whether the user is an organizer.
+     * @param organizer True if the user is an organizer, false otherwise.
+     */
+
 
     @PropertyName("isOrganizer")
     public void setOrganizer(boolean organizer) {
         isOrganizer = organizer;
     }
 
+    /**
+     * Retrieves the list of events the user is associated with.
+     * @return List of events the user is associated with.
+     */
+
+
     @PropertyName("events")
     public List<Event> getEvents() {
         return events;
     }
+
+    /**
+     * Sets the list of events the user is associated with.
+     * @param events List of events the user is associated with.
+     */
 
     @PropertyName("events")
     public void setEvents(List<Event> events) {
@@ -228,6 +342,10 @@ public class User {
         private Double longitude;
 
         // Default constructor for Firebase deserialization
+
+        /**
+         * Default constructor required for Firebase deserialization.
+         */
         public EventAttendance() {
         }
 
@@ -244,30 +362,60 @@ public class User {
             this.longitude = longitude;
         }
 
+        /**
+         * Retrieves the status of the attendance.
+         * @return
+         */
+
         @PropertyName("status")
         public String getStatus() {
             return status;
         }
+
+        /**
+         * Sets the status of the attendance.
+         * @param status
+         */
 
         @PropertyName("status")
         public void setStatus(String status) {
             this.status = status;
         }
 
+        /**
+         * Retrieves the latitude coordinate of the user's location.
+         * @return Latitude coordinate of the user's location.
+         */
+
         @PropertyName("latitude")
         public Double getLatitude() {
             return latitude;
         }
+
+        /**
+         * Sets the latitude coordinate of the user's location.
+         * @param latitude Latitude coordinate of the user's location.
+         */
 
         @PropertyName("latitude")
         public void setLatitude(Double latitude) {
             this.latitude = latitude;
         }
 
+        /**
+         * Retrieves the longitude coordinate of the user's location.
+         * @return Longitude coordinate of the user's location.
+         */
+
         @PropertyName("longitude")
         public Double getLongitude() {
             return longitude;
         }
+
+        /**
+         * Sets the longitude coordinate of the user's location.
+         * @param longitude Longitude coordinate of the user's location.
+         */
 
         @PropertyName("longitude")
         public void setLongitude(Double longitude) {

@@ -9,14 +9,16 @@ public class StorageImage {
     private String path;
     private String url;
 
-
+    /**
+     * Default constructor required for Firebase deserialization.
+     */
     public StorageImage() {}
 
     /**
-     * Constructor for StorageImage.
-     * @param name
-     * @param path
-     * @param url
+     *
+     * @param name The name of the image.
+     * @param path The path of the image.
+     * @param url The URL of the image.
      */
     public StorageImage(String name, String path, String url) {
         this.name = name;
@@ -25,7 +27,22 @@ public class StorageImage {
     }
 
     // Getters
+
+    /**
+     * Retrieves the name of the image.
+     * @return The name of the image.
+     */
     public String getName() { return name; }
+
+    /**
+     * Retrieves the path of the image.
+     * @return The path of the image.
+     */
     public String getPath() { return path; }
+
+    /**
+     * Retrieves the URL of the image.
+     * @return The URL of the image.
+     */
     public String getUrl() { return url; }
 }

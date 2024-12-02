@@ -27,6 +27,13 @@ public class WaitlistExpandableListAdapter extends BaseExpandableListAdapter {
     private HashMap<String, List<String>> listData;
     private Set<String> selectedGroups; // To track selected status groups
 
+    /**
+     * Constructor for WaitlistExpandableListAdapter.
+     * @param context
+     * @param listGroupTitles
+     * @param listData
+     */
+
     public WaitlistExpandableListAdapter(Context context, List<String> listGroupTitles, HashMap<String, List<String>> listData) {
         this.context = context;
         this.listGroupTitles = listGroupTitles;
