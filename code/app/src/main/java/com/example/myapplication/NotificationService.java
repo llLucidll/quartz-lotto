@@ -1,15 +1,20 @@
 package com.example.myapplication;
 
+import android.app.Activity;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.Build;
 import android.util.Log;
+import android.Manifest;
 
+import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -39,6 +44,20 @@ public class NotificationService {
         if (user == null || !user.containsKey("userId")) {
             Log.e(TAG, "User data is invalid or missing 'userId'");
             return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (context instanceof Activity) {
+                    ActivityCompat.requestPermissions(
+                            (Activity) context,
+                            new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                            1001
+                    );
+                }
+                Log.d(TAG, "Notification permission not granted. Requesting permission.");
+                return;
+            }
         }
 
         String userId = (String) user.get("userId");
@@ -117,6 +136,21 @@ public class NotificationService {
         if (user == null || !user.containsKey("userId")) {
             Log.e(TAG, "User data is invalid or missing 'userId'");
             return;
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS)
+                    != PackageManager.PERMISSION_GRANTED) {
+                if (context instanceof Activity) {
+                    ActivityCompat.requestPermissions(
+                            (Activity) context,
+                            new String[]{Manifest.permission.POST_NOTIFICATIONS},
+                            1001
+                    );
+                }
+                Log.d(TAG, "Notification permission not granted. Requesting permission.");
+                return;
+            }
         }
 
         String userId = (String) user.get("userId");
