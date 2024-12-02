@@ -11,6 +11,9 @@ import java.util.List;
 /**
  * Unit test for testing notification permissions.
  * Verifies that notifications are sent only to users with notification permissions enabled.
+ * US 01.04.02 {Receive notifications if not chosen from the waiting list}
+ * US 01.04.01 {Receive notifications when chosen from the waiting list}
+ * US 01.04.03 {Opt out of receiving notifications from organizers and admins}
  */
 public class NotificationTest {
 

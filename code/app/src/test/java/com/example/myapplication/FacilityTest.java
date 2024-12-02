@@ -5,6 +5,9 @@ import static org.junit.Assert.*;
 import org.junit.Before;
 import org.junit.Test;
 
+/*
+Testing the Facility class itself for underlying correctness.
+ */
 public class FacilityTest {
 
     private Facility facility;
