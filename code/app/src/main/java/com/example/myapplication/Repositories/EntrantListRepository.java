@@ -128,14 +128,19 @@ public class EntrantListRepository {
             @Override
             public void onSuccess(ArrayList<Attendee> entrants) {
                 ArrayList<Attendee> selectedAttendees;
+                ArrayList<Attendee> unselectedAttendees = null;
                 if (entrants.size() <= size) {
                     selectedAttendees = entrants;
                 } else {
                     List<Attendee> shuffledList = new ArrayList<>(entrants);
                     Collections.shuffle(shuffledList);
                     selectedAttendees = new ArrayList<>(shuffledList.subList(0, size));
+                    unselectedAttendees = new ArrayList<>(shuffledList.subList(size, entrants.size()));
+
                 }
                 updateAttendeeList(eventId, selectedAttendees, context);
+                updateWaitList(eventId, unselectedAttendees, context);
+                sendNotificationLose(eventId, context);
             }
 
             @Override
@@ -171,13 +176,36 @@ public class EntrantListRepository {
                         document.getReference().update("status", "selected")
                                 .addOnSuccessListener(aVoid -> {
                                     Log.d("EntrantListRepository", "User status updated: " + document.getId());
-                                    sendNotification(document.getId(), context);
+                                    sendNotificationWin(document.getId(), context);
                                 })
                                 .addOnFailureListener(e -> Log.w("EntrantListRepository", "Error updating user status: ", e));
                     }
                 })
                 .addOnFailureListener(e -> Log.e("EntrantListRepository", "Error getting documents: ", e));
     }
+
+    private void updateWaitList(String eventId, ArrayList<Attendee> attendees, Context context) {
+        ArrayList<String> userIds = new ArrayList<>();
+        for (Attendee attendee : attendees) {
+            userIds.add(attendee.getUserId());
+        }
+
+        int size = userIds.size();
+        updateAttendeeListCount(eventId, size);
+
+        db.collection(EVENT_COLLECTION_NAME)
+                .document(eventId)
+                .collection(WAITLIST_COLLECTION_NAME)
+                .whereIn(FieldPath.documentId(), userIds)
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    for (DocumentSnapshot document : querySnapshot.getDocuments()) {
+                        sendNotificationLose(document.getId(), context);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("EntrantListRepository", "Error getting documents: ", e));
+    }
+
 
 
     /**
@@ -186,7 +214,7 @@ public class EntrantListRepository {
      * @param userId  The user ID.
      * @param context The context to send notifications.
      */
-    private void sendNotification(String userId, Context context) {
+    private void sendNotificationWin(String userId, Context context) {
         db.collection("users").document(userId).get()
                 .addOnSuccessListener(documentSnapshot -> {
                     if (documentSnapshot.exists()) {
@@ -202,6 +230,40 @@ public class EntrantListRepository {
                                     context,
                                     "Congratulations!",
                                     "You have been selected as an attendee for the event. PLS SIGN UP"
+                            );
+                            Log.d("EntrantListRepository", "Notification sent to user: " + userId);
+                        } else {
+                            Log.d("EntrantListRepository", "Notifications disabled for user: " + userId);
+                        }
+                    } else {
+                        Log.e("EntrantListRepository", "User not found in Firestore for userId: " + userId);
+                    }
+                })
+                .addOnFailureListener(e -> Log.e("EntrantListRepository", "Error fetching user: ", e));
+    }
+
+    /**
+     * Sends a notification to the user with the given ID using `NotificationService`.
+     *
+     * @param userId  The user ID.
+     * @param context The context to send notifications.
+     */
+    private void sendNotificationLose(String userId, Context context) {
+        db.collection("users").document(userId).get()
+                .addOnSuccessListener(documentSnapshot -> {
+                    if (documentSnapshot.exists()) {
+                        Boolean notificationsPerm = documentSnapshot.getBoolean("notificationsPerm");
+                        if (notificationsPerm != null && notificationsPerm) {
+                            // Construct the user map
+                            HashMap<String, Object> user = new HashMap<>();
+                            user.put("userId", userId);
+
+                            // Send notification
+                            NotificationService.sendNotification(
+                                    user,
+                                    context,
+                                    "Sorry!",
+                                    "You have not been selected as an attendee for the event. PLS SIGN UP"
                             );
                             Log.d("EntrantListRepository", "Notification sent to user: " + userId);
                         } else {
