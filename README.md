@@ -50,7 +50,7 @@ Lottery systems are great because you don’t have to first get a chance to go t
 - Users can manage their notification preferences from their profile.
 
 
-**Project Backlog: **
+**Project Backlog:**
 https://github.com/orgs/CMPUT301F24quartz/projects/1
 
 
