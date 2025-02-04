@@ -2,7 +2,7 @@ This app was developed as part of a team effort with the following contributors:
 - Ayesha Aamer *aaaamer1*
 - Francis Garcia *fgarcia06*
 - Aditi Padhi *aditipadhii*
-- Ayra Qutub *ayraqutub* (me)
+- Ayra Qutub *ayraqutub* 
 - Akhil Sunil *llLucidll*
 
 
